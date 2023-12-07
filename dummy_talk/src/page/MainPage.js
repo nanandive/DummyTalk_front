@@ -7,11 +7,9 @@ function MainPage() {
 
     return (
         <>
-            <div style={{display : "flex"}}>
+            <div style={{display:"flex", height:"92vh"}}>
+                <LeftBar />
                 {/* 추후 outlet 사용 밑은 테스트*/}
-                {/*<Outlet />*/}
-
-                <LeftBar /> 
                 <Chat />
                 <RightBar />
             </div>

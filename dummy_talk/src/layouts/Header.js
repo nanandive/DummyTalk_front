@@ -2,8 +2,7 @@ function Header(){
 
     return (
         <>
-            <div>
-                haha
+            <div className="h-[77px] border border-black ">
             </div>
         </>
     )
