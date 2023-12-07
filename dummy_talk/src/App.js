@@ -1,25 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./layouts/layout";
+import MainPage from "./page/MainPage";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+    <BrowserRouter>
+        <Routes>
+            <Route path='main' element={<Layout/>}>
+                <Route index element={<MainPage />}>
+                    {/* 추후 순서대로 Left, Chat, Right를 넣으면 됨 */}
+                </Route>
+            </Route>
+        </Routes>
+    </BrowserRouter>
+    );
 }
 
 export default App;
