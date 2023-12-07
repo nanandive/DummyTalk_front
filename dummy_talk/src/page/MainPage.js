@@ -1,6 +1,6 @@
 import Chat from "./Chat";
-import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
+import LeftBar from "./LeftBar";
 
 function MainPage() {
 
