@@ -2,7 +2,7 @@ function Chat() {
 
     return (
         <>
-            <div style={{width:"100%", border:"1px solid black"}}>
+            <div className="w-full border border-black">
                 챗
             </div>
         </>
