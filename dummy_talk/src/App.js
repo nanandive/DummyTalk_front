@@ -1,15 +1,15 @@
-// App.js
-import React from "react";
-import GridComponent from "./GridComponent";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import './App.css';
+import Layout from "./layouts/layout";
 
 function App() {
-  return (
-    <div className="App">
-      <div className="scrollable-area">
-        <GridComponent />
-      </div>
-    </div>
-  );
+    return (
+    <BrowserRouter>
+        <Routes>
+            <Route path='/main' element={<Layout/>} />
+        </Routes>
+    </BrowserRouter>
+    );
 }
 
 export default App;
