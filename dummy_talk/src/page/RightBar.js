@@ -1,7 +1,8 @@
-import CellComponent from "src/components/CellComponent";
-import GridComponent from "src/components/GridComponent";
-import ParentComponent from "src/components/ParentComponent";
-import Scroll from "src/components/Scroll";
+import ParentComponent from "src/layouts/RightSide/component/ParentComponent";
+import GridComponent from "src/layouts/RightSide/component/GridComponent";
+import CellComponent from "src/layouts/RightSide/component/CellComponent";
+import Scroll from "src/layouts/RightSide/component/Scroll";
+
 
 function RightBar() {
 

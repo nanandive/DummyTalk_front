@@ -2,17 +2,25 @@
 import React, { useState } from "react";
 import GridComponent from "./GridComponent";
 
+
+
+
+
 function ParentComponent() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="검색어를 입력하세요"
-      />
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="이미지를 검색해주세요"
+        />
+        
+      </div>
+
       <GridComponent searchQuery={searchQuery} />
     </div>
   );

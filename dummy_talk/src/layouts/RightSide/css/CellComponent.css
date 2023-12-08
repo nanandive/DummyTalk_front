@@ -1,20 +1,22 @@
  .grid-container {
-  display: grid;  
+
   grid-template-columns: repeat(3, 1fr);
-  gap: 0px; 
-  } 
+  gap: 5px;
+
+ } 
   
-  .grid-cell {
-  padding: 0%;
-  position: relative;
-  width: 100%;
+.grid-cell {
   height: 100%;
+  position: relative;
+ 
+  
 }
 
 .grid-img {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
+  object-position: center center;
+  border-radius: 7px;
 }
 
