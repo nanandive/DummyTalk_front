@@ -151,7 +151,7 @@ function Chat({ isOpen, setOpen }) {
                 </div>
                 <Textarea
                     className="w-full h-full resize-none top-3 outline outline-zinc-300"
-                    // maxlength="500"
+                    maxLength="500"
                     onChange={message_enter_event}
                     placeholder="메시지를 입력하세요."
                 />

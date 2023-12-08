@@ -1,11 +1,15 @@
 // SettingsModal.js
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useModal } from "src/components/hooks/use-modal";
 import "./css/SettingsModal.css";
 
-const SettingsModal = ({ isOpen, closeModal }) => {
+const SettingsModal = () => {
+  const { isOpen, onClose, type } = useModal();
   const [newServerName, setNewServerName] = useState('');
   const [kickUser, setKickUser] = useState('');
 
+  const isModalOpen = isOpen && type === "settings";
+  
   const handleServerNameChange = (e) => {
     setNewServerName(e.target.value);
   };
@@ -19,22 +23,17 @@ const SettingsModal = ({ isOpen, closeModal }) => {
     // Add your logic here...
 
     // Close the modal after saving settings
-    closeModal();
-  };
-
-  const handleCancel = () => {
-    // Close the modal without saving settings
-    closeModal();
+    onClose();
   };
 
   const modalStyle = {
-    display: isOpen ? 'block' : 'none',
+    display: isModalOpen ? 'block' : 'none',
   };
 
   return (
     <div className="modal" style={modalStyle}>
       <div className="modal-content">
-        <span className="close" onClick={closeModal}>
+        <span className="close" onClick={onClose}>
           &times;
         </span>
         <h2>서버 설정 변경</h2>
@@ -51,7 +50,7 @@ const SettingsModal = ({ isOpen, closeModal }) => {
 
         <div className="button-container">
           <button onClick={handleSaveSettings}>저장</button>
-          <button onClick={handleCancel}>취소</button>
+          <button onClick={onClose}>취소</button>
         </div>
       </div>
     </div>

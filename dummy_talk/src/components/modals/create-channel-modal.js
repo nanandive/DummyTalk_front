@@ -1,9 +1,12 @@
 // ChannelModal.js
 import React, { useState } from 'react';
+import { useModal } from "src/components/hooks/use-modal";
 
 
 
-const ChannelModal = ({ isOpen, closeModal, addChannel }) => {
+const CreateChannelModal = () => {
+  const { data, isOpen, onClose, type } = useModal();
+  const isModalOpen = isOpen && type === "createChannel";
   const [newChannelName, setNewChannelName] = useState('');
 
   const handleInputChange = (e) => {
@@ -12,13 +15,13 @@ const ChannelModal = ({ isOpen, closeModal, addChannel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addChannel(newChannelName);
-    closeModal();
+    data(newChannelName);
+    onClose();
   };
 
   return (
     <div style={{
-      display: isOpen ? 'block' : 'none',
+      display: isModalOpen ? 'block' : 'none',
       position: 'fixed',
       zIndex: 1,
       left: 0,
@@ -41,7 +44,7 @@ const ChannelModal = ({ isOpen, closeModal, addChannel }) => {
           fontSize: '28px',
           fontWeight: 'bold',
           cursor: 'pointer',
-        }} onClick={closeModal}>
+        }} onClick={onClose}>
           &times;
         </span>
         <h2 style={{textAlign: "center"}}>채널 생성</h2>
@@ -70,4 +73,4 @@ const ChannelModal = ({ isOpen, closeModal, addChannel }) => {
   );
 };
 
-export default ChannelModal;
+export default CreateChannelModal;
