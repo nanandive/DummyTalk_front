@@ -3,7 +3,7 @@ import { UserAvatar } from "../user-avatar";
 
 const ChatItem = ({ id, content, member, timestamp }) => {
     return (
-        <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+        <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
             <div className="group flex gap-x-2 items-start w-full">
                 <div
                     className="cursor-pointer hover:drop-shadow-md transition"
