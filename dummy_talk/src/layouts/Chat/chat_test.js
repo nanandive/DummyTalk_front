@@ -6,7 +6,7 @@ import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";
 
-function Chat({ isOpen, setOpen }) {
+function Chat_Test({ isOpen, setOpen }) {
     const [text, setText] = useState("기본 글");
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
 
@@ -44,6 +44,38 @@ function Chat({ isOpen, setOpen }) {
     function message_enter_event(e) {
         setText(e.target.value);
     }
+
+    // setEnabled()
+
+    function stream_e(){
+        if (enabled === true){
+            const openMediaDevices = async (constraints) => {
+                return await navigator.mediaDevices.getUserMedia(constraints);
+            }
+            try {
+                const stream = openMediaDevices({'video':true,'audio':true});
+                console.log('Got MediaStream:', stream);
+            } catch(error) {
+                console.error('Error accessing media devices.', error);
+            }
+
+
+            // navigator.permissions.query({name: 'camera'})
+            //     .then((permissionObj) => {
+            //         console.log(permissionObj.state);
+            //         return permissionObj.state === 'granted';
+            //     })
+            //     .catch((error) => {
+            //         console.log('Got error :', error);
+            //         return false;
+            //     })
+        }
+    }
+
+
+
+
+
 
     return (
         <div className="flex w-full flex-col h-full">
@@ -133,4 +165,4 @@ function Chat({ isOpen, setOpen }) {
     );
 }
 
-export default Chat;
+export default Chat_Test;

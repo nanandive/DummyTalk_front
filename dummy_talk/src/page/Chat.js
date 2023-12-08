@@ -45,6 +45,39 @@ function Chat({ isOpen, setOpen }) {
         setText(e.target.value);
     }
 
+    // setEnabled()
+
+    function stream_e(){
+        console.log(enabled);
+        if (enabled === true){
+            const openMediaDevices = async (constraints) => {
+                return await navigator.mediaDevices.getUserMedia(constraints);
+            }
+            try {
+                const stream = openMediaDevices({'video':true,'audio':true});
+                console.log('Got MediaStream:', stream);
+            } catch(error) {
+                console.error('Error accessing media devices.', error);
+            }
+
+
+            // navigator.permissions.query({name: 'camera'})
+            //     .then((permissionObj) => {
+            //         console.log(permissionObj.state);
+            //         return permissionObj.state === 'granted';
+            //     })
+            //     .catch((error) => {
+            //         console.log('Got error :', error);
+            //         return false;
+            //     })
+        }
+    }
+
+
+
+
+
+
     return (
         <div className="flex w-full flex-col h-full">
             <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
@@ -118,7 +151,7 @@ function Chat({ isOpen, setOpen }) {
                 </div>
                 <Textarea
                     className="w-full h-full resize-none top-3 outline outline-zinc-300"
-                    maxlength="500"
+                    // maxlength="500"
                     onChange={message_enter_event}
                     placeholder="메시지를 입력하세요."
                 />
