@@ -34,6 +34,8 @@ function Chat() {
 
     function message_enter_event(e){
         setText(e.target.value);
+    //     푸시
+
     }
 
 
