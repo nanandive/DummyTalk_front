@@ -1,9 +1,7 @@
 import ChatItem from "src/components/chat/chat-item";
 import {Button} from "src/components/ui/button";
 import {ScrollArea} from "src/components/ui/scroll-area";
-import {Separator} from "src/components/ui/separator";
 import {Textarea} from "src/components/ui/textarea";
-// import {Switch} from "src/components/ui/switch";
 import {Label} from "src/components/ui/label";
 import {ImagePlus} from "lucide-react";
 import {useState} from "react";
