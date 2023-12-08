@@ -4,7 +4,6 @@ import { useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
-import { ScrollArea } from "src/components/ui/scroll-area";
 import { Textarea } from "src/components/ui/textarea";
 
 function Chat() {
@@ -51,43 +50,41 @@ function Chat() {
             <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black ">
                 서브방 이름
             </div>
-            <div className="h-3/4 flex items-end mx-3">
-                <ScrollArea className="h-full w-full">
-                    <div className="flex flex-col">
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                    </div>
-                </ScrollArea>
+            <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden">
+                <div className="h-full w-full">
+                    {members.map((mem) => (
+                        <ChatItem
+                            key={mem.id}
+                            member={mem}
+                            content={mem.content}
+                            timestamp={"2022"}
+                        />
+                    ))}
+                    {members.map((mem) => (
+                        <ChatItem
+                            key={mem.id}
+                            member={mem}
+                            content={mem.content}
+                            timestamp={"2022"}
+                        />
+                    ))}
+                    {members.map((mem) => (
+                        <ChatItem
+                            key={mem.id}
+                            member={mem}
+                            content={mem.content}
+                            timestamp={"2022"}
+                        />
+                    ))}
+                    {members.map((mem) => (
+                        <ChatItem
+                            key={mem.id}
+                            member={mem}
+                            content={mem.content}
+                            timestamp={"2022"}
+                        />
+                    ))}
+                </div>
             </div>
             <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
                 <div className="flex flex-row-reverse pb-2">
