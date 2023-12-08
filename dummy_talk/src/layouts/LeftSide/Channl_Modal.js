@@ -1,6 +1,8 @@
 // ChannelModal.js
 import React, { useState } from 'react';
 
+
+
 const ChannelModal = ({ isOpen, closeModal, addChannel }) => {
   const [newChannelName, setNewChannelName] = useState('');
 
