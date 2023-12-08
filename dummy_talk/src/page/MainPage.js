@@ -1,5 +1,5 @@
-import Chat from "src/layouts/Chat/chat";
 import LeftBar from "./LeftBar";
+import Chat from "./Chat";
 import RightBar from "./RightBar";
 
 function MainPage() {

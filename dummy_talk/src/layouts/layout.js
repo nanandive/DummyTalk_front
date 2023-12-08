@@ -1,12 +1,13 @@
-import Header  from "./Header"
-import MainPage from "../page/MainPage"
+import MainPage from "src/page/MainPage";
+import Header from "./Header";
+
+
 function Layout() {
 
     return (
         <div className="h-full relative">
             <Header/>
-            <MainPage/>
-        </div>
+            <MainPage/>        </div>
     )
 }
 
