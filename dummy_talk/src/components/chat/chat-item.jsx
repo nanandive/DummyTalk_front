@@ -1,11 +1,11 @@
+import { cn } from "src/lib/utils";
 import { UserAvatar } from "../user-avatar";
 
 const ChatItem = ({ id, content, member, timestamp }) => {
     return (
-        <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+        <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
             <div className="group flex gap-x-2 items-start w-full">
                 <div
-                    onClick={onMemberClick}
                     className="cursor-pointer hover:drop-shadow-md transition"
                 >
                     <UserAvatar src={member.profile.imageUrl} />
@@ -16,14 +16,21 @@ const ChatItem = ({ id, content, member, timestamp }) => {
                             <p className="font-semibold text-sm hover:underline cursor-pointer">
                                 {member.profile.name}
                             </p>
-                            <ActionTooltip label={member.role}>
+                            {/* <ActionTooltip label={member.role}>
                                 {roleIconMap[member.role]}
-                            </ActionTooltip>
+                            </ActionTooltip> */}
                         </div>
-                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs text-zinc-500">
                             {timestamp}
                         </span>
                     </div>
+                    <p
+                            className={cn(
+                                "text-sm text-zinc-600"
+                            )}
+                        >
+                            {content}
+                        </p>
                     {/* {isImage && (
                         <a
                             href={fileUrl}
