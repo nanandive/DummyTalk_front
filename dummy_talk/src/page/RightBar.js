@@ -8,7 +8,7 @@ function RightBar() {
 
     return (
         <>
-            <div className="border border-black w-[35%]">
+            <div className="border border-black w-full">
                 <ParentComponent/>
                 <GridComponent/>
                 <CellComponent/>
