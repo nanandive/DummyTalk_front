@@ -1,11 +1,11 @@
+import { Switch } from '@headlessui/react';
+import { ImagePlus } from "lucide-react";
+import { useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
-import {Button} from "src/components/ui/button";
-import {ScrollArea} from "src/components/ui/scroll-area";
-import {Textarea} from "src/components/ui/textarea";
-import {Label} from "src/components/ui/label";
-import {ImagePlus} from "lucide-react";
-import {useState} from "react";
-import {Switch} from '@headlessui/react'
+import { Button } from "src/components/ui/button";
+import { Label } from "src/components/ui/label";
+import { ScrollArea } from "src/components/ui/scroll-area";
+import { Textarea } from "src/components/ui/textarea";
 
 function Chat() {
 
@@ -69,7 +69,7 @@ function Chat() {
                         <span aria-hidden="true" className={`${enabled ? 'translate-x-6' : 'translate-x-0'} pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
                     </Switch>
                 </div>
-                <Textarea className="w-full h-full resize-none top-3 outline outline-zinc-300" maxlength="500" onChange={message_enter_event}
+                <Textarea className="w-full h-full resize-none top-3 outline outline-zinc-300" maxLength="500" onChange={message_enter_event}
                           placeholder="메시지를 입력하세요."/>
                 <div className="absolute right-[5%] bottom-[10%] ">
                     <Button>

@@ -1,7 +1,7 @@
 // Channels.js
 
-import React, { useState, useEffect } from "react";
-import ChannelModal from "./Channl_Modal";  // 올바른 파일명으로 수정
+import { useEffect, useState } from "react";
+import { useModal } from "src/components/hooks/use-modal";
 import "./css/Channels.css";
 
 const Channels = () => {
@@ -9,6 +9,7 @@ const Channels = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
+  const { onOpen, onClose } = useModal()
 
   useEffect(() => {
     if (selectedChannel) {
@@ -68,7 +69,7 @@ const Channels = () => {
           </ul>
           <button
             className="create-channel-btn"
-            onClick={openModal}
+            onClick={() => onOpen('createChannel', addChannel)}
             disabled={channels.length >= 3}
           >
             채널 생성
@@ -85,14 +86,6 @@ const Channels = () => {
           </button>
         )}
       </div>
-
-      {isModalOpen && (
-        <ChannelModal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-          addChannel={addChannel}
-        />
-      )}
     </>
   );
 };

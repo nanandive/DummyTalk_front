@@ -1,5 +1,5 @@
-import {Header}  from "./Header"
 import MainPage from "../page/MainPage"
+import { Header } from "./Header"
 
 
 function Layout() {
