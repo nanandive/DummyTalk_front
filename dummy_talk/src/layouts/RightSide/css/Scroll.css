@@ -1,0 +1,9 @@
+
+  
+  .scrollable-area {
+    overflow-y: scroll;
+    max-height: 300px; /* 적절한 높이로 조절하세요 */
+  }
+  
+  
+  
