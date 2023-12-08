@@ -1,12 +1,12 @@
 import { Switch } from "@headlessui/react";
-import { ImagePlus } from "lucide-react";
+import {ChevronLeft, ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
 import { useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";
 
-function Chat() {
+function Chat({ isOpen, setOpen }) {
     const [text, setText] = useState("기본 글");
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
 
@@ -47,8 +47,14 @@ function Chat() {
 
     return (
         <div className="flex w-full flex-col h-full">
-            <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black ">
-                서브방 이름
+            <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
+                <div>
+                    서브방 이름
+                </div>
+                <Button variant={"icon"} onClick={ () => setOpen(prev => !prev)}>
+                    {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
+                </Button>
+
             </div>
             <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden">
                 <div className="h-full w-full">

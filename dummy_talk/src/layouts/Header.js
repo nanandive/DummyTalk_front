@@ -104,7 +104,7 @@ function LogOut( { setLogOutModal} ){
     }
 
     return (
-        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px"}}>
+        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"white"}}>
             <div style={{fontSize:"20px", fontWeight:"bolder", margin:"15px 15px 15px 25px"}}>
                 로그아웃
             </div>
@@ -130,7 +130,7 @@ function UserModal({setModal}){
     }
 
     return (
-        <div style={{width: "520px", height:"360px", top:"50%" ,left:"50%", border:"1px solid rgb(128,128,128)", position: "absolute", borderRadius:"5px", transform: "translate(-50%, -50%)", background:"white"}}>
+        <div style={{width: "520px", height:"360px", top:"50%" ,left:"50%", border:"1px solid rgb(128,128,128)", position: "absolute", borderRadius:"5px", transform: "translate(-50%, -50%)", background:"white", zIndex:"1", backgroundColor:"white"}}>
             {/* 상단바 */}
             <div style={{display:"flex"}}>
                 <div style={{height:"45px", fontSize:"24px", fontWeight:"bolder", margin:"40px 0px 0px 50px"}}>
@@ -173,7 +173,7 @@ function CreateServer( {setCreateModal} ){
     }
 
     return (
-        <div style={{width:"500px", height:"450px", border:"1px solid black", top:"50%", left:"50%", position: "absolute", transform: "translate(-50%, -50%)"}}>
+        <div style={{width:"500px", height:"450px", border:"1px solid black", top:"50%", left:"50%", position: "absolute", transform: "translate(-50%, -50%)", background:"white", zIndex:"1"}}>
             <div onClick={ () => onClickClose()} style={{margin:"20px 20px -20px 450px", cursor:"pointer"}}>
                 <X/>
             </div>
@@ -211,7 +211,7 @@ function SettingModal( {setSettingModal} ){
     }
 
     return (
-        <div style={{width:"500px", height:"450px", border:"1px solid black", top:"50%", left:"50%", position: "absolute", transform: "translate(-50%, -50%)"}}>
+        <div style={{width:"500px", height:"450px", border:"1px solid black", top:"50%", left:"50%", position: "absolute", transform: "translate(-50%, -50%)", background:"white", zIndex:"1"}}>
             <div onClick={ () => onClickClose()} style={{margin:"20px 20px -20px 450px", cursor:"pointer"}}>
                 <X/>
             </div>
