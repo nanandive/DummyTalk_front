@@ -1,5 +1,7 @@
-import Header  from "./Header"
+import {Header}  from "./Header"
 import MainPage from "../page/MainPage"
+
+
 function Layout() {
 
     return (
@@ -10,4 +12,4 @@ function Layout() {
     )
 }
 
-export default Layout;
+export default Layout
