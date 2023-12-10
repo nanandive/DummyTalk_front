@@ -9,6 +9,11 @@ function Home() {
     <>
       <HeroSection />
       <Cards />
+      <Cards /> 
+      {/* 추후내용변경 */}
+      <Cards />
+{/* 추후내용변경 */}
+
       <Footer />
     </>
   );
