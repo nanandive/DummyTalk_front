@@ -1,12 +1,15 @@
 // Friends.js
-import React, { useState, useEffect } from 'react';
-import FriendsModal from './FriendsModal'; // Correct the path based on your file structure
+import { useEffect, useState } from 'react';
+import FriendsModal from '../../components/modals/FriendsModal'; // Correct the path based on your file structure
 import './css/Friends.css'; // Ensure that you have your Friends.css file
+import { useModal } from "src/components/hooks/use-modal";
 
 function Friends() {
   const [friends, setFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { onOpen, isOpen } = useModal()
 
   useEffect(() => {
     // Mock data
@@ -50,17 +53,13 @@ function Friends() {
 
       <button
         className="invite-button"
-        onClick={handleInviteClick}
-        disabled={!selectedFriend}
+        onClick={() => onOpen('friend')}
+        disabled={isOpen}
       >
         초대하기
       </button>
 
-      <FriendsModal isOpen={isModalOpen} closeModal={closeModal}>
-        <h2>친구 초대</h2>
-        <p>초대 메시지를 작성하세요.</p>
-        <button onClick={closeModal}>닫기</button>
-      </FriendsModal>
+      
     </div>
   );
 }

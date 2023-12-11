@@ -1,15 +1,15 @@
+import { Switch } from '@headlessui/react';
+import { ImagePlus } from "lucide-react";
+import { useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
-import {Button} from "src/components/ui/button";
-import {ScrollArea} from "src/components/ui/scroll-area";
-import {Textarea} from "src/components/ui/textarea";
-import {Label} from "src/components/ui/label";
-import {ImagePlus} from "lucide-react";
-import {useState} from "react";
-import {Switch} from '@headlessui/react'
+import { Button } from "src/components/ui/button";
+import { Label } from "src/components/ui/label";
+import { ScrollArea } from "src/components/ui/scroll-area";
+import { Textarea } from "src/components/ui/textarea";
 
 function Chat() {
 
-    const [text,setText] = useState("기본 글");
+    const [message, setMessage] = useState('');
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
 
     const members = [
@@ -32,11 +32,20 @@ function Chat() {
             content: "TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, ",
         }];
 
-    function message_enter_event(e){
-        setText(e.target.value);
-    //     푸시
-
+    const enter_event = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            console.log('엔터 키 눌림');
+            e.preventDefault();
+            console.log('메시지 전송:', message);
+            setMessage('');
+            console.log(message);
+        }
     }
+
+    // const handleChange = (e) => {
+    //     console.log(message);
+    //     setMessage(e.target.value);
+    // };
 
 
 
@@ -69,7 +78,10 @@ function Chat() {
                         <span aria-hidden="true" className={`${enabled ? 'translate-x-6' : 'translate-x-0'} pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
                     </Switch>
                 </div>
-                <Textarea className="w-full h-full resize-none top-3 outline outline-zinc-300" maxlength="500" onChange={message_enter_event}
+                <Textarea className="w-full h-full resize-none top-3 outline outline-zinc-300"
+                          maxLength="500"
+                          onChange={ e => setMessage(e.target.value) }
+                          value={message}
                           placeholder="메시지를 입력하세요."/>
                 <div className="absolute right-[5%] bottom-[10%] ">
                     <Button>
