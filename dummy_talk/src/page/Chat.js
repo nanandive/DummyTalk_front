@@ -102,6 +102,28 @@ function Chat({ isOpen, setOpen }) {
     }
 
 
+
+    useEffect(() => {
+        const socket = io('http://localhost:9999'); // 서버의 주소에 맞게 변경
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        // 서버로 메시지 전송
+        socket.emit('send-message', 'Hello, Server!');
+
+        // 서버로부터 메시지 수신
+        socket.on('messages', (message) => {
+            console.log('Received message from server:', message);
+        });
+
+        return () => {
+            socket.disconnect(); // 컴포넌트가 언마운트되면 소켓 연결 해제
+        };
+    }, []);
+
+
     return (
         <div className="flex w-full flex-col h-full">
             {/* 채널명 */}
