@@ -8,7 +8,8 @@ import { Textarea } from "src/components/ui/textarea";
 import {useModal} from "src/components/hooks/use-modal";
 
 function Chat({ isOpen, setOpen }) {
-    // isOpen, setOpen = useState(false); // 오른쪽 사이드바
+
+    // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [message, setMessage] = useState(''); // 메시지 입력
