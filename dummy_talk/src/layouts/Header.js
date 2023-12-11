@@ -104,7 +104,7 @@ function LogOut( { setLogOutModal} ){
     }
 
     return (
-        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"white"}}>
+        <div style={ { width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"white"}}>
             <div style={{fontSize:"20px", fontWeight:"bolder", margin:"15px 15px 15px 25px"}}>
                 로그아웃
             </div>
