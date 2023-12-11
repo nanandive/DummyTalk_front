@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useModal} from "src/components/hooks/use-modal";
+import { useState } from 'react';
+import { useModal } from "src/components/hooks/use-modal";
 
 
 const ImageSendModal = () => {

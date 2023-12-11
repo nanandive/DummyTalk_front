@@ -11,7 +11,6 @@ import {
 function UserModal() {
     const { isOpen, onOpen, onClose, type, data } = useModal();
 
-    console.log(isOpen, type);
     const isModalOpen = isOpen && type === "members";
 
     return (
@@ -46,7 +45,7 @@ function UserModal() {
                                     className="pl-1 border border-[#F1F1F1] w-[250px] h-[30px]  rounded-md"
                                 >
                                     <option
-                                        value=""
+                                        value="국가선택"
                                         disabled
                                         selected
                                         hidden
