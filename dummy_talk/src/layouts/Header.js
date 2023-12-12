@@ -28,7 +28,7 @@ function Header() {
 
     return (
         <>
-            <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#E7DAB8]">
+            <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#C9A8FF]">
                 <div
                     onClick={() => onOpen("settings")}
                     className="w-[200px]"

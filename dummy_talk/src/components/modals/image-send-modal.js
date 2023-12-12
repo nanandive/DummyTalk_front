@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useModal } from "src/components/hooks/use-modal";
+import React, {useState} from 'react';
+import {useModal} from "src/components/hooks/use-modal";
+import {Label} from "src/components/ui/label";
 
 
 const ImageSendModal = () => {
@@ -26,6 +27,8 @@ const ImageSendModal = () => {
                 </span>
                 <h2 className="text-center my-5">파일 선택하기</h2>
                 <input type="file" className="my-2"/>
+                <Label className="">사진 크기 10MB 이하</Label>
+                <div className="">이미지가 들어오면 미리보기</div>
                 <button
                     type="submit"
                     className="w-full h-auto p-1 my-2 bg-green-500 text-white border-none rounded-md cursor-pointer"

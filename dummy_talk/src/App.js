@@ -10,6 +10,8 @@ import IndexLayOut from "./layouts/IndexLayout/index_layout";
 import Layout from "./layouts/layout";
 
 function App() {
+
+
   return (
     <>
       <ModalProvider />
