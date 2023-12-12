@@ -82,27 +82,35 @@ function Chat({ isOpen, setOpen }) {
     }
 
 
-    // 채팅방 구성 요소 렌더링
-    // useEffect(() => {
-        const sock = new SockJS('http://localhost:9999/websocket');
-        const stompClient = Stomp.over(sock);
+    //********************* 소켓 통신 *********************//
+    // const [subscribe, setubscribe] = useState([]);
 
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
+    // stomp 옵션 설정
+    const SOCKET_HOST = 'http://localhost:9999/websocket';
+    // const options = {
+    //     protocols : ['v12.stomp', 'v11.stomp'],
+    //     binary : false,             // true : 바이너리 값 사용 가능
+    //     heartbeat : [10000, 10000], // [서버->클라이언트, 클라이언트->서버] ms
+    //     debug : true               // true : 디버깅 모드
+    // }
 
-            stompClient.subscribe('/topic/msg', function (msg) {
-                // const newMessage = JSON.parse(msg.body);
-                // setMessages((prevMessages) => [...prevMessages, newMessage]);
-                console.log(msg);
-            });
+    // let subscribe = null;
 
-            stompClient.send(`/app/message`, {}, '{Test : test}');
+    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
+    const stompClient = Stomp.over(sock);
 
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/msg', function (msg) {
+            console.log('msg : '+msg);
+            // setMessages((prevMessages) => [...prevMessages, newMessage]);
+            // stompClient.disconnect();
         });
-        //     return () => {
-        //         stompClient.disconnect();
-        //     };
-        // }, []);
+
+        stompClient.send(`/app/message`, { message : '{Test : test}'});
+    });
+
 
 
         return (
