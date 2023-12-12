@@ -1,7 +1,7 @@
 // SignUpForm.js
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { callPostLogin } from '../../apis/UserAPICalls'
+import { callPostLogin } from '../../api/UserAPICalls'
 
 const SignUpForm = () => {
   const [name, setName] = useState('');
