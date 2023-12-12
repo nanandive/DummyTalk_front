@@ -5,7 +5,9 @@ import {useState} from "react";
 
 
 function MainPage() {
+
     const [isOpen, setOpen] = useState(false)
+
     return (
         <>
             <div className="flex h-[92vh]">
