@@ -12,10 +12,10 @@ export default function SignUp() {
 
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
-
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+
 
   useEffect(() => {
     if (emailValid && pwValid) {
@@ -61,9 +61,15 @@ export default function SignUp() {
     navigate('/sign-up-form');
   };
 
+
+
+  const onClickTest = () =>{
+    console.log()
+  }
+
   return (
     <div className="page">
-      <div className="titleWrap">
+      <div onClick={() => onClickTest()} className="titleWrap">
         이메일과 비밀번호를
         <br />
         입력해주세요          
