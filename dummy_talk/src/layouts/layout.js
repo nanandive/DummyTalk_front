@@ -1,5 +1,6 @@
 import MainPage from "../page/MainPage"
 import { Header } from "./Header"
+import {Outlet} from "react-router-dom";
 
 
 function Layout() {
@@ -7,7 +8,7 @@ function Layout() {
     return (
         <div className="h-full relative">
             <Header/>
-            <MainPage/>
+            <MainPage />
         </div>
     )
 }
