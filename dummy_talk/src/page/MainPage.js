@@ -13,9 +13,11 @@ function MainPage() {
             <div className="flex h-[92vh]">
                 <LeftBar />
                 <Chat isOpen={isOpen} setOpen={ setOpen } />
-                { isOpen && (<div className="flex w-[35%]">
-                    <RightBar />
-                </div>)}
+                { isOpen && (
+                    <div className="flex w-[35%]">
+                        <RightBar />
+                    </div>)
+                }
             </div>
         </>
     )

@@ -9,13 +9,14 @@ import {useModal} from "src/components/hooks/use-modal";
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
 
+// const socket = io('http://localhost:9999/websocket');
 function Chat({ isOpen, setOpen }) {
 
     // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [message, setMessage] = useState(''); // 메시지 입력
-    const { onOpen, onClose } = useModal()
+    const { onOpen, onClose } = useModal();
 
     const members = [   // 채팅방 임시 멤버
         {
@@ -95,7 +96,7 @@ function Chat({ isOpen, setOpen }) {
     // }
 
     // let subscribe = null;
-
+    //
     const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
     const stompClient = Stomp.over(sock);
 
@@ -110,6 +111,15 @@ function Chat({ isOpen, setOpen }) {
 
         stompClient.send(`/app/message`, { message : '{Test : test}'});
     });
+
+    // socket.on('connect', () => {
+    //     console.log('Connected to server');
+    // });
+    //
+    // socket.on('/topic/messages', (message) => {
+    //     console.log('Received message:', message);
+    //     // 원하는 동작 수행
+    // });
 
 
 

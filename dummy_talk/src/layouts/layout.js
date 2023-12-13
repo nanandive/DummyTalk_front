@@ -6,10 +6,10 @@ function Layout() {
 
     return (
         <div className="h-full relative">
-            <Header/>
-            <MainPage/>
+            <Header />
+            <MainPage />
         </div>
     )
 }
 
-export default Layout
+export default Layout;
