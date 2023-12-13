@@ -8,15 +8,18 @@ import { Textarea } from "src/components/ui/textarea";
 import {useModal} from "src/components/hooks/use-modal";
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
+import {useUrlQuery} from "src/components/hooks/use-url-query";
 
 // const socket = io('http://localhost:9999/websocket');
 function Chat({ isOpen, setOpen }) {
-
+    const query = useUrlQuery()
+    const channelId = query.get("channel")
     // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [message, setMessage] = useState(''); // 메시지 입력
     const { onOpen, onClose } = useModal();
+
 
     const members = [   // 채팅방 임시 멤버
         {
@@ -122,6 +125,7 @@ function Chat({ isOpen, setOpen }) {
     // });
 
 
+    if (!channelId) return null;
 
         return (
 

@@ -1,10 +1,14 @@
 // SignUpForm.js
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { callPostLogin } from '../../apis/UserAPICalls'
 
 const SignUpForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -31,10 +35,24 @@ const SignUpForm = () => {
     setPassword('');
   };
 
+  const user = {
+    name : name,
+    email: email,
+    password: password
+  };
+
+  const onClickTest = () =>{
+    console.log(user)
+  }
+
+  const onClickSignUp = () =>{
+    dispatch(callPostLogin(user))
+  }
+
   return (
     <div>
-      <h2>회원가입 양식</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 onClick={() => onClickTest() }>회원가입 양식</h2>
+      <div onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">이름:</label>
           <input
@@ -66,9 +84,9 @@ const SignUpForm = () => {
           />
         </div>
         <div>
-          <button type="submit">가입하기</button>
+          <button onClick={() => onClickSignUp()}>가입하기</button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

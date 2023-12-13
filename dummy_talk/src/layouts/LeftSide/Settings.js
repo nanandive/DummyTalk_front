@@ -1,5 +1,5 @@
-import { useModal } from "src/components/hooks/use-modal.jsx";
-import SettingsModal from '../../components/modals/settings-modal.js'; // Adjust the path based on your file structure
+import { useModal } from "src/components/hooks/use-modal";
+import SettingsModal from '../../components/modals/settings-modal'; // Adjust the path based on your file structure
 import './css/Settings.css'; // Ensure that you have your Settings.css file
 
 function Settings() {
