@@ -1,11 +1,31 @@
 import { X } from "lucide-react";
 import { useModal } from "src/components/hooks/use-modal";
+import axios from "axios";
+import {useState} from "react";
 
 function CreateServerModal() {
     const { isOpen, onClose, type } = useModal();
-
+    const [serverName, setServerName] = useState(''); // 서버 이름 상태
     const isModalOpen = isOpen && type === "createServer";
 
+    const handleCreateServer = async () => {
+        try {
+            const data = new URLSearchParams();
+            data.append('serverName', serverName); // 서버 이름을 URLSearchParams 객체에 추가
+
+            // 백엔드 서버의 URL을 포함하여 요청을 보냅니다.
+            await axios.post('http://localhost:9999/server/writePro', data, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            console.log("서버 생성 성공");
+            onClose(); // 모달 닫기
+        } catch (error) {
+            console.error("서버 생성 실패: ", error);
+        }
+    };
 
     return (
         <div
@@ -60,8 +80,11 @@ function CreateServerModal() {
                     width: "400px",
                     height: "25px",
                 }}
-                type={"text"}
+                type="text"
+                value={serverName}
+                onChange={(e) => setServerName(e.target.value)}
             />
+
             <div style={{ display: "flex", margin: "20px 0px 0px 50px" }}>
                 <div
                     onClick={onClose}
@@ -76,6 +99,7 @@ function CreateServerModal() {
                     뒤로가기
                 </div>
                 <div
+                    onClick={handleCreateServer}
                     style={{
                         cursor: "pointer",
                         textAlign: "center",
