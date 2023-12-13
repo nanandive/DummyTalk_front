@@ -1,9 +1,11 @@
-import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { UserAvatar } from "src/components/user-avatar";
+import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
-import { UserAvatar } from "src/components/user-avatar";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Header() {
@@ -11,6 +13,7 @@ function Header() {
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
 
+    /* 서버 리스트 가져오기 */
     useEffect(() => {
         const fetchServers = async () => {
             try {
@@ -28,6 +31,14 @@ function Header() {
     const [page, setPage] = useState(0);
     const slicedData = serverList.length > 6 ? serverList.slice(page, 6 + page) : serverList;
 
+    /* 서버 접속  */
+    const navigate = useNavigate();
+    const handleServerClick = (serverId) => {
+        navigate(`/main?server=${serverId}`);
+    };
+
+
+
     return (
         <>
             <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#C9A8FF]">
@@ -36,8 +47,8 @@ function Header() {
                     className="w-[200px]"
                 >
                     <img
-                        className="h-full w-[150px] flex items-center"
-                        src="./logo.svg"
+                        className="h-full w-[150px] min-w-[150px] flex items-center"
+                        src="/logo.svg"
                         alt=""
                     ></img>
                 </div>
@@ -65,21 +76,23 @@ function Header() {
                     >
                         <ChevronLeft className={"text-yellow-600"} />
                     </button>
+
+                    {/* 서버 리스트 및  접속 */}
                     <div style={{ display: "flex" }}>
                         {slicedData.map((data, index) => (
-                            <div
-                                key={index}
-                                style={{ marginLeft: "10px" }}
-                            >
+                            <div key={index} style={{ marginLeft: "10px" }} onClick={() => handleServerClick(data.id)}>
                                 <Button
-                                    className="bg-yellow-600 border-2"
-                                    size="icon"
+                                    className="overflow-hidden text-lg font-bold"
+                                    size="serverIcon"
+                                    variant="serverLink"
                                 >
-                                    {data}
+                                    {data.serverName.slice(0, 2)}
                                 </Button>
                             </div>
                         ))}
                     </div>
+
+
                     <button
                         onClick={() => setPage((prev) => prev + 1)}
                         style={
