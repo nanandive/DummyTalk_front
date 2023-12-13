@@ -1,56 +1,59 @@
-import { Switch } from "@headlessui/react";
+import {Switch} from "@headlessui/react";
 import {ChevronLeft, ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
 import {useEffect, useState} from "react";
 import ChatItem from "src/components/chat/chat-item";
-import { Button } from "src/components/ui/button";
-import { Label } from "src/components/ui/label";
-import { Textarea } from "src/components/ui/textarea";
+import {Button} from "src/components/ui/button";
+import {Label} from "src/components/ui/label";
+import {Textarea} from "src/components/ui/textarea";
 import {useModal} from "src/components/hooks/use-modal";
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
 import {useUrlQuery} from "src/components/hooks/use-url-query";
+import axios from "axios";
+import ChatEmpty from "src/components/chat/ChatEmpty";
 
 // const socket = io('http://localhost:9999/websocket');
-function Chat({ isOpen, setOpen }) {
+function Chat({isOpen, setOpen}) {
     const query = useUrlQuery()
     const channelId = query.get("channel")
     // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [message, setMessage] = useState(''); // 메시지 입력
-    const { onOpen, onClose } = useModal();
+    const [data, setData] = useState([]);
+    const {onOpen, onClose} = useModal();
 
 
-    const members = [   // 채팅방 임시 멤버
-        {
-            id: 1,
-            profile: {
-                name: "John Doe",
-                imageUrl: "./test.png",
-            },
-            role: "admin",
-            content: "hello, My name is John Doe. What's your name?",
-        },
-        {
-            id: 2,
-            profile: {
-                name: "Jane Smith",
-                imageUrl: "./logo192.png",
-            },
-            role: "member",
-            content: "John Smith",
-        },
-        {
-            id: 3,
-            profile: {
-                name: "John Doe",
-                imageUrl: "./test.png",
-            },
-            role: "admin",
-            content:
-                "TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, ",
-        },
-    ];
+    // const members = [   // 채팅방 임시 멤버
+    //     {
+    //         id: 1,
+    //         profile: {
+    //             name: "John Doe",
+    //             imageUrl: "./test.png",
+    //         },
+    //         role: "admin",
+    //         content: "hello, My name is John Doe. What's your name?",
+    //     },
+    //     {
+    //         id: 2,
+    //         profile: {
+    //             name: "Jane Smith",
+    //             imageUrl: "./logo192.png",
+    //         },
+    //         role: "member",
+    //         content: "John Smith",
+    //     },
+    //     {
+    //         id: 3,
+    //         profile: {
+    //             name: "John Doe",
+    //             imageUrl: "./test.png",
+    //         },
+    //         role: "admin",
+    //         content:
+    //             "TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, ",
+    //     },
+    // ];
 
     // 메시지를 입력할 때마다 메시지를 업데이트
     const handleChange = (e) => {
@@ -64,7 +67,7 @@ function Chat({ isOpen, setOpen }) {
             console.log('엔터 키 눌림');
             e.preventDefault();
             // 메세지 전송 이벤트 추가 예정
-            
+
             console.log('메시지 전송:', message);
             // 메시지를 전송한 후에 메시지를 초기화
             setMessage('');
@@ -72,19 +75,40 @@ function Chat({ isOpen, setOpen }) {
         }
     }
 
-    useEffect(() => {
-        // 메시지 전송 후
-    },[])
-
-    // 채팅번역 기능 활성화 / 비활성화
-
-
     // 이미지 전송
     const imageSend = () => {
         // 이미지 전송 이벤트 추가 예정
         console.log('imageSend');
     }
 
+
+    const fetchChatData = async () => {
+        // const { id } = useParams();
+        try {
+            const response = await axios.get(`http://localhost:9999/channel/chat/1`);
+            console.log(response);
+            setData(response.data.data);
+            setData(response.data.data);
+            console.log("===================================== response.data.data ")
+
+            console.log(response.data.data);
+            console.log("===================================== data ")
+            console.log(data);
+        } catch (error) {
+            console.error("채팅 리스트 뽑아보기 에러", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchChatData();
+        console.log("===================================== fetchChatData 호출 ")
+        console.log(data);
+    }, []);
+
+    useEffect(() => {
+        console.log("===================================== data 랜더링 ")
+        console.log(data);
+    }, [data]);
 
     //********************* 소켓 통신 *********************//
     // const [subscribe, setubscribe] = useState([]);
@@ -107,12 +131,12 @@ function Chat({ isOpen, setOpen }) {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/topic/msg', function (msg) {
-            console.log('msg : '+msg);
+            console.log('msg : ' + msg);
             // setMessages((prevMessages) => [...prevMessages, newMessage]);
             // stompClient.disconnect();
         });
 
-        stompClient.send(`/app/message`, { message : '{Test : test}'});
+        stompClient.send(`/app/message`, {message: '{Test : test}'});
     });
 
     // socket.on('connect', () => {
@@ -125,10 +149,8 @@ function Chat({ isOpen, setOpen }) {
     // });
 
 
-    if (!channelId) return null;
-
-        return (
-
+    return (
+        data.length === 0 ? <ChatEmpty/> : (
             <div className="flex w-full flex-col h-full">
                 {/* 채널명 */}
                 <div
@@ -145,37 +167,8 @@ function Chat({ isOpen, setOpen }) {
                 {/* 채팅방 스크롤 바 구역 */}
                 <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden">
                     <div className="h-full w-full">
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
-                        ))}
-                        {members.map((mem) => (
-                            <ChatItem
-                                key={mem.id}
-                                member={mem}
-                                content={mem.content}
-                                timestamp={"2022"}
-                            />
+                        { data.map((chat) => (
+                            <ChatItem key={chat.id} id={1} content={chat.message} member={chat.sender}/>
                         ))}
                     </div>
                 </div>
@@ -224,7 +217,7 @@ function Chat({ isOpen, setOpen }) {
                     </div>
                 </div>
             </div>
-        );
+        ));
 
 }
 
