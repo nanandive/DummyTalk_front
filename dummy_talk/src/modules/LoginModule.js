@@ -7,15 +7,15 @@ const initialState = {
 };
 
 //액션
-export const POST_SIGN_UP = 'login/POST_SIGN_UP';
+export const GET_USER_EMAIL = 'sign/GET_USER_EMAIL';
+export const POST_SIGN_UP = 'sign/POST_SIGN_UP';
 
 
 //리듀서
 export const signUpReducer = handleActions(
     {
-        [POST_SIGN_UP]: (state, { payload }) => {
-            state.data.push( ...payload.data );
-            return { ...state };
+        [POST_SIGN_UP] : (state, { payload }) =>{
+            return payload
         },
     },
     initialState

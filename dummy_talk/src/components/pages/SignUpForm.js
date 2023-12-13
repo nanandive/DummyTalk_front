@@ -1,7 +1,7 @@
 // SignUpForm.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { callPostLogin } from '../../api/UserAPICalls'
+import { callPostSignUp } from '../../api/UserAPICalls'
 
 const SignUpForm = () => {
   const [name, setName] = useState('');
@@ -9,6 +9,11 @@ const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
+  useEffect(() => {
+
+  }, []);
+
+  const data = useSelector(state => state.signUpReducer);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -41,12 +46,14 @@ const SignUpForm = () => {
     password: password
   };
 
-  const onClickTest = () =>{
-    console.log(user)
-  }
 
   const onClickSignUp = () =>{
-    dispatch(callPostLogin(user))
+    dispatch(callPostSignUp(user))
+    // alert(data.message)
+  }
+
+  const onClickTest = () =>{
+    console.log(data.message)
   }
 
   return (
