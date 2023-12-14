@@ -17,7 +17,6 @@ import MainPage, {ChatPage} from "./page/MainPage";
 
 
 function App() {
-  const {isOpen, setOpen} = useModal()
 
   return (
       <>
