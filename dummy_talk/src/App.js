@@ -22,7 +22,7 @@ function App() {
   return (
       <>
         <Provider store={store}>
-          <ModalProvider />
+          
           <Router>
             <Routes>
                 <Route path='/' element={<IndexLayOut />}>

@@ -17,6 +17,7 @@ function ParentComponent() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="이미지를 검색해주세요"
+          className="search-input"
         />
         
       </div>

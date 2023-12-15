@@ -4,6 +4,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "src/components/ui/dialog";
@@ -70,6 +71,9 @@ function UserModal() {
                         </div>
                     </DialogDescription>
                 </DialogHeader>
+                <DialogFooter>
+                    
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
