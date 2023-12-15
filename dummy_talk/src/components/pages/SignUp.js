@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Navigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
+import { callPotLogin } from '../../api/UserAPICalls'
 import '../SignUp.module.css';
-
-const User = {
-  email: 'test@example.com',
-  pw: 'test2323@@@'
-};
+import { jwtDecode, InvalidTokenError } from 'jwt-decode';
 
 export default function SignUp() {
+
+  const accessToken = window.localStorage.getItem('accessToken');
+  const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+
   const navigate = useNavigate(); // Initialize navigate for navigation
 
   const [email, setEmail] = useState('');
@@ -16,6 +18,12 @@ export default function SignUp() {
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
 
+  const dispatch = useDispatch();
+
+  const user = {
+    userEmail: email,
+    password: pw,
+  };
 
   useEffect(() => {
     if (emailValid && pwValid) {
@@ -48,11 +56,7 @@ export default function SignUp() {
   };
 
   const onClickConfirmButton = () => {
-    if (email === User.email && pw === User.pw) {
-      alert('로그인에 성공했습니다.');
-    } else {
-      alert('등록되지 않은 회원입니다.');
-    }
+    dispatch(callPotLogin(user))
   };
 
   const onClickSignUpButton = () => {
@@ -61,11 +65,13 @@ export default function SignUp() {
     navigate('/sign-up-form');
   };
 
-
-
   const onClickTest = () =>{
-    console.log()
+    console.log(decodedToken.sub)
   }
+
+  // if(Token){
+  //   return <Navigate to="/" replace />
+  // }
 
   return (
     <div className="page">
@@ -116,5 +122,5 @@ export default function SignUp() {
         </button>
       </div>
     </div>
-  );
+  )
 }

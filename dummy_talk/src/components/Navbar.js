@@ -24,6 +24,8 @@ function Navbar() {
 
   window.addEventListener('resize', showButton);
 
+  const Token = localStorage.getItem("accessToken");
+
   return (
     <>
       <nav className='navbar'>
@@ -70,7 +72,13 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>}
+          {
+            button
+            && Token ?
+                <Button buttonStyle='btn--outline'>Logout</Button>
+                :
+                <Button buttonStyle='btn--outline'>SIGN UP</Button>
+          }
         </div>
       </nav>
     </>
