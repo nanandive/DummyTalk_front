@@ -76,6 +76,17 @@ export default function SignUp() {
     return <Navigate to="/" replace />
   }
 
+  const handleKeyDown = (event) => {
+    const key = event.code;
+    switch(key){
+      case 'Enter':
+        onClickConfirmButton()
+          console.log("Test")
+        break;
+      default:
+    }
+  }
+
   return (
     <div className="page">
       <div onClick={() => onClickTest()} className="titleWrap">
@@ -109,6 +120,7 @@ export default function SignUp() {
             placeholder="영문, 숫자, 특수문자 포함 8자 이상"
             value={pw}
             onChange={handlePw}
+            onKeyDown={handleKeyDown}
           />
         </div>
         <div className="errorMessageWrap">
