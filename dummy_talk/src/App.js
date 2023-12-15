@@ -14,6 +14,7 @@ import ServerDetail from "./components/Server/serverDetail";
 import Chat from "./page/Chat";
 import {useModal} from "./components/hooks/use-modal";
 import MainPage, {ChatPage} from "./page/MainPage";
+import {AuthProvider} from "../src/components/AuthProvider";
 
 
 function App() {
@@ -24,15 +25,17 @@ function App() {
           <ModalProvider />
           <Router>
             <Routes>
-              <Route path='/' element={<IndexLayOut />}>
-                <Route index element={<Home />} />
-                <Route path='/services' element={<Services />} />
-                <Route path='/products' element={<Products />} />
-                <Route path='/sign-up' element={<SignUp />} />
-                <Route path='/sign-up-form' element={<SignUpForm />} />
-                {/* <Route path='/Login' element={<Login />} /> */}
-              </Route>
-              <Route path="/main" element={<Layout />} />
+                <Route path='/' element={<IndexLayOut />}>
+                  <Route index element={<Home />} />
+                  <Route path='/services' element={<Services />} />
+                  <Route path='/products' element={<Products />} />
+                  <Route path='/sign-up' element={<SignUp />} />
+                  <Route path='/sign-up-form' element={<SignUpForm />} />
+                  {/* <Route path='/Login' element={<Login />} /> */}
+                </Route>
+                <Route element={<AuthProvider />} >
+                  <Route path="/main" element={<Layout />} />
+                </Route>
             </Routes>
           </Router>
         </Provider>
