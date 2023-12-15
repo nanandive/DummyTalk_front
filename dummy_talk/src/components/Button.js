@@ -44,7 +44,6 @@ export const Button = ({children,
 
     return (
 
-    // <Link to='/sign-up' className='btn-mobile'>
         <button
             className={`btn ${checkButtonStyle} ${checkButtonSize}`}
             onClick={onClick}
@@ -60,6 +59,5 @@ export const Button = ({children,
                 </Link>
             }
         </button>
-    // {/*</Link>*/}
     );
 };

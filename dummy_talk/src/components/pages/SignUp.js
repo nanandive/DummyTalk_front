@@ -57,6 +57,7 @@ export default function SignUp() {
 
   const onClickConfirmButton = () => {
     dispatch(callPotLogin(user))
+    navigate('/');
   };
 
   const onClickSignUpButton = () => {
