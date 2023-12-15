@@ -18,10 +18,11 @@ function Header() {
         const fetchServers = async () => {
             try {
                 const response = await axios.get('http://localhost:9999/server/list');
-                setServerList(response.data); // 서버 리스트 설정
-                console.log("요청 성공",response)
+                setServerList(Array.isArray(response.data) ? response.data : []); // 배열인지 확인
+                console.log("요청 성공", response);
             } catch (error) {
                 console.error('서버 리스트 가져오기 실패', error);
+                setServerList([]); // 오류 발생 시 빈 배열로 설정
             }
         };
 
@@ -29,7 +30,8 @@ function Header() {
     }, []);
 
     const [page, setPage] = useState(0);
-    const slicedData = serverList.length > 6 ? serverList.slice(page, 6 + page) : serverList;
+    const validServerList = Array.isArray(serverList) ? serverList : [];
+    const slicedData = validServerList.length > 6 ? validServerList.slice(page, 6 + page) : validServerList;
 
     /* 서버 접속  */
     const navigate = useNavigate();
@@ -78,19 +80,18 @@ function Header() {
                     </button>
 
                     {/* 서버 리스트 및  접속 */}
-                    <div style={{ display: "flex" }}>
-                        {slicedData.map((data, index) => (
-                            <div key={index} style={{ marginLeft: "10px" }} onClick={() => handleServerClick(data.id)}>
-                                <Button
-                                    className="overflow-hidden text-lg font-bold"
-                                    size="serverIcon"
-                                    variant="serverLink"
-                                >
-                                    {data.serverName.slice(0, 2)}
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
+                    {slicedData.map((data, index) => (
+                        <div key={index} style={{ marginLeft: "10px" }} onClick={() => handleServerClick(data.id)}>
+                            <Button
+                                className="overflow-hidden text-lg font-bold"
+                                size="serverIcon"
+                                variant="serverLink"
+                            >
+                                {data.serverName ? data.serverName.slice(0, 2) : "???"}
+                            </Button>
+                        </div>
+                    ))}
+
 
 
                     <button

@@ -1,12 +1,9 @@
-import { Switch } from "@headlessui/react";
-import {ChevronLeft, ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
-import {useEffect, useState} from "react";
-import ChatItem from "src/components/chat/chat-item";
-import { Button } from "src/components/ui/button";
-import { Label } from "src/components/ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import {useModal} from "src/components/hooks/use-modal";
+import { useState } from "react";
 import SockJS from 'sockjs-client';
+import ChatItem from "src/components/chat/chat-item";
+import { useModal } from "src/components/hooks/use-modal";
+import { Button } from "src/components/ui/button";
+import { Textarea } from "src/components/ui/textarea";
 import Stomp from 'webstomp-client';
 
 function Chat({ isOpen, setOpen }) {
@@ -102,4 +99,4 @@ function Chat({ isOpen, setOpen }) {
 
 }
 
-export default Chat;
+// export default Chat;

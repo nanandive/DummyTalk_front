@@ -6,6 +6,7 @@ import "./Navbar.css";
 function Navbar() {
     const [click, setClick] = useState(false);
     const [button, setButton] = useState(true);
+    const accessToken = localStorage.getItem('accessToken');
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
@@ -90,7 +91,7 @@ function Navbar() {
                             </Link>
                         </li>
                     </ul>
-                    {button && (
+                    {(button && !accessToken) && (
                         <Button
                             buttonStyle="btn--outline"
                             link="/sign-up"
@@ -98,7 +99,7 @@ function Navbar() {
                             SIGN UP
                         </Button>
                     )}
-                    {button && (
+                    {(button && !accessToken) && (
                         <Button
                             buttonStyle="btn--outline"
                             link="/login"
@@ -106,6 +107,15 @@ function Navbar() {
                             SIGN IN
                         </Button>
                     )}
+                    {accessToken && (
+                        <Button
+                        buttonStyle="btn--outline"
+                        link="/logout"
+                        >
+                            LOGOUT
+                        </Button>
+                    )
+                    }
                 </div>
             </nav>
         </>

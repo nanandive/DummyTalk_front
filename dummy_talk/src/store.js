@@ -3,8 +3,8 @@ import {thunk} from 'redux-thunk';
 import rootReducer from './modules';
 
 
-const store = createStore(
-    rootReducer,
+const store = createStore( // 리덕스
+    rootReducer,  // 리듀서
     applyMiddleware(thunk)
 );
 

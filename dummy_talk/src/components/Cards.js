@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './Cards.css';
 import CardItem from './CardItem';
-
+import {useDispatch} from "react-redux";
+import {callTest} from "../api/UserAPICalls";
 function Cards() {
   return (
     <div className='cards'>
