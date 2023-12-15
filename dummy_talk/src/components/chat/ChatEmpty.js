@@ -1,11 +1,11 @@
 const ChatEmpty = () => {
 
-    const ChatEmptyImg = "./CHATEMPTY.png";
+    const ChatEmptyImg = "./dum.png";
 
     return (
-        <div className="chat__empty">
-            <div className="chat__empty__inner">
-                <img src={ChatEmptyImg} alt="채팅이 없습니다." />
+        <div className="h-full w-full">
+            <div className="h-1/2 w-1/2 flex flex-col">
+                <img className="" src={ChatEmptyImg} alt="채팅이 없습니다." />
                 <p>채팅을 시작해보세요!</p>
             </div>
         </div>

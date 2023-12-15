@@ -1,5 +1,5 @@
 import {Switch} from "@headlessui/react";
-import {ChevronLeft, ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
+import {ChevronLeft, ChevronsLeft, ChevronsRight, icons, ImagePlus} from "lucide-react";
 import {useEffect, useState} from "react";
 import ChatItem from "src/components/chat/chat-item";
 import {Button} from "src/components/ui/button";
@@ -11,54 +11,31 @@ import Stomp from 'webstomp-client';
 import {useUrlQuery} from "src/components/hooks/use-url-query";
 import axios from "axios";
 import ChatEmpty from "src/components/chat/ChatEmpty";
+import {json} from "react-router-dom";
 
-// const socket = io('http://localhost:9999/websocket');
 function Chat({isOpen, setOpen}) {
     const query = useUrlQuery()
-    const channelId = query.get("channel")
+    const [channelId, setChannel] = useState(1);
+    // const channelId = query.get("channel")
     // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
-    const [message, setMessage] = useState(''); // 메시지 입력
     const [data, setData] = useState([]);
     const {onOpen, onClose} = useModal();
+    const [sendMessage, setSendMessage] = useState('');
 
+    const [messages, setMessages] = useState([]);
+    const SOCKET_HOST = 'http://localhost:9999/websocket';
+    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
+    const socket = Stomp.over(sock);
+    const USERREPLY = '/topic/' + channelId; // 구독할 주소 ['/topic/'+ channelId]
+    const WEBSOCKLOGIN = '/app/message/' + channelId;  // 메시지 전송할 주소 [`/app/message/'+ channelId]
 
-    // const members = [   // 채팅방 임시 멤버
-    //     {
-    //         id: 1,
-    //         profile: {
-    //             name: "John Doe",
-    //             imageUrl: "./test.png",
-    //         },
-    //         role: "admin",
-    //         content: "hello, My name is John Doe. What's your name?",
-    //     },
-    //     {
-    //         id: 2,
-    //         profile: {
-    //             name: "Jane Smith",
-    //             imageUrl: "./logo192.png",
-    //         },
-    //         role: "member",
-    //         content: "John Smith",
-    //     },
-    //     {
-    //         id: 3,
-    //         profile: {
-    //             name: "John Doe",
-    //             imageUrl: "./test.png",
-    //         },
-    //         role: "admin",
-    //         content:
-    //             "TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, TEST, ",
-    //     },
-    // ];
 
     // 메시지를 입력할 때마다 메시지를 업데이트
     const handleChange = (e) => {
-        console.log(message);
-        setMessage(e.target.value);
+        console.log(e);
+        setSendMessage(e.target.value);
     };
 
     // 엔터키 눌렀을 때 메시지 전송
@@ -68,10 +45,10 @@ function Chat({isOpen, setOpen}) {
             e.preventDefault();
             // 메세지 전송 이벤트 추가 예정
 
-            console.log('메시지 전송:', message);
+            console.log('메시지 전송:', sendMessage);
             // 메시지를 전송한 후에 메시지를 초기화
-            setMessage('');
-            console.log(message);
+            setSendMessage('');
+            console.log(sendMessage);
         }
     }
 
@@ -88,7 +65,6 @@ function Chat({isOpen, setOpen}) {
             const response = await axios.get(`http://localhost:9999/channel/chat/1`);
             console.log(response);
             setData(response.data.data);
-            setData(response.data.data);
             console.log("===================================== response.data.data ")
 
             console.log(response.data.data);
@@ -101,20 +77,44 @@ function Chat({isOpen, setOpen}) {
 
     useEffect(() => {
         fetchChatData();
-        console.log("===================================== fetchChatData 호출 ")
-        console.log(data);
     }, []);
 
-    useEffect(() => {
-        console.log("===================================== data 랜더링 ")
-        console.log(data);
-    }, [data]);
+    console.log(data)
 
-    //********************* 소켓 통신 *********************//
-    // const [subscribe, setubscribe] = useState([]);
+    /***
+     * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
+     * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
+     * - userId, channelId, message, language, timestamp, page
+     * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
+     * -- @DestinationVariable : channelId
+     * -- @Header : UserId
+     * -- @RequestParam : page
+     * endpoint : /websocket
+     * subscribe : /topic/{channelId}
+     * send : /app/message/{channelId}
+     */
+    console.log('socket =====================================: ' + socket)
+    socket.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        socket.subscribe(USERREPLY, function (msg) {
+            console.log('msg : ' + msg);
+            // setMessages((prevMessages) => [...prevMessages, newMessage]);
+            // stompClient.disconnect();
+        });
+
+        socket.send(WEBSOCKLOGIN, {}, JSON.stringify({
+            message: {
+                sender: 1,
+                message: sendMessage,
+                language: "ko",
+                channelId: 1
+            }
+        }));
+
+        // const [subscribe, setubscribe] = useState([]);
 
     // stomp 옵션 설정
-    const SOCKET_HOST = 'http://localhost:9999/websocket';
     // const options = {
     //     protocols : ['v12.stomp', 'v11.stomp'],
     //     binary : false,             // true : 바이너리 값 사용 가능
@@ -122,35 +122,93 @@ function Chat({isOpen, setOpen}) {
     //     debug : true               // true : 디버깅 모드
     // }
 
-    // let subscribe = null;
+    // const onConnected  = (frame) => {
+    //     console.log('Connected ===================================== ' + frame);
     //
-    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
-    const stompClient = Stomp.over(sock);
-
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-
-        stompClient.subscribe('/topic/msg', function (msg) {
-            console.log('msg : ' + msg);
-            // setMessages((prevMessages) => [...prevMessages, newMessage]);
-            // stompClient.disconnect();
-        });
-
-        stompClient.send(`/app/message`, {message: '{Test : test}'});
-    });
-
-    // socket.on('connect', () => {
-    //     console.log('Connected to server');
-    // });
+    //     socket.subscribe('/topic/msg', function (msg) {
+    //         console.log('msg : ' + msg);
+    //         const newMessage = JSON.parse(msg.body);
+    //         setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     });
     //
-    // socket.on('/topic/messages', (message) => {
-    //     console.log('Received message:', message);
-    //     // 원하는 동작 수행
-    // });
+    //     // return () => {
+    //     //     // Cleanup and disconnect websocket when component unmounts
+    //     //     socket.disconnect();
+    //     // };
+    // }
 
+    //******************************* 소켓 통신 *******************************//
+
+
+
+    // useEffect(() => {
+    //
+    //     const SOCKET_HOST = 'http://localhost:9999/websocket';
+    //     const socket = Stomp.over(new SockJS(SOCKET_HOST));
+    //
+    //
+    //     console.log('socket =====================================: ' + socket)
+    //
+    //     socket.connect({}, function (frame) {
+    //         console.log('Connected ===================================== frame: ' + frame);
+    //         socket.subscribe(USERREPLY, function (msg) {
+    //             console.log('msg : ' + msg);
+    //             // setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //             // stompClient.disconnect();
+    //         });
+    //         // socket.subscribe(WEBSOCKLOGIN);
+    //         socket.send(WEBSOCKLOGIN, {
+    //             sender: 1,
+    //             message: sendMessage,
+    //             language: "ko",
+    //             channelId: 1
+    //         });
+    //     });
+    //     const onMessage = (msg) => {
+    //         console.log('msg =====================================: ', msg);
+    //         const newMessage = JSON.parse(msg.body);
+    //         setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     }
+    //
+    //     // const onConnected = () => {
+    //     //     console.log('Connected ===================================== ');
+    //     //     socket.subscribe(USERREPLY, onMessage);
+    //     //     socket.subscribe(WEBSOCKLOGIN);
+    //     //     socket.send(WEBSOCKLOGIN, {
+    //     //             "sender": 1,
+    //     //             "message": "test message",
+    //     //             "language": "ko",
+    //     //             "channelId": 1
+    //     //         }
+    //     //     );
+    //     // }
+    //     const onError = (err) => console.error('Alarm Websocket - Error', err);
+    //
+    //     // message: {'"sender": 1,"message": "test message","language": "ko"}',channelId: 1});
+    //     // socket.connect({}, function (frame) {
+    //     //     console.log('Connected ===================================== ');
+    //     //     socket.subscribe(USERREPLY, onMessage);
+    //     //     socket.subscribe(WEBSOCKLOGIN);
+    //     //     socket.send(WEBSOCKLOGIN, {
+    //     //         sender: 1,
+    //     //         message: sendMessage,
+    //     //         language: "ko",
+    //     //         channelId: 1
+    //     //     } );
+    //     // }, onError);
+    //
+    //     return () => {
+    //         // Cleanup 함수에서 disconnect를 호출하여 컴포넌트가 unmount 될 때 WebSocket을 닫을 수 있도록 합니다.
+    //         console.log('Disconnected ===================================== ');
+    //         socket.disconnect();
+    //     };
+    // }, []); // channelId가 변경될 때마다 useEffect가 다시 실행
+
+
+    // socket.send(`/app/message`, {"message": message, "channelId": channelId}, JSON.stringify({}));
 
     return (
-        data.length === 0 ? <ChatEmpty/> : (
+        messages.length === 0 ? <ChatEmpty/> : (
             <div className="flex w-full flex-col h-full">
                 {/* 채널명 */}
                 <div
@@ -167,8 +225,13 @@ function Chat({isOpen, setOpen}) {
                 {/* 채팅방 스크롤 바 구역 */}
                 <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden">
                     <div className="h-full w-full">
-                        { data.map((chat) => (
-                            <ChatItem key={chat.id} id={1} content={chat.message} member={chat.sender}/>
+                        {messages.map((chat) => (
+                            <ChatItem
+                                key={chat.chatId}
+                                content={chat.message}
+                                member={chat.sender}
+                                timestamp={"20200"}
+                            />
                         ))}
                     </div>
                 </div>
@@ -203,7 +266,7 @@ function Chat({isOpen, setOpen}) {
                               maxLength="500"
                               onChange={handleChange}
                               onKeyPress={enter_event}
-                              value={message}
+                              value={sendMessage}
                               placeholder="메시지를 입력하세요."/>
                     <div className="absolute right-[5%] bottom-[10%] ">
                         {/* 사진 전송 버튼 */}
@@ -218,7 +281,7 @@ function Chat({isOpen, setOpen}) {
                 </div>
             </div>
         ));
-
 }
+
 
 export default Chat;
