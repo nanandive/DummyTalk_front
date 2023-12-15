@@ -1,24 +1,28 @@
 import { Switch } from "@headlessui/react";
-import {ChevronLeft, ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
-import {useEffect, useState} from "react";
+import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import SockJS from 'sockjs-client';
 import ChatItem from "src/components/chat/chat-item";
+import { useModal } from "src/components/hooks/use-modal";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";
-import {useModal} from "src/components/hooks/use-modal";
-import SockJS from 'sockjs-client';
+import { decodeJwt } from "src/util/tokenUtils";
 import Stomp from 'webstomp-client';
-import {useUrlQuery} from "src/components/hooks/use-url-query";
 
 function Chat({ isOpen, setOpen }) {
     const query = useUrlQuery()
     const channelId = query.get("channel")
+    const accessToken = localStorage.getItem("accessToken")
+
+    const userId = useMemo(() => decodeJwt(accessToken).sub , [accessToken])
+
     // isOpen, setOpen 오른쪽 사이드바
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [message, setMessage] = useState(''); // 메시지 입력
     const { onOpen, onClose } = useModal()
-
 
     const members = [   // 채팅방 임시 멤버
         {
@@ -99,20 +103,25 @@ function Chat({ isOpen, setOpen }) {
 
     // let subscribe = null;
 
-    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
-    const stompClient = Stomp.over(sock);
+    useEffect(() => {
 
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-
-        stompClient.subscribe('/topic/msg', function (msg) {
-            console.log('msg : '+msg);
-            // setMessages((prevMessages) => [...prevMessages, newMessage]);
-            // stompClient.disconnect();
+        const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
+        const stompClient = Stomp.over(sock, { debug: false});
+    
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+    
+            stompClient.subscribe(`/topic/msg/${channelId}`, function (msg) {
+                console.log(msg);
+                const result = JSON.parse(msg.body);
+                console.log(result);
+                // setMessages((prevMessages) => [...prevMessages, newMessage]);
+                // stompClient.disconnect();
+            });
+    
+            stompClient.send(`/app/${channelId}/message`, JSON.stringify({ message : '안녕하세요', 'sender':userId, language: 'en', channelId}));
         });
-
-        stompClient.send(`/app/message`, { message : '{Test : test}'});
-    });
+    }, [])
 
 
     if (!channelId) return null;
