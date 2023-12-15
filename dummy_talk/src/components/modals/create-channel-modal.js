@@ -1,23 +1,37 @@
 // ChannelModal.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useModal } from "src/components/hooks/use-modal";
-
-
+import axios from "axios";
 
 const CreateChannelModal = () => {
   const { data, isOpen, onClose, type } = useModal();
+  const { serverId } = data
   const isModalOpen = isOpen && type === "createChannel";
-  const [newChannelName, setNewChannelName] = useState('');
+  const [channelName, setChannelName] = useState('');
 
   const handleInputChange = (e) => {
-    setNewChannelName(e.target.value);
+    setChannelName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    data(newChannelName);
+    const formData = new FormData;
+    formData.append("channelName" ,channelName);
+    formData.append("serverId" ,serverId);
+
+    try{
+        await axios.post("http://localhost:9999/channel/writePro", formData)
+
+        console.log("채널 생성 성공")
+        console.log(">>>> " + formData.serverId)
+    }catch (error){
+        console.log("채널 생성 실패")
+    }
+
     onClose();
   };
+
+
 
   return (
     <div style={{
@@ -53,7 +67,7 @@ const CreateChannelModal = () => {
             채널 이름:
             <input
               type="text"
-              value={newChannelName}
+              value={channelName}
               onChange={handleInputChange}
               style={{
                 width: '100%',
