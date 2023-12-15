@@ -14,8 +14,8 @@ import ChatEmpty from "src/components/chat/ChatEmpty";
 import {decodeJwt} from "src/util/tokenUtils";
 
 function Chat({isOpen, setOpen}) {
+    const { onOpen, onClose } = useModal();
 
-    const {onOpen, onClose} = useModal()
     const query = useUrlQuery()
     const channelId = query.get("channel")
 
@@ -90,20 +90,23 @@ function Chat({isOpen, setOpen}) {
     // stomp 옵션 설정
     useEffect(() => {
 
-
-        // const USERREPLY = `/topic/msg/${channelId}`;
-        //
-        //
-        // console.log('socket =====================================: ' + socket)
-        // socket.subscribe(USERREPLY, function (msg) {
-        //     console.log('msg : ' + msg);
-        // });
-        // socket.send(WEBSOCKLOGIN, onMessage());
-        //
-        // setSendMessage('');
-
-    }, []);
-
+        const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
+        const stompClient = Stomp.over(sock, { debug: false});
+    
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+    
+            stompClient.subscribe(`/topic/msg/${channelId}`, function (msg) {
+                console.log(msg);
+                const result = JSON.parse(msg.body);
+                console.log(result);
+                // setMessages((prevMessages) => [...prevMessages, newMessage]);
+                // stompClient.disconnect();
+            });
+    
+            stompClient.send(`/app/${channelId}/message`, JSON.stringify({ message : '안녕하세요', 'sender':userId, language: 'en', channelId}));
+        });
+    }, [])
 
     const onMessage = (msg) => {
         console.log('onMessage =====================================: ' + msg)
