@@ -81,7 +81,6 @@ export default function SignUp() {
     switch(key){
       case 'Enter':
         onClickConfirmButton()
-          console.log("Test")
         break;
       default:
     }

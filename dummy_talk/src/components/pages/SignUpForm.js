@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { callPostSignUp } from '../../api/UserAPICalls'
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
   const [userName, setUserName] = useState('');
@@ -9,8 +10,10 @@ const SignUpForm = () => {
   const [userPhone, setUserPhone] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Initialize navigate for navigation
   const dispatch = useDispatch();
-  
+
+
 
   const data = useSelector(state => state.signUpReducer);
 
@@ -46,11 +49,24 @@ const SignUpForm = () => {
 
   const onClickSignUp = () =>{
     dispatch(callPostSignUp(user))
+    navigate('/');
   }
+  const handleKeyDown = (event) => {
+    const key = event.code;
+    switch(key){
+      case 'Enter':
+        onClickSignUp()
+        break;
+      default:
+    }
+  }
+
 
   const onClickTest = () =>{
     console.log(user)
   }
+
+
 
   return (
     <div>
@@ -93,6 +109,7 @@ const SignUpForm = () => {
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            onKeyDown={handleKeyDown}
           />
         </div>
         <div>
