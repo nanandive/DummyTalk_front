@@ -21,7 +21,7 @@ const Channels = () => {
         const channelList = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:9999/server/${serverId}/channel/list`
+                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list`
                 );
                 setChannels(response.data);
                 console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
@@ -70,7 +70,7 @@ const Channels = () => {
         if (channelId) {
             try {
                 const response = await axios.delete(
-                    `http://localhost:9999/server/${serverId}/channel/${channelId}/delete`
+                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/${channelId}/delete`
                 );
                 console.log(`채널 삭제 성공:`, response.data);
                 setChannels(

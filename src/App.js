@@ -1,5 +1,7 @@
+import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'; // Switch 대신 Routes를 사용합니다.
-import { ModalProvider } from "src/components/providers/modal-provider";
+import { AuthProvider } from "../src/components/AuthProvider";
+import store from '../src/store';
 import './App.css';
 import Home from './components/pages/Home';
 import Products from './components/pages/Products';
@@ -8,13 +10,6 @@ import SignUp from './components/pages/SignUp';
 import SignUpForm from './components/pages/SignUpForm';
 import IndexLayOut from "./layouts/IndexLayout/index_layout";
 import Layout from "./layouts/layout";
-import { Provider } from 'react-redux';
-import store from '../src/store'
-import ServerDetail from "./components/Server/serverDetail";
-import Chat from "./page/Chat";
-import {useModal} from "./components/hooks/use-modal";
-import MainPage, {ChatPage} from "./page/MainPage";
-import {AuthProvider} from "../src/components/AuthProvider";
 
 
 function App() {

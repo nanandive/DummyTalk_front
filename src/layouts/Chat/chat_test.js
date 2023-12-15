@@ -30,7 +30,7 @@ function Chat({ isOpen, setOpen }) {
     const [subscribe, setSubscribe] = useState(null);
 
     // stomp 옵션 설정
-    const SOCKET_HOST = 'http://localhost:9999/websocket';
+    const SOCKET_HOST = '${process.env.REACT_APP_API_URL}/websocket';
     const options = {
         protocols : ['v12.stomp', 'v11.stomp'],
         binary : false,             // true : 바이너리 값 사용 가능
@@ -39,7 +39,7 @@ function Chat({ isOpen, setOpen }) {
     }
 
 
-    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 'http://localhost:9999/websocket'
+    const sock = new SockJS(SOCKET_HOST); // 소켓 연결 '${process.env.REACT_APP_API_URL}/websocket'
     const stompClient = Stomp.over(sock, options);
 
     stompClient.connect({}, function (frame) {

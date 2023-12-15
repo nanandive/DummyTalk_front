@@ -27,7 +27,7 @@ function CreateServerModal() {
 
         try {
             await axios.post(
-                "http://localhost:9999/server/writePro",
+                `${process.env.REACT_APP_API_URL}/server/writePro`,
                 formData,
                 {
                     headers: {

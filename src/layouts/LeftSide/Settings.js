@@ -1,9 +1,8 @@
-import { useModal } from "src/components/hooks/use-modal";
-import SettingsModal from '../../components/modals/settings-modal';
-import './css/Settings.css';
-import {useState} from "react";
 import axios from "axios";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
+import { useState } from "react";
+import { useModal } from "src/components/hooks/use-modal";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import './css/Settings.css';
 
 function Settings() {
   const { onOpen, onClose } = useModal()
@@ -13,7 +12,7 @@ function Settings() {
 
     const updateServerSettings = async (settings) => {
         try {
-            const response = await axios.post("http://localhost:9999/server/setting", settings);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/server/setting`, settings);
             console.log(response.data);
         } catch (error) {
             console.log("서버 업데이트 오류", error);

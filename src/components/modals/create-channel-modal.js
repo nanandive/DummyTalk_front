@@ -1,8 +1,8 @@
 // ChannelModal.js
-import React, { useEffect, useState } from "react";
-import { useModal } from "src/components/hooks/use-modal";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useModal } from "src/components/hooks/use-modal";
 
 const CreateChannelModal = () => {
     const navigate = useNavigate()
@@ -23,7 +23,7 @@ const CreateChannelModal = () => {
 
         try {
             await axios.post(
-                "http://localhost:9999/channel/writePro",
+                `${process.env.REACT_APP_API_URL}/channel/writePro`,
                 formData
             );
 

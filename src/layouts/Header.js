@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { UserAvatar } from "src/components/user-avatar";
+import axios from 'axios';
 import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { UserAvatar } from "src/components/user-avatar";
 
 
 
@@ -17,7 +17,7 @@ function Header() {
     useEffect(() => {
         const fetchServers = async () => {
             try {
-                const response = await axios.get('http://localhost:9999/server/list');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/list`);
                 setServerList(Array.isArray(response.data) ? response.data : []); // 배열인지 확인
                 console.log("요청 성공", response);
             } catch (error) {

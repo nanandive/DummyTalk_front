@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, useEffect  } from 'react';
+import { useState } from 'react';
 import { useModal } from "src/components/hooks/use-modal";
 import "./css/SettingsModal.css";
 
@@ -40,7 +40,7 @@ const SettingsModal = () => {
     if (serverId) formData.append("serverId", serverId)
 
     try {
-      const response = await axios.post(`http://localhost:9999/server/setting?id=${serverId}`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/server/setting?id=${serverId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -56,7 +56,7 @@ const SettingsModal = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.get(`http://localhost:9999/server/delete?id=${serverId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/delete?id=${serverId}`);
       console.log('서버 삭제 완료:', response.data);
       onClose();
     } catch (error) {
