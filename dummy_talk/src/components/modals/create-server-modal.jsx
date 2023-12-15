@@ -1,10 +1,37 @@
 import { X } from "lucide-react";
 import { useModal } from "src/components/hooks/use-modal";
+import axios from "axios";
+import {useRef, useState} from "react";
 
 function CreateServerModal() {
     const { isOpen, onClose, type } = useModal();
-
+    const [serverName, setServerName] = useState(''); // 서버 이름 상태
     const isModalOpen = isOpen && type === "createServer";
+
+    const fileInputRef = useRef();
+
+    const handleCreateServer = async () => {
+        const formData = new FormData();
+        formData.append('serverName', serverName);
+        if (fileInputRef.current && fileInputRef.current.files[0]) {
+            formData.append('file', fileInputRef.current.files[0]);
+        }
+
+        try {
+            await axios.post('http://localhost:9999/server/writePro', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            console.log("서버 생성 성공");
+            onClose();
+        } catch (error) {
+            console.error("서버 생성 실패: ", error);
+        }
+    };
+
+
 
 
     return (
@@ -49,6 +76,7 @@ function CreateServerModal() {
             </div>
             <div style={{ margin: "20px 180px" }}>
                 <img src="./image 29.png"></img>
+                <input type="file" ref={fileInputRef} />
             </div>
             <div style={{ margin: "30px 0px 0px 50px", fontWeight: "550" }}>
                 서버 이름
@@ -60,8 +88,11 @@ function CreateServerModal() {
                     width: "400px",
                     height: "25px",
                 }}
-                type={"text"}
+                type="text"
+                value={serverName}
+                onChange={(e) => setServerName(e.target.value)}
             />
+
             <div style={{ display: "flex", margin: "20px 0px 0px 50px" }}>
                 <div
                     onClick={onClose}
@@ -76,6 +107,7 @@ function CreateServerModal() {
                     뒤로가기
                 </div>
                 <div
+                    onClick={handleCreateServer}
                     style={{
                         cursor: "pointer",
                         textAlign: "center",

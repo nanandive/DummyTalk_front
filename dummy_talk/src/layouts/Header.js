@@ -1,30 +1,45 @@
+import { useState, useEffect } from "react";
+import { UserAvatar } from "src/components/user-avatar";
 import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
-import { useState } from "react";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
-import { UserAvatar } from "src/components/user-avatar";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+
 
 function Header() {
     const { onOpen, onClose } = useModal();
     const imageUrl = "./test.png";
+    const [serverList, setServerList] = useState([]);
 
-    const hi = [
-        "1번",
-        "2번",
-        "3번",
-        "4번",
-        "5번",
-        "6번",
-        "7번",
-        "8번",
-        "9번",
-        "10번",
-    ];
-    // const hi = ["1번", "2번"]
+    /* 서버 리스트 가져오기 */
+    useEffect(() => {
+        const fetchServers = async () => {
+            try {
+                const response = await axios.get('http://localhost:9999/server/list');
+                setServerList(Array.isArray(response.data) ? response.data : []); // 배열인지 확인
+                console.log("요청 성공", response);
+            } catch (error) {
+                console.error('서버 리스트 가져오기 실패', error);
+                setServerList([]); // 오류 발생 시 빈 배열로 설정
+            }
+        };
+
+        fetchServers();
+    }, []);
 
     const [page, setPage] = useState(0);
+    const validServerList = Array.isArray(serverList) ? serverList : [];
+    const slicedData = validServerList.length > 6 ? validServerList.slice(page, 6 + page) : validServerList;
 
-    const slicedData = hi.length > 6 ? hi.slice(page, 6 + page) : hi;
+    /* 서버 접속  */
+    const navigate = useNavigate();
+    const handleServerClick = (serverId) => {
+        navigate(`/main?server=${serverId}`);
+    };
+
+
 
     return (
         <>
@@ -34,8 +49,8 @@ function Header() {
                     className="w-[200px]"
                 >
                     <img
-                        className="h-full w-[150px] flex items-center"
-                        src="./logo.svg"
+                        className="h-full w-[150px] min-w-[150px] flex items-center"
+                        src="/logo.svg"
                         alt=""
                     ></img>
                 </div>
@@ -53,7 +68,7 @@ function Header() {
                             setPage((pre) => (pre > 0 ? pre - 1 : pre))
                         }
                         style={
-                            hi.length > 6
+                            serverList.length > 6
                                 ? {
                                       display: "block",
                                       margin: "0px 5px 0px 20px",
@@ -63,25 +78,26 @@ function Header() {
                     >
                         <ChevronLeft className={"text-yellow-600"} />
                     </button>
-                    <div style={{ display: "flex" }}>
-                        {slicedData.map((data, index) => (
-                            <div
-                                key={index}
-                                style={{ marginLeft: "10px" }}
+
+                    {/* 서버 리스트 및  접속 */}
+                    {slicedData.map((data, index) => (
+                        <div key={index} style={{ marginLeft: "10px" }} onClick={() => handleServerClick(data.id)}>
+                            <Button
+                                className="overflow-hidden text-lg font-bold"
+                                size="serverIcon"
+                                variant="serverLink"
                             >
-                                <Button
-                                    className="bg-yellow-600 border-2"
-                                    size="icon"
-                                >
-                                    {data}
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
+                                {data.serverName ? data.serverName.slice(0, 2) : "???"}
+                            </Button>
+                        </div>
+                    ))}
+
+
+
                     <button
                         onClick={() => setPage((prev) => prev + 1)}
                         style={
-                            hi.length > 6 && page + 6 != hi.length
+                            serverList.length > 6 && page + 6 != serverList.length
                                 ? { display: "block", marginLeft: "15px" }
                                 : { display: "none" }
                         }
@@ -114,7 +130,7 @@ function LogOut( { setLogOutModal} ){
     }
 
     return (
-        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"white"}}>
+        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"wserverListte"}}>
             <div style={{fontSize:"20px", fontWeight:"bolder", margin:"15px 15px 15px 25px"}}>
                 로그아웃
             </div>
@@ -125,7 +141,7 @@ function LogOut( { setLogOutModal} ){
                 <div style={{width:"80px", height:"30px", cursor:"pointer", marginRight:"30px", border:"1px solid black", textAlign:"center", borderRadius:"5px", paddingTop:"2px"}} onClick={ () => onClickLogOutModal()}>
                     취소
                 </div>
-                <div style={{background:"red", width:"80px", height:"30px", textAlign:"center", paddingTop:"3px", borderRadius:"5px", color:"white"}}>
+                <div style={{background:"red", width:"80px", height:"30px", textAlign:"center", paddingTop:"3px", borderRadius:"5px", color:"wserverListte"}}>
                     로그아웃
                 </div>
             </div>
@@ -140,7 +156,7 @@ function UserModal({setModal}){
     }
 
     return (
-        <div style={{width: "520px", height:"360px", top:"50%" ,left:"50%", border:"1px solid rgb(128,128,128)", position: "absolute", borderRadius:"5px", transform: "translate(-50%, -50%)", background:"white", zIndex:"1", backgroundColor:"white"}}>
+        <div style={{width: "520px", height:"360px", top:"50%" ,left:"50%", border:"1px solid rgb(128,128,128)", position: "absolute", borderRadius:"5px", transform: "translate(-50%, -50%)", background:"wserverListte", zIndex:"1", backgroundColor:"wserverListte"}}>
             {/* 상단바 */}
             <div style={{display:"flex"}}>
                 <div style={{height:"45px", fontSize:"24px", fontWeight:"bolder", margin:"40px 0px 0px 50px"}}>
@@ -157,7 +173,7 @@ function UserModal({setModal}){
                     <input type={"text"} placeholder={"변경할 비밀번호"} style={{paddingLeft:"3px", border:"1px solid rgb(128,128,128)", width: "250px", height:"30px", marginTop:"25px", borderRadius:"5px"}}/>
                     <input type={"text"} placeholder={"변경할 비밀번호 확인"} style={{paddingLeft:"3px", border:"1px solid rgb(128,128,128)", width: "250px", height:"30px",  marginTop:"25px", borderRadius:"5px"}}/>
                     <select placeholder={"국가선택"} style={{paddingLeft:"3px",border:"1px solid rgb(128,128,128)", width: "250px", height:"30px", marginTop:"25px", borderRadius:"5px"}}>
-                        <option value="" disabled selected hidden>국가선택</option>
+                        <option value="" disabled selected serverListdden>국가선택</option>
                         <option value="국가1">국가1</option>
                         <option value="국가2">국가2</option>
                         <option value="국가3">국가3</option>
@@ -192,7 +208,7 @@ function CreateServer( {setCreateModal} ){
                 left: "50%",
                 position: "absolute",
                 transform: "translate(-50%, -50%)",
-                background: "white",
+                background: "wserverListte",
                 zIndex: "1",
             }}
         >
