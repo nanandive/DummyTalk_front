@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "types": ["aria-query"],
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "*",
+                "src/*",
+                "public/*"
+            ]
+        }
+    }
+}
