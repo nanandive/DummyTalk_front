@@ -37,12 +37,6 @@ export const Button = ({
         setActivateToken(Token);
     }, []);
 
-    const onClickLogout = () => {
-        console.log(activateToken);
-        alert("로그아웃이 되었습니다~");
-        window.localStorage.removeItem("accessToken");
-    };
-
     return (
         // <Link to='/sign-up' className='btn-mobile'>
         <button
@@ -57,6 +51,5 @@ export const Button = ({
                 {children}
             </Link>
         </button>
-        // {/*</Link>*/}
     );
 };

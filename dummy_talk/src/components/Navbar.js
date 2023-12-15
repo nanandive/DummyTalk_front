@@ -8,6 +8,11 @@ function Navbar() {
     const [button, setButton] = useState(true);
     const accessToken = localStorage.getItem('accessToken');
 
+    const onClickLogout = () => {
+        alert("로그아웃이 되었습니다~");
+        window.localStorage.removeItem("accessToken");
+    };
+
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
 
@@ -94,7 +99,7 @@ function Navbar() {
                     {(button && !accessToken) && (
                         <Button
                             buttonStyle="btn--outline"
-                            link="/sign-up"
+                            link="/sign-up-form"
                         >
                             SIGN UP
                         </Button>
@@ -102,7 +107,7 @@ function Navbar() {
                     {(button && !accessToken) && (
                         <Button
                             buttonStyle="btn--outline"
-                            link="/login"
+                            link="/sign-up"
                         >
                             SIGN IN
                         </Button>
@@ -110,7 +115,8 @@ function Navbar() {
                     {accessToken && (
                         <Button
                         buttonStyle="btn--outline"
-                        link="/logout"
+                        link="/"
+                        onClick={() =>onClickLogout()}
                         >
                             LOGOUT
                         </Button>

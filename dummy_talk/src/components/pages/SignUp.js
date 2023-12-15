@@ -56,8 +56,12 @@ export default function SignUp() {
   };
 
   const onClickConfirmButton = () => {
-    dispatch(callPotLogin(user))
+
+    dispatch( callPotLogin(user) )
+
+    // navigate('/');
   };
+  
 
   const onClickSignUpButton = () => {
     // Add your logic for handling sign-up button click
@@ -66,12 +70,12 @@ export default function SignUp() {
   };
 
   const onClickTest = () =>{
-    console.log(decodedToken.sub)
+    console.log(decodedToken.nickname)
   }
 
-  // if(Token){
-  //   return <Navigate to="/" replace />
-  // }
+  if(accessToken){
+    return <Navigate to="/" replace />
+  }
 
   return (
     <div className="page">

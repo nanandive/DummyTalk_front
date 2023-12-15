@@ -16,7 +16,7 @@ function Chat({ isOpen, setOpen }) {
     const channelId = query.get("channel")
     const accessToken = localStorage.getItem("accessToken")
 
-    const userId = useMemo(() => decodeJwt(accessToken).sub , [accessToken])
+    // const userId = useMemo(() => decodeJwt(accessToken).sub , [accessToken])
 
     // isOpen, setOpen 오른쪽 사이드바
 
@@ -119,7 +119,7 @@ function Chat({ isOpen, setOpen }) {
                 // stompClient.disconnect();
             });
     
-            stompClient.send(`/app/${channelId}/message`, JSON.stringify({ message : '안녕하세요', 'sender':userId, language: 'en', channelId}));
+            // stompClient.send(`/app/${channelId}/message`, JSON.stringify({ message : '안녕하세요', 'sender':userId, language: 'en', channelId}));
         });
     }, [])
 
