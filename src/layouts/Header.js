@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
@@ -9,9 +9,10 @@ import { UserAvatar } from "src/components/user-avatar";
 
 
 function Header() {
-    const { onOpen, onClose } = useModal();
+    const { onOpen } = useModal();
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
+    const { state } = useLocation()
 
     /* 서버 리스트 가져오기 */
     useEffect(() => {
@@ -27,7 +28,8 @@ function Header() {
         };
 
         fetchServers();
-    }, []);
+        console.log('-----!!!!----')
+    }, [state]);
 
     const [page, setPage] = useState(0);
     const validServerList = Array.isArray(serverList) ? serverList : [];
@@ -124,165 +126,5 @@ function Header() {
     );
 }
 
-function LogOut( { setLogOutModal} ){
-    const onClickLogOutModal = () => {
-        setLogOutModal(false);
-    }
-
-    return (
-        <div style={{width:"250px", height:"150px",  top:"50%" ,left:"50%", position: "absolute", transform: "translate(-50%, -50%)", border:"1px solid black", borderRadius:"5px", zIndex:"1", backgroundColor:"wserverListte"}}>
-            <div style={{fontSize:"20px", fontWeight:"bolder", margin:"15px 15px 15px 25px"}}>
-                로그아웃
-            </div>
-            <div style={{marginLeft:"25px"}}>
-                정말로 로그아웃하시겠어요?
-            </div>
-            <div style={{margin:"10px 0px 0px 25px", display:"flex"}}>
-                <div style={{width:"80px", height:"30px", cursor:"pointer", marginRight:"30px", border:"1px solid black", textAlign:"center", borderRadius:"5px", paddingTop:"2px"}} onClick={ () => onClickLogOutModal()}>
-                    취소
-                </div>
-                <div style={{background:"red", width:"80px", height:"30px", textAlign:"center", paddingTop:"3px", borderRadius:"5px", color:"wserverListte"}}>
-                    로그아웃
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function UserModal({setModal}){
-
-    const onClickClose = () =>{
-        setModal(false)
-    }
-
-    return (
-        <div style={{width: "520px", height:"360px", top:"50%" ,left:"50%", border:"1px solid rgb(128,128,128)", position: "absolute", borderRadius:"5px", transform: "translate(-50%, -50%)", background:"wserverListte", zIndex:"1", backgroundColor:"wserverListte"}}>
-            {/* 상단바 */}
-            <div style={{display:"flex"}}>
-                <div style={{height:"45px", fontSize:"24px", fontWeight:"bolder", margin:"40px 0px 0px 50px"}}>
-                    회원정보수정
-                </div>
-                <div onClick={() => onClickClose()} style={{margin:"20px 25px 0px auto", fontSize:"30px", fontWeight:"bolder", cursor:"pointer"}}>
-                    <X/>
-                </div>
-            </div>
-            <div style={{display:"flex", margin:"30px 0px 0px 45px"}}>
-                {/* 정보 수정*/}
-                <div style={{width:"280px"}}>
-                    <input type={"text"} placeholder={"변경할 닉네임"} style={{paddingLeft:"3px", border:"1px solid rgb(128,128,128)", width: "250px", height:"30px", borderRadius:"5px"}}/>
-                    <input type={"text"} placeholder={"변경할 비밀번호"} style={{paddingLeft:"3px", border:"1px solid rgb(128,128,128)", width: "250px", height:"30px", marginTop:"25px", borderRadius:"5px"}}/>
-                    <input type={"text"} placeholder={"변경할 비밀번호 확인"} style={{paddingLeft:"3px", border:"1px solid rgb(128,128,128)", width: "250px", height:"30px",  marginTop:"25px", borderRadius:"5px"}}/>
-                    <select placeholder={"국가선택"} style={{paddingLeft:"3px",border:"1px solid rgb(128,128,128)", width: "250px", height:"30px", marginTop:"25px", borderRadius:"5px"}}>
-                        <option value="" disabled selected serverListdden>국가선택</option>
-                        <option value="국가1">국가1</option>
-                        <option value="국가2">국가2</option>
-                        <option value="국가3">국가3</option>
-                    </select>
-                </div>
-                {/* 이미지 등록 및 확인 버튼*/}
-                <div style={{marginTop:"-25px"}}>
-                    <img src="./image 29.png"></img>
-                    <div style={{cursor:"pointer", textAlign:"center", borderRadius:"5px", width:"100px", height:"40px", backgroundColor:"#FFED46",
-                        fontWeight:"bolder", paddingTop:"8px", margin:"45px 0px 0px 25px"}}>
-                        수정
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function CreateServer( {setCreateModal} ){
-
-    const onClickClose = () =>{
-        setCreateModal(false)
-    }
-
-    return (
-        <div
-            style={{
-                width: "500px",
-                height: "450px",
-                border: "1px solid black",
-                top: "50%",
-                left: "50%",
-                position: "absolute",
-                transform: "translate(-50%, -50%)",
-                background: "wserverListte",
-                zIndex: "1",
-            }}
-        >
-            <div
-                onClick={() => onClickClose()}
-                style={{ margin: "20px 20px -20px 450px", cursor: "pointer" }}
-            >
-                <X />
-            </div>
-            <div
-                style={{
-                    textAlign: "center",
-                    fontWeight: "bolder",
-                    fontSize: "30px",
-                }}
-            >
-                서버 생성하기
-            </div>
-            <div
-                style={{
-                    textAlign: "center",
-                    marginTop: "15px",
-                    fontSize: "20px",
-                    color: "gray",
-                }}
-            >
-                새로운 서버에서 사용할 이름과 <br /> 아이콘을 설정해주세요
-            </div>
-            <div style={{ margin: "20px 180px" }}>
-                <img src="./image 29.png"></img>
-            </div>
-            <div style={{ margin: "30px 0px 0px 50px", fontWeight: "550" }}>
-                서버 이름
-            </div>
-            <input
-                style={{
-                    marginLeft: "50px",
-                    backgroundColor: "rgb(233,233,233)",
-                    width: "400px",
-                    height: "25px",
-                }}
-                type={"text"}
-            />
-            <div style={{ display: "flex", margin: "20px 0px 0px 50px" }}>
-                <div
-                    onClick={() => onClickClose()}
-                    style={{
-                        cursor: "pointer",
-                        width: "80px",
-                        height: "30px",
-                        fontWeight: "bolder",
-                        paddingTop: "5px",
-                    }}
-                >
-                    뒤로가기
-                </div>
-                <div
-                    style={{
-                        cursor: "pointer",
-                        textAlign: "center",
-                        borderRadius: "5px",
-                        width: "80px",
-                        height: "30px",
-                        backgroundColor: "#FFED46",
-                        fontWeight: "bolder",
-                        paddingTop: "5px",
-                        margin: "0px 50px 0px auto",
-                    }}
-                >
-                    생성
-                </div>
-            </div>
-        </div>
-    );
-}
-
 export { Header };
+

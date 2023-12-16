@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import "./css/Channels.css";
@@ -12,6 +12,7 @@ const Channels = () => {
     const [connectedUsers, setConnectedUsers] = useState([]);
     const { onOpen, onClose, data } = useModal();
     const query = useUrlQuery();
+    const { state } = useLocation()
     const serverId = query.get("server");
     const channelId = query.get("channel");
     const currentChannel = useMemo(() => channels.filter(channel => channel.channelId == channelId)[0], [channelId]);
@@ -30,7 +31,7 @@ const Channels = () => {
             }
         };
         channelList();
-    }, [serverId]);
+    }, [serverId, state]);
 
     /* 접속중인 유저 정보 */
 

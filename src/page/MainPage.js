@@ -1,18 +1,18 @@
-import LeftBar from "./LeftBar";
+import { useState } from "react";
 import Chat from "./Chat";
+import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
-import {useState} from "react";
-import {Outlet} from "react-router-dom";
 
 
 function MainPage() {
-
+    const [isOpen, setOpen] = useState(false)
 
     return (
         <>
             <div className="flex h-[92vh]">
                 <LeftBar />
-                <Chat />
+                <Chat isOpen={isOpen} setOpen={setOpen} />
+                {isOpen && <RightBar />}
             </div>
         </>
     )
