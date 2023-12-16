@@ -1,129 +1,132 @@
-import { Switch } from "@headlessui/react";
+import {Switch} from "@headlessui/react";
 import axios from "axios";
-import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import SockJS from "sockjs-client";
 import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "src/components/chat/ChatEmpty";
-import { useModal } from "src/components/hooks/use-modal";
-import { useUrlQuery } from "src/components/hooks/use-url-query";
-import { Button } from "src/components/ui/button";
-import { Label } from "src/components/ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { decodeJwt } from "src/util/tokenUtils";
+import {useModal} from "src/components/hooks/use-modal";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
+import {Button} from "src/components/ui/button";
+import {Label} from "src/components/ui/label";
+import {Textarea} from "src/components/ui/textarea";
+import {decodeJwt} from "src/util/tokenUtils";
 import Stomp from "webstomp-client";
 
-function Chat({ isOpen, setOpen }) {
-  const { onOpen, onClose } = useModal();
+function Chat({isOpen, setOpen}) {
+    const {onOpen, onClose} = useModal();
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
     const accessToken = localStorage.getItem("accessToken");
-    const userInfo= useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [data, setData] = useState([]);
-    const [ newMessage, setNewMessage ] = useState([]);
+    const [newMessage, setNewMessage] = useState([]);
 
     const sendMessage = useRef(null);
     const socket = useRef(null);
 
 
-  // 엔터키 눌렀을 때 메시지 전송
-  const enter_event = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendChatMessage()
-    }
-  };
-
-  const sendChatMessage = useCallback(() => {
-    socket.current.send(
-      `/app/${channelId}/message`,
-      JSON.stringify({
-        message: sendMessage.current?.value,
-        sender: userInfo.sub,
-        nickname: userInfo.nickname,
-        language: "en",
-        channelId,
-      })
-    );
-
-    sendMessage.current.value = ""
-    // 메시지를 전송한 후에 메시지를 초기화
-    // setSendMessage("");
-  }, [channelId, sendMessage]);
-
-  // 이미지 전송
-  const imageSend = () => {
-    // 이미지 전송 이벤트 추가 예정
-    console.log("imageSend");
-  };
-
-  const fetchChatData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/channel/chat/${channelId}`
-      );
-      setData(response.data.data);
-      console.log("===================================== response " + response);
-    } catch (error) {
-      console.error("채팅 리스트 뽑아보기 에러", error);
-    }
-  };
-
-  /***
-   * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
-   * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
-   * - userId, channelId, message, language, timestamp, page
-   * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
-   * -- @DestinationVariable : channelId
-   * -- @Header : UserId
-   * -- @RequestParam : page
-   * endpoint : /websocket
-   * subscribe : /topic/msg/{channelId}
-   * send : /app/{channelId}/message
-   */
-
-  // stomp 옵션 설정
-  useEffect(() => {
-    if (!channelId) return;
-
-    fetchChatData();
-
-    const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
-    socket.current = Stomp.over(sockJs, { debug: false });
-
-    socket.current.connect({}, function (frame) {
-      console.log("Connected: " + frame);
-
-      socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
-        console.log(msg);
-        const result = JSON.parse(msg.body);
-        if (newMessage!== null ) {
-          console.log(result.chat)
-          setData((prevData) => [...prevData, result.chat]);
+    /* 메시지 전송 : 엔터키 감지 -> sendChatMessage 호출 */
+    const enter_event = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendChatMessage()
         }
-      });
-    });
+    };
 
-    return () => socket.current.disconnect(() => {});
-  }, [channelId]);
+    /* 메시지 전송 : 웹소켓 통신 */
+    const sendChatMessage = useCallback(() => {
+        if (!sendMessage.current.value) return null;
+        socket.current.send(
+            `/app/${channelId}/message`,
+            JSON.stringify({
+                message: sendMessage.current?.value,
+                sender: userInfo.sub,
+                nickname: userInfo.nickname,
+                language: "en",
+                channelId,
+            })
+        );
 
-  if (!channelId) return <ChatEmpty />;
+        // 메시지를 전송한 후에 메시지를 초기화
+        sendMessage.current.value = ""
+    }, [channelId, sendMessage]);
+
+    /* 이미지 전송 */
+    const imageSend = () => {
+        // 이미지 전송 이벤트 추가 예정
+        console.log("imageSend");
+    };
+
+    /* 채널 이전 메시지 조회 */
+    const fetchChatData = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_URL}/chat/${channelId}`
+            );
+            setData(response.data.data);
+            const {timeStamp} = response.data.data;
+            console.log("===================================== response " + timeStamp);
+        } catch (error) {
+            console.error("채팅 리스트 뽑아보기 에러", error);
+        }
+    };
+
+    /***
+     * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
+     * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
+     * - userId, channelId, message, language, timestamp, page
+     * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
+     * -- @DestinationVariable : channelId
+     * -- @Header : UserId
+     * -- @RequestParam : page
+     * endpoint : /websocket
+     * subscribe : /topic/msg/{channelId}
+     * send : /app/{channelId}/message
+     */
+    useEffect(() => {
+        if (!channelId) return;
+
+        fetchChatData();
+        
+        // 웹소켓 config
+        const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
+        socket.current = Stomp.over(sockJs, {debug: false});
+
+        // 웹소켓 연결
+        socket.current.connect({}, function (frame) {
+            console.log("Connected: " + frame);
+            // 구독 경로 설정
+            socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
+                console.log(msg);
+                const result = JSON.parse(msg.body);
+                    console.log(result.chat)
+                    setData((prevData) => [...prevData, result.chat]);
+            });
+        });
+
+        return () => socket.current.disconnect(() => {
+        });
+    }, [channelId]);
+
+    if (!channelId) return <ChatEmpty/>;
 
     return (
         <div className="flex w-full flex-col h-full">
             {/* 채널명 */}
-            <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
+            <div
+                className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
                 <div>서브방 이름</div>
                 {/* 우측 사이드 닫힘 / 열림 */}
                 <Button
                     variant={"icon"}
                     onClick={() => setOpen((prev) => !prev)}
                 >
-                    {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
+                    {isOpen ? <ChevronsRight/> : <ChevronsLeft/>}
                 </Button>
             </div>
             {/* 채팅방 스크롤 바 구역 */}
@@ -134,7 +137,7 @@ function Chat({ isOpen, setOpen }) {
                             key={chat.chatId}
                             content={chat.message}
                             member={chat.sender}
-                            timestamp={"20200"}
+                            timestamp={chat.timeStamp}
                         />
                     ))}
                 </div>
@@ -179,7 +182,7 @@ function Chat({ isOpen, setOpen }) {
                         className="place-self-center"
                         onClick={() => onOpen("imageSend")}
                     >
-                        <ImagePlus />
+                        <ImagePlus/>
                     </Button>
                     {/* 메시지 전송 버튼 */}
                     <Button
