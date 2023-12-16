@@ -20,13 +20,15 @@ function Chat({ isOpen, setOpen }) {
   const channelId = query.get("channel");
 
   const accessToken = localStorage.getItem("accessToken");
-  const userId = useMemo(() => decodeJwt(accessToken)?.sub, [accessToken]);
+  const userInfo= useMemo(() => decodeJwt(accessToken), [accessToken]);
 
   const [enabled, setEnabled] = useState(false); // 채팅번역 기능
   const [data, setData] = useState([]);
-  // const [sendMessage, setSendMessage] = useState("");
+
   const sendMessage = useRef(null);
   const socket = useRef(null);
+
+
 
   // 메시지를 입력할 때마다 메시지를 업데이트
   const handleChange = (e) => {
@@ -38,7 +40,6 @@ function Chat({ isOpen, setOpen }) {
   const enter_event = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-
       sendChatMessage()
     }
   };
@@ -48,15 +49,15 @@ function Chat({ isOpen, setOpen }) {
       `/app/${channelId}/message`,
       JSON.stringify({
         message: sendMessage.current?.value,
-        sender: userId,
+        sender: userInfo.sub,
+        nickname: userInfo.nickname,
         language: "en",
         channelId,
       })
     );
 
-    sendMessage.current.value = ""
     // 메시지를 전송한 후에 메시지를 초기화
-    // setSendMessage("");
+    sendMessage.current.value = ""
   }, [channelId, sendMessage]);
 
   // 이미지 전송
@@ -67,11 +68,12 @@ function Chat({ isOpen, setOpen }) {
 
   const fetchChatData = async () => {
     try {
+      console.log(channelId);
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/channel/chat/${channelId}`
       );
+      console.log("===================================== response " + response.data);
       setData(response.data.data);
-      console.log("===================================== response " + response);
     } catch (error) {
       console.error("채팅 리스트 뽑아보기 에러", error);
     }
@@ -89,13 +91,12 @@ function Chat({ isOpen, setOpen }) {
    * subscribe : /topic/msg/{channelId}
    * send : /app/{channelId}/message
    */
-
   // stomp 옵션 설정
+  const [ newMessage, setNewMessage ] = useState([]);
   useEffect(() => {
     if (!channelId) return;
 
     fetchChatData();
-
     const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
     socket.current = Stomp.over(sockJs, { debug: false });
 
@@ -105,59 +106,27 @@ function Chat({ isOpen, setOpen }) {
       socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
         console.log(msg);
         const result = JSON.parse(msg.body);
-        console.log(result);
-        // setMessages((prevMessages) => [...prevMessages, newMessage]);
-        // socket.current.disconnect();
+        if (newMessage!== null ) {
+          console.log(result.chat)
+          setData((prevData) => [...prevData, result.chat]);
+        }
       });
-
-      socket.current.send(
-        `/app/${channelId}/message`,
-        JSON.stringify({
-          message: "안녕하세요",
-          sender: userId,
-          language: "en",
-          channelId,
-        })
-      );
     });
 
     return () => socket.current.disconnect(() => {});
   }, [channelId]);
 
-  //   const onMessage = (msg) => {
-  //     console.log("onMessage =====================================: " + msg);
-  //     // return JSON.stringify({
-  //     //     message: sendMessage,
-  //     //     'sender': userId,
-  //     //     language: 'en',
-  //     //     channelId
-  //     // });
-  //   };
+  // const chat
 
-  //   const onError = (e) => {
-  //     const error = e.body;
-  //     console.log("Alarm Websocket - Error: ", error);
-  //     throw error;
-  //   };
-
-  //   const USERREPLY = `/topic/msg/${channelId}`;
-
-  //   const onConnection = () => {
-  //     console.log("onConnected =====================================: " + socket);
-
-  //     socket.subscribe(USERREPLY, onMessage);
-  //     socket.send(WEBSOCKLOGIN, sendMessage);
-  //   };
-
-  //   socket.connect({}, onConnection, onError); // 소켓 연결
 
   if (!channelId) return <ChatEmpty />;
+
 
   return (
     <div className="flex w-full flex-col h-full">
       {/* 채널명 */}
       <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
-        <div>서브방 이름</div>
+        <div>서브방 이름{ userInfo.sub }, { userInfo.nickname }</div>
         {/* 우측 사이드 닫힘 / 열림 */}
         <Button variant={"icon"} onClick={() => setOpen((prev) => !prev)}>
           {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
@@ -167,12 +136,12 @@ function Chat({ isOpen, setOpen }) {
       <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden">
         <div className="h-full w-full">
           {data.map((chat) => (
-            <ChatItem
-              key={chat.chatId}
-              content={chat.message}
-              member={chat.sender}
-              timestamp={"20200"}
-            />
+              <ChatItem
+                  key={chat.chatId}
+                  content={chat.message}
+                  member={chat.sender}
+                  timestamp={"20200"}
+              />
           ))}
         </div>
       </div>
