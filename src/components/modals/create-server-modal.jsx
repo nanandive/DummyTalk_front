@@ -10,8 +10,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 function CreateServerModal() {
+    const navigate = useNavigate();
     const { isOpen, onClose, type } = useModal();
     const [serverName, setServerName] = useState(""); // 서버 이름 상태
     const isModalOpen = isOpen && type === "createServer";
@@ -26,7 +28,9 @@ function CreateServerModal() {
         }
 
         try {
-            await axios.post(
+            const {
+                data: { data },
+            } = await axios.post(
                 `${process.env.REACT_APP_API_URL}/server/writePro`,
                 formData,
                 {
@@ -36,10 +40,17 @@ function CreateServerModal() {
                 }
             );
 
+            console.log(data);
+            const serverId = data.id;
             console.log("서버 생성 성공");
-            onClose();
+            navigate(`/main?server=${serverId}`, {
+                replace: true,
+                state: serverId,
+            });
         } catch (error) {
             console.error("서버 생성 실패: ", error);
+        } finally {
+            onClose();
         }
     };
 
@@ -87,19 +98,19 @@ function CreateServerModal() {
                             onChange={(e) => setServerName(e.target.value)}
                         />
                     </div>
-                    <DialogFooter className='pr-6'>
-                    <Button
-                                onClick={onClose}
-                                className="bg-[#FFED46] font-bold"
-                            >
-                                뒤로가기
-                            </Button>
-                            <Button
-                                onClick={handleCreateServer}
-                                className="bg-lime-300 hover:bg-lime-400 font-bold mr-4"
-                            >
-                                생성
-                            </Button>
+                    <DialogFooter className="pr-6">
+                        <Button
+                            onClick={onClose}
+                            className="bg-[#FFED46] font-bold"
+                        >
+                            뒤로가기
+                        </Button>
+                        <Button
+                            onClick={handleCreateServer}
+                            className="bg-lime-300 hover:bg-lime-400 font-bold mr-4"
+                        >
+                            생성
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

@@ -1,11 +1,12 @@
 // ChannelModal.js
 import axios from "axios";
+import uuid from "react-uuid";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 
 const CreateChannelModal = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { data, isOpen, onClose, type } = useModal();
     const { serverId } = data;
     const isModalOpen = isOpen && type === "createChannel";
@@ -28,13 +29,15 @@ const CreateChannelModal = () => {
             );
 
             console.log("채널 생성 성공");
-            console.log(">>>> " + formData.serverId);
+            navigate(`/main?server=${serverId}`, {
+                replace: true,
+                state: uuid(),
+            });
         } catch (error) {
             console.log("채널 생성 실패");
+        } finally {
+            onClose();
         }
-
-        navigate(0)
-        onClose();
     };
 
     return (
