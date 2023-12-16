@@ -14,146 +14,104 @@ import { decodeJwt } from "src/util/tokenUtils";
 import Stomp from "webstomp-client";
 
 function Chat({ isOpen, setOpen }) {
-    const { onOpen, onClose } = useModal();
+  const { onOpen, onClose } = useModal();
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
     const accessToken = localStorage.getItem("accessToken");
-    const userId = useMemo(() => decodeJwt(accessToken)?.sub, [accessToken]);
+    const userInfo= useMemo(() => decodeJwt(accessToken), [accessToken]);
 
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [data, setData] = useState([]);
-    // const [sendMessage, setSendMessage] = useState("");
+    const [ newMessage, setNewMessage ] = useState([]);
+
     const sendMessage = useRef(null);
     const socket = useRef(null);
 
-    // 메시지를 입력할 때마다 메시지를 업데이트
-    const handleChange = (e) => {
-        console.log(e);
-        // setSendMessage(e.target.value);
-    };
 
-    // 엔터키 눌렀을 때 메시지 전송
-    const enter_event = (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
+  // 엔터키 눌렀을 때 메시지 전송
+  const enter_event = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage()
+    }
+  };
 
-            sendChatMessage();
+  const sendChatMessage = useCallback(() => {
+    socket.current.send(
+      `/app/${channelId}/message`,
+      JSON.stringify({
+        message: sendMessage.current?.value,
+        sender: userInfo.sub,
+        nickname: userInfo.nickname,
+        language: "en",
+        channelId,
+      })
+    );
+
+    sendMessage.current.value = ""
+    // 메시지를 전송한 후에 메시지를 초기화
+    // setSendMessage("");
+  }, [channelId, sendMessage]);
+
+  // 이미지 전송
+  const imageSend = () => {
+    // 이미지 전송 이벤트 추가 예정
+    console.log("imageSend");
+  };
+
+  const fetchChatData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/channel/chat/${channelId}`
+      );
+      setData(response.data.data);
+      console.log("===================================== response " + response);
+    } catch (error) {
+      console.error("채팅 리스트 뽑아보기 에러", error);
+    }
+  };
+
+  /***
+   * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
+   * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
+   * - userId, channelId, message, language, timestamp, page
+   * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
+   * -- @DestinationVariable : channelId
+   * -- @Header : UserId
+   * -- @RequestParam : page
+   * endpoint : /websocket
+   * subscribe : /topic/msg/{channelId}
+   * send : /app/{channelId}/message
+   */
+
+  // stomp 옵션 설정
+  useEffect(() => {
+    if (!channelId) return;
+
+    fetchChatData();
+
+    const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
+    socket.current = Stomp.over(sockJs, { debug: false });
+
+    socket.current.connect({}, function (frame) {
+      console.log("Connected: " + frame);
+
+      socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
+        console.log(msg);
+        const result = JSON.parse(msg.body);
+        if (newMessage!== null ) {
+          console.log(result.chat)
+          setData((prevData) => [...prevData, result.chat]);
         }
-    };
+      });
+    });
 
-    const sendChatMessage = useCallback(() => {
-        socket.current.send(
-            `/app/${channelId}/message`,
-            JSON.stringify({
-                message: sendMessage.current?.value,
-                sender: userId,
-                language: "en",
-                channelId,
-            })
-        );
+    return () => socket.current.disconnect(() => {});
+  }, [channelId]);
 
-        sendMessage.current.value = "";
-        // 메시지를 전송한 후에 메시지를 초기화
-        // setSendMessage("");
-    }, [channelId, sendMessage, userId]);
-
-    // 이미지 전송
-    const imageSend = () => {
-        // 이미지 전송 이벤트 추가 예정
-        console.log("imageSend");
-    };
-
-    const fetchChatData = async () => {
-        try {
-            const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/channel/chat/${channelId}`
-            );
-            setData(response.data.data);
-            console.log(
-                "===================================== response " + response
-            );
-        } catch (error) {
-            console.error("채팅 리스트 뽑아보기 에러", error);
-        }
-    };
-
-    /***
-     * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
-     * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
-     * - userId, channelId, message, language, timestamp, page
-     * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
-     * -- @DestinationVariable : channelId
-     * -- @Header : UserId
-     * -- @RequestParam : page
-     * endpoint : /websocket
-     * subscribe : /topic/msg/{channelId}
-     * send : /app/{channelId}/message
-     */
-
-    // stomp 옵션 설정
-    useEffect(() => {
-        if (!channelId) return;
-
-        fetchChatData();
-
-        const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
-        socket.current = Stomp.over(sockJs, { debug: false });
-
-        socket.current.connect({}, function (frame) {
-            console.log("Connected: " + frame);
-
-            socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
-                console.log(msg);
-                const result = JSON.parse(msg.body);
-                console.log(result);
-                // setMessages((prevMessages) => [...prevMessages, newMessage]);
-                // socket.current.disconnect();
-            });
-
-            socket.current.send(
-                `/app/${channelId}/message`,
-                JSON.stringify({
-                    message: "안녕하세요",
-                    sender: userId,
-                    language: "en",
-                    channelId,
-                })
-            );
-        });
-
-        return () => socket.current.disconnect(() => {});
-    }, [channelId]);
-
-    //   const onMessage = (msg) => {
-    //     console.log("onMessage =====================================: " + msg);
-    //     // return JSON.stringify({
-    //     //     message: sendMessage,
-    //     //     'sender': userId,
-    //     //     language: 'en',
-    //     //     channelId
-    //     // });
-    //   };
-
-    //   const onError = (e) => {
-    //     const error = e.body;
-    //     console.log("Alarm Websocket - Error: ", error);
-    //     throw error;
-    //   };
-
-    //   const USERREPLY = `/topic/msg/${channelId}`;
-
-    //   const onConnection = () => {
-    //     console.log("onConnected =====================================: " + socket);
-
-    //     socket.subscribe(USERREPLY, onMessage);
-    //     socket.send(WEBSOCKLOGIN, sendMessage);
-    //   };
-
-    //   socket.connect({}, onConnection, onError); // 소켓 연결
-
-    if (!channelId) return <ChatEmpty />;
+  if (!channelId) return <ChatEmpty />;
 
     return (
         <div className="flex w-full flex-col h-full">
