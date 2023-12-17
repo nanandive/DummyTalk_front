@@ -62,7 +62,7 @@ function Chat({isOpen, setOpen}) {
         console.log("imageSend");
     };
 
-    /* 채널 이전 메시지 조회 */
+    /* 채널 이전 메시지 조회! */
     const fetchChatData = async () => {
         try {
             const response = await axios.get(
