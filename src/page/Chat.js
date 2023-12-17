@@ -3,7 +3,6 @@ import axios from "axios";
 import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SockJS from "sockjs-client";
-import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
@@ -67,7 +66,7 @@ function Chat({ isOpen, setOpen }) {
     const fetchChatData = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/channel/chat/${channelId}`
+                `${process.env.REACT_APP_API_URL}/chat/${channelId}`
             );
             setData(response.data.data);
             console.log(
@@ -111,7 +110,7 @@ function Chat({ isOpen, setOpen }) {
                 if (enabled && result.chat.sender !== parseInt(userInfo.sub)) {
                     // if (enabled) {
                     axios({
-                        url: `${process.env.REACT_APP_API_URL}/channel/chat/trans/${userInfo.national_language}`,
+                        url: `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo.national_language}`,
                         method: "POST",
                         data: {
                             ...result.chat,
