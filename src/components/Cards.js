@@ -3,7 +3,9 @@ import './Cards.css';
 import CardItem from './CardItem';
 import {useDispatch} from "react-redux";
 import {callTest} from "../api/UserAPICalls";
+import {jwtDecode} from "jwt-decode";
 function Cards() {
+
   return (
     <div className='cards'>
       <h1>Check out these EPIC Destinations!</h1>
