@@ -1,20 +1,20 @@
-import { Switch } from "@headlessui/react";
+import {Switch} from "@headlessui/react";
 import axios from "axios";
-import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import SockJS from "sockjs-client";
 import ChatEmpty from "src/components/chat/ChatEmpty";
-import { useModal } from "src/components/hooks/use-modal";
-import { useUrlQuery } from "src/components/hooks/use-url-query";
-import { Button } from "src/components/ui/button";
-import { Label } from "src/components/ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { decodeJwt } from "src/util/tokenUtils";
+import {useModal} from "src/components/hooks/use-modal";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
+import {Button} from "src/components/ui/button";
+import {Label} from "src/components/ui/label";
+import {Textarea} from "src/components/ui/textarea";
+import {decodeJwt} from "src/util/tokenUtils";
 import Stomp from "webstomp-client";
 import ChatMessages from "../components/chat/chat-messages";
 
-function Chat({ isOpen, setOpen }) {
-    const { onOpen, onClose } = useModal();
+function Chat({isOpen, setOpen}) {
+    const {onOpen, onClose} = useModal();
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
@@ -25,6 +25,7 @@ function Chat({ isOpen, setOpen }) {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const [data, setData] = useState([]);
     const [newMessage, setNewMessage] = useState([]);
+    const [click, setClick] = useState(false);
 
     const sendMessage = useRef(null);
     const socket = useRef(null);
@@ -54,6 +55,10 @@ function Chat({ isOpen, setOpen }) {
         // setSendMessage("");
     }, [channelId, sendMessage]);
 
+    const click_event = () => {
+        setClick((prev) => !prev);
+    }
+
     // 이미지 전송
     const imageSend = () => {
         // 이미지 전송 이벤트 추가 예정
@@ -63,15 +68,16 @@ function Chat({ isOpen, setOpen }) {
     const changeEnabled = () => {
         setEnabled((prev) => !prev);
     };
+
     const fetchChatData = async () => {
         try {
+            console.log("===================================== fetchChatData")
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/chat/${channelId}`
+                `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
             );
             setData(response.data.data);
             console.log(
-                "===================================== response " + response
-            );
+                "===================================== response " + response);
         } catch (error) {
             console.error("채팅 리스트 뽑아보기 에러", error);
         }
@@ -89,19 +95,18 @@ function Chat({ isOpen, setOpen }) {
      * subscribe : /topic/msg/{channelId}
      * send : /app/{channelId}/message
      */
-
     // stomp 옵션 설정
     useEffect(() => {
         if (!channelId) return;
 
         const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
-        socket.current = Stomp.over(sockJs, { debug: false });
+        socket.current = Stomp.over(sockJs, {debug: false});
 
         socket.current.connect({}, function (frame) {
             console.log("Connected: " + frame);
 
             socket.current.subscribe(`/topic/msg/${channelId}`, function (msg) {
-                console.log(msg);
+                console.log(msg)
 
                 const result = JSON.parse(msg.body);
 
@@ -126,28 +131,28 @@ function Chat({ isOpen, setOpen }) {
             });
         });
 
-        return () => socket.current.disconnect(() => {});
+        return () => socket.current.disconnect(() => {
+        });
     }, [channelId, enabled]);
 
     useEffect(() => {
         fetchChatData();
     }, [channelId]);
 
-    
-
-    if (!channelId) return <ChatEmpty />;
+    if (!channelId) return <ChatEmpty/>;
 
     return (
         <div className="flex w-full flex-col h-full">
             {/* 채널명 */}
-            <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
+            <div
+                className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
                 <div>서브방 이름</div>
                 {/* 우측 사이드 닫힘 / 열림 */}
                 <Button
                     variant={"icon"}
                     onClick={() => setOpen((prev) => !prev)}
                 >
-                    {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
+                    {isOpen ? <ChevronsRight/> : <ChevronsLeft/>}
                 </Button>
             </div>
             {/* 채팅방 스크롤 바 구역 */}
@@ -193,7 +198,7 @@ function Chat({ isOpen, setOpen }) {
                         className="place-self-center"
                         onClick={() => onOpen("imageSend")}
                     >
-                        <ImagePlus />
+                        <ImagePlus/>
                     </Button>
                     {/* 메시지 전송 버튼 */}
                     <Button
