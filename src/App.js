@@ -15,10 +15,9 @@ import Chat from "./page/Chat";
 import {useModal} from "./components/hooks/use-modal";
 import MainPage, {ChatPage} from "./page/MainPage";
 import {AuthProvider} from "../src/components/AuthProvider";
-
+import {jwtDecode} from "jwt-decode";
 
 function App() {
-
   return (
       <>
         <Provider store={store}>
