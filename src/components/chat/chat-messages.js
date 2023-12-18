@@ -1,37 +1,16 @@
-import { format } from "date-fns";
-import { useEffect, useMemo, useRef, useState } from "react";
-import ChatItem from "src/components/chat/chat-item";
-import { useUrlQuery } from "../hooks/use-url-query";
 import axios from "axios";
-import { decodeJwt } from "src/lib/tokenUtils";
+import { format } from "date-fns";
+import { useEffect, useRef, useState } from "react";
+import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "./ChatEmpty";
 
-const ChatMessages = ({data, setData}) => {
+const ChatMessages = ({ channelId, data, setData, userInfo }) => {
     const [hasInitialized, setHasInitialized] = useState(false);
 
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
 
-    const query = useUrlQuery();
-    const channelId = query.get("channel");
-
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
-
-    const fetchChatData = async () => {
-        try {
-            console.log("===================================== fetchChatData");
-            const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
-            );
-            setData(response.data.data);
-            console.log(
-                "===================================== response " + response
-            );
-        } catch (error) {
-            console.error("채팅 리스트 뽑아보기 에러", error);
-        }
-    };
+    
 
     useEffect(() => {
         const bottomDiv = bottomRef?.current;
@@ -61,8 +40,27 @@ const ChatMessages = ({data, setData}) => {
     }, [bottomRef, chatRef, hasInitialized, data]);
 
     useEffect(() => {
-        if (channelId) fetchChatData();
-    }, [channelId]);
+        if (!channelId) return;
+
+        const fetchChatData = async () => {
+            try {
+                console.log("===================================== fetchChatData");
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
+                );
+
+                setData(response.data.data);
+                console.log(
+                    "===================================== response " + response
+                );
+            } catch (error) {
+                console.error("채팅 리스트 뽑아보기 에러", error);
+            }
+        };
+
+        fetchChatData()
+
+    }, [channelId, userInfo, setData]);
 
     if (!channelId) return <ChatEmpty />;
 
