@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import "./css/Channels.css";
@@ -12,6 +12,7 @@ const Channels = () => {
     const [connectedUsers, setConnectedUsers] = useState([]);
     const { onOpen, onClose, data } = useModal();
     const query = useUrlQuery();
+    const { state } = useLocation()
     const serverId = query.get("server");
     const channelId = query.get("channel");
     const currentChannel = useMemo(() => channels.filter(channel => channel.channelId == channelId)[0], [channelId]);
@@ -21,7 +22,7 @@ const Channels = () => {
         const channelList = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:9999/server/${serverId}/channel/list`
+                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list`
                 );
                 setChannels(response.data);
                 console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
@@ -30,7 +31,7 @@ const Channels = () => {
             }
         };
         channelList();
-    }, [serverId]);
+    }, [serverId, state]);
 
     /* 접속중인 유저 정보 */
 
@@ -70,7 +71,7 @@ const Channels = () => {
         if (channelId) {
             try {
                 const response = await axios.delete(
-                    `http://localhost:9999/server/${serverId}/channel/${channelId}/delete`
+                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/${channelId}/delete`
                 );
                 console.log(`채널 삭제 성공:`, response.data);
                 setChannels(
@@ -101,6 +102,8 @@ const Channels = () => {
                             >
                                 {channel.channelName}{" "}
                                 {/* 채널의 이름을 렌더링 */}
+                                {/* 추후 1:1채팅 색상 변경 */}
+
                             </Link>
                         ))}
                     </div>

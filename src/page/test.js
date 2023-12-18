@@ -1,7 +1,7 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
-import axios from 'axios';
 
 const WEBSOCKLOGIN = '/app/login';
 const USERREPLY = '/user/queue/reply';
@@ -80,7 +80,7 @@ const ChatComponent = () => {
 
         const fetchChatData = async () => {
             try {
-                const response = await axios.get(`http://localhost:9999/channel/chat/1`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/channel/chat/1`);
                 console.log(response);
                 // Handle the response data as needed
             } catch (error) {

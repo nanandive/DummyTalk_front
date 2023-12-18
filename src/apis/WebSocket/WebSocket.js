@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import SockJS from 'sockjs-client';
-import Stomp from 'webstomp-client'
+import Stomp from 'webstomp-client';
 
 function WebSocketComponent(props) {
     useEffect(() => {
-        const socket = new SockJS('http://localhost:9999/websocket');
+        const socket = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {

@@ -1,5 +1,3 @@
-import {useEffect} from "react";
-import {useParams} from "react-router-dom";
 import axios from "axios";
 
 
@@ -8,7 +6,7 @@ const fetchChatData = async () => {
     // const { id } = useParams();
 
     try {
-        const response = await axios.get(`http://localhost:9999/channel/chat/1`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/channel/chat/1`);
         console.log(response);
         return response.data;
     }catch (error) {

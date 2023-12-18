@@ -2,7 +2,7 @@ import {POST_LOGIN, POST_SIGN_UP, GET_TEST} from "../modules/LoginModule";
 
 export const callPostSignUp = (user) => {
 
-    const requestURL = `http://localhost:9999/signUp`;
+    const requestURL = `${process.env.REACT_APP_API_URL}/signUp`;
 
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
@@ -30,8 +30,7 @@ export const callPostSignUp = (user) => {
 
 // 로그인
 export const callPotLogin = (user) => {
-
-    const requestURL = `http://localhost:9999/login`;
+    const requestURL = `${process.env.REACT_APP_API_URL}/login`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'POST',
@@ -39,6 +38,7 @@ export const callPotLogin = (user) => {
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             },
+            // withCredentials: true, // 필요에 따라 설정
             body: JSON.stringify(user)
         }).then(response => response.json());
 
@@ -59,7 +59,7 @@ export const callPotLogin = (user) => {
 }
 
 export const callTest = () => {
-    const requestURL = `http://localhost:9999/get`;
+    const requestURL = `${process.env.REACT_APP_API_URL}/get`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'GET',

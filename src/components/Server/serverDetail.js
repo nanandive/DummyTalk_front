@@ -11,7 +11,7 @@ function ServerDetail() {
     useEffect(() => {
         const fetchServerDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:9999/server/${id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/${id}`);
                 console.log(response)
                 setServerDetails(response.data);
             }catch (error) {
@@ -21,7 +21,7 @@ function ServerDetail() {
         fetchServerDetails()
     }, [id]);
 
-    if(!serverDetails) return <div>Loading >>>> 접속 실패 .... </div>
+    if(!serverDetails) return <div>{"Loading >>>> 접속 실패 ...."}</div>
 
     return(
         <div>

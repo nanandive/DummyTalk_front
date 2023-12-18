@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { callPostSignUp } from '../../api/UserAPICalls'
 import { useNavigate } from "react-router-dom";
+import styles from '../SignUp.module.css'; // Import your CSS module
+
 
 const SignUpForm = () => {
   const [userName, setUserName] = useState('');
@@ -69,54 +71,51 @@ const SignUpForm = () => {
 
 
   return (
-    <div>
-      <h2 onClick={() => onClickTest() }>회원가입 양식</h2>
-        <div>
-          <div>이름</div>
-          <input
-            type="text"
-            value={userName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="name">닉네임:</label>
-          <input
-              type="text"
-              value={nickname}
-              onChange={handleNicknameChange}
-          />
-        </div>
+    <div className={styles.page}>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <h2 onClick={() => onClickTest()}>회원가입 양식</h2>
+      환영합니다
+        <br />
+        더미톡!!!
       <div>
-        <label htmlFor="name">전화번호:</label>
+        <div className={styles.input}>이름</div>
+        <input type="text" value={userName} onChange={handleNameChange} />
+      </div>
+      <div>
+        <div className={styles.input}>닉네임</div>
+        <input type="text" value={nickname} onChange={handleNicknameChange} />
+      </div>
+      <div>
+        <div className={styles.input}>전화번호</div>
+        <input type="text" value={userPhone} onChange={handleUserPhone} />
+      </div>
+      <div>
+        <div className={styles.input}>이메일</div>
+        <input type="email" value={userEmail} onChange={handleEmailChange} />
+      </div>
+      <div>
+        <div className={styles.input}>비밀번호</div>
         <input
-            type="text"
-            value={userPhone}
-            onChange={handleUserPhone}
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
-        <div>
-          <label htmlFor="email">이메일:</label>
-          <input
-            type="email"
-            value={userEmail}
-            onChange={handleEmailChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">비밀번호:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        <div>
-          <button onClick={() => onClickSignUp()}>가입하기</button>
-        </div>
+      <div>
+        <button onClick={() => onClickSignUp()} disabled={!userName || !nickname || !userPhone || !userEmail || !password} className={styles.bottomButton}>
+          가입하기
+        </button>
       </div>
-  )
-}
+    </div>
+  );
+};
 
 export default SignUpForm;
