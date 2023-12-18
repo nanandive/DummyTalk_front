@@ -4,12 +4,15 @@ import { Button } from "./Button";
 import "./Navbar.css";
 
 function Navbar() {
+
     const [click, setClick] = useState(false);
     const [button, setButton] = useState(true);
+
     const accessToken = localStorage.getItem('accessToken');
 
     const onClickLogout = () => {
         alert("로그아웃이 되었습니다~");
+        setClick(!click);
         window.localStorage.removeItem("accessToken");
     };
 

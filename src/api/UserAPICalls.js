@@ -30,6 +30,7 @@ export const callPostSignUp = (user) => {
 
 // 로그인
 export const callPotLogin = (user) => {
+
     const requestURL = `http://localhost:9999/login`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
@@ -38,7 +39,6 @@ export const callPotLogin = (user) => {
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             },
-            // withCredentials: true, // 필요에 따라 설정
             body: JSON.stringify(user)
         }).then(response => response.json());
 
@@ -47,11 +47,12 @@ export const callPotLogin = (user) => {
 
             window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
             console.log(localStorage.getItem('accessToken'))
-            dispatch({ type: POST_SIGN_UP, payload: result });
+            dispatch({ type: POST_LOGIN, payload: result });
             alert(result.message)
+            window.location.reload();
 
         } else{
-            dispatch({ type: POST_SIGN_UP, payload: result });
+            dispatch({ type: POST_LOGIN, payload: result });
             alert(result.message)
         }
     }

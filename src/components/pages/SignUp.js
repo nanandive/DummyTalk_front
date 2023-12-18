@@ -4,6 +4,7 @@ import { useNavigate, Navigate } from 'react-router-dom'; // Import useNavigate 
 import { callPotLogin } from '../../api/UserAPICalls'
 import '../SignUp.module.css';
 import { jwtDecode, InvalidTokenError } from 'jwt-decode';
+import {loginReducer} from "../../modules/LoginModule";
 
 export default function SignUp() {
 
@@ -17,8 +18,8 @@ export default function SignUp() {
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
-
   const dispatch = useDispatch();
+
 
   const user = {
     userEmail: email,
@@ -56,9 +57,7 @@ export default function SignUp() {
   };
 
   const onClickConfirmButton = () => {
-
     dispatch( callPotLogin(user) )
-    navigate('/');
   };
   
 
@@ -68,8 +67,13 @@ export default function SignUp() {
     navigate('/sign-up-form');
   };
 
+
+
   const onClickTest = () =>{
-    console.log(decodedToken.nickname)
+
+    console.log(new Date().getTime())
+    console.log(decodedToken.exp* 1000)
+
   }
 
   if(accessToken){
