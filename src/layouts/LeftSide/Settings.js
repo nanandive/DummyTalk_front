@@ -5,7 +5,7 @@ import axios from "axios";
 import { useModal } from "../../components/hooks/use-modal"; // Update the path
 import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../components/VideoModal.css"
+import "../../components/modals/VideoModal.css"
 import {
   faVideo,
   faDesktop,
@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./css/Settings.css";
 import "../../components/AudioRecorder/AudioRecorder.css"; // Update the path
-import VideoModal from "../../components/VideoModal.js"; // Import the VideoModal component
+import VideoModal from "../../components/modals/VideoModal.js"; // Import the VideoModal component
 
 function Settings() {
   const { onOpen, onClose } = useModal();

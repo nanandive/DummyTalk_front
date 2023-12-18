@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Navigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
-import { callPotLogin } from '../../api/UserAPICalls'
-import styles from '../SignUp.module.css'; // Import your CSS module
-import { jwtDecode, InvalidTokenError } from 'jwt-decode';
-import {loginReducer} from "../../modules/LoginModule";
+import { jwtDecode } from 'jwt-decode';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
+import { callPotLogin } from '../api/UserAPICalls';
+import styles from './SignUp.module.css'; // Import your CSS module
 
 export default function SignUp() {
 

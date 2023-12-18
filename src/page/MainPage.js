@@ -1,8 +1,7 @@
 import { useState } from "react";
-import Chat from "./Chat";
-import LeftBar from "./LeftBar";
-import RightBar from "./RightBar";
-import axios from "axios";
+import Chat from "../layouts/chat/Chat";
+import LeftBar from "../layouts/MainLayout/LeftBar";
+import RightBar from "../layouts/MainLayout/RightBar";
 
 
 function MainPage() {
