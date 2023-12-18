@@ -54,5 +54,15 @@
   font-size: 100px;
 }
 
+@keyframes sparkle {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
 
-
+.sparkle {
+  animation: sparkle 1s infinite linear alternate;
+}

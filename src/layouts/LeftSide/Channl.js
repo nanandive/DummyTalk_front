@@ -104,6 +104,8 @@ const Channels = () => {
                             >
                                 {channel.channelName}{" "}
                                 {/* 채널의 이름을 렌더링 */}
+                                {/* 추후 1:1채팅 색상 변경 */}
+
                             </Link>
                         ))}
                     </div>
