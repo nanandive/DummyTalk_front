@@ -14,7 +14,8 @@
 }
 
 .modal-content {
-    background-color: #ffffff; /* White background */
+    background-color: #17233C;
+    ; /* White background */
     margin: 10% auto;
     padding: 20px;
     border: 1px solid #ccc; /* Light gray border */
@@ -53,7 +54,8 @@
 
 .button-container button:hover {
     background-color: #4caf50; /* Green background on hover */
-    color: white;
+    color: #17233C
+    ;
 }
 
 /* ... Other styles ... */
