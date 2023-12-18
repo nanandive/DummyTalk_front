@@ -1,14 +1,15 @@
 /* App.css */
 .App {
-    text-align: center;
-  }
-  
-  .scrollable-area {
-    overflow-y: scroll;
-    max-height: 400px; /* 적절한 높이로 조절하세요 */
-  }
-  
- 
+  text-align: center;
+}
+
+.scrollable-area {
+  overflow-y: scroll;
+  max-height: 400px;
+  /* 적절한 높이로 조절하세요 */
+}
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -58,6 +59,7 @@
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 200% 200%;
   }

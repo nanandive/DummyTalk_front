@@ -1,17 +1,17 @@
-import {Switch} from "@headlessui/react";
+import { Switch } from "@headlessui/react";
 import axios from "axios";
-import {ChevronsLeft, ChevronsRight, ImagePlus} from "lucide-react";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import ChatEmpty from "src/components/chat/ChatEmpty";
-import {useModal} from "src/components/hooks/use-modal";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {Button} from "src/components/ui/button";
-import {Label} from "src/components/ui/label";
-import {Textarea} from "src/components/ui/textarea";
-import {decodeJwt} from "src/util/tokenUtils";
+import { useModal } from "src/components/hooks/use-modal";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { Button } from "src/components/ui/button";
+import { Label } from "src/components/ui/label";
+import { Textarea } from "src/components/ui/textarea";
+import { decodeJwt } from "src/lib/tokenUtils";
 import Stomp from "webstomp-client";
-import ChatMessages from "../components/chat/chat-messages";
+import ChatMessages from "src/components/chat/chat-messages";
 
 function Chat({isOpen, setOpen}) {
     const {onOpen, onClose} = useModal();

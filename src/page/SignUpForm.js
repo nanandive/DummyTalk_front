@@ -1,9 +1,9 @@
 // SignUpForm.js
-import React, {useEffect, useState} from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { callPostSignUp } from '../../api/UserAPICalls'
 import { useNavigate } from "react-router-dom";
-import styles from '../SignUp.module.css'; // Import your CSS module
+import { callPostSignUp } from '../api/UserAPICalls';
+import styles from './SignUp.module.css'; // Import your CSS module
 
 
 const SignUpForm = () => {

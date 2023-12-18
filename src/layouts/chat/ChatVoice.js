@@ -2,11 +2,11 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
 } from "react";
 import SockJS from "sockjs-client";
 import ChatItem from "src/components/chat/chat-item";
@@ -16,7 +16,7 @@ import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";
-import { decodeJwt } from "src/util/tokenUtils";
+import { decodeJwt } from "src/lib/tokenUtils";
 import Stomp from "webstomp-client";
 
 function Chat({ isOpen, setOpen }) {
