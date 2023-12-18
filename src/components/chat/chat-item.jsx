@@ -1,7 +1,11 @@
 import { cn } from "src/lib/utils";
 import { UserAvatar } from "../user-avatar";
 
-const ChatItem = ({content, member, timestamp }) => {
+const ChatItem = ({content, member, timestamp , name}) => {
+    //
+    console.log('membernickname', member.nickname)
+    console.log('membername', member.nickname)
+
     return (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
             <div className="group flex gap-x-2 items-start w-full">
@@ -14,7 +18,7 @@ const ChatItem = ({content, member, timestamp }) => {
                     <div className="flex items-center gap-x-2">
                         <div className="flex items-center">
                             <p className="font-semibold text-sm hover:underline cursor-pointer">
-                                {member.username}
+                                {member.nickname}
                             </p>
                             {/* <ActionTooltip label={member.role}>
                                 {roleIconMap[member.role]}
@@ -93,7 +97,7 @@ const ChatItem = ({content, member, timestamp }) => {
                         </ActionTooltip>
                     )}
                     <ActionTooltip label="Deletet">
-                        <Trash 
+                        <Trash
                             onClick={() => onOpen('deleteMessage', {
                                 apiUrl: `${socketUrl}/${id}`,
                                 query: socketQuery

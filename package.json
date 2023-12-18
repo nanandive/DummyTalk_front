@@ -24,6 +24,7 @@
     "base-64": "^1.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
     "http-proxy-middleware": "^2.0.6",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
