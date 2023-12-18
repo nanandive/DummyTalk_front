@@ -59,7 +59,7 @@ export const callPotLogin = (user) => {
 }
 
 export const callPostMail = (userEmail) => {
-    const requestURL = `${process.env.REACT_APP_API_URL}/userEmail/{}`;
+    const requestURL = `${process.env.REACT_APP_API_URL}/userEmail`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'POST',

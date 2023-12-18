@@ -15,6 +15,12 @@ overflow: hidden;
   display: flex;
   flex-direction: column;
 }
+.titleWrapForm{
+  font-size: 26px;
+  font-weight: bold;
+  color: #262626;
+}
+
 
 .titleWrap {
   margin-top: 87px;
@@ -24,14 +30,14 @@ color: #262626;
 }
 
 .contentWrap {
-  margin-top: 26px;
   flex: 1;
 }
 
 .inputTitle {
   font-size: 12px;
-font-weight: 600;
-color: #262626;
+  font-weight: 600;
+  color: #262626;
+  margin-top: 26px;
 }
 
 .inputWrap {
@@ -49,10 +55,10 @@ color: #262626;
 .input {
   width: 100%;
   outline: none;
-border: none;
+  border: none;
   height: 17px;
   font-size: 14px;
-font-weight: 400;
+  font-weight: 400;
 }
 
 .input::placeholder {
@@ -80,4 +86,11 @@ height: 48px;
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
+}
+.submit{
+  width: 30%;
+  outline: none;
+  height: 17px;
+  font-size: 14px;
+  font-weight: 400;
 }

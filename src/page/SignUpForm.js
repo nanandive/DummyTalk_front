@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { callPostSignUp, callPostMail } from '../api/UserAPICalls';
-import styles from './SignUp.module.css'; // Import your CSS module
+import styles from './SignUp.module.css'
 
 
 const SignUpForm = () => {
@@ -91,50 +91,60 @@ const SignUpForm = () => {
 
   return (
     <div className={styles.page}>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <h2 onClick={() => onClickTest()}>회원가입 양식</h2>
-      환영합니다
-        <br />
-        더미톡!!!
-        <div>
-            <div className={styles.input}>이름</div>
-            <input type="text" value={userName} onChange={handleNameChange} />
+        <br></br>
+        <div onClick={onClickTest} className={styles.titleWrap}>
+            <h1>회원가입 양식</h1>
         </div>
-        <div>
-            <div className={styles.input}>닉네임</div>
-            <input type="text" value={nickname} onChange={handleNicknameChange} />
-        </div>
-        <div>
-            <div className={styles.input}>전화번호</div>
-            <input type="text" value={userPhone} onChange={handleUserPhone} />
-        </div>
-        <div>
-            <div className={styles.input}>이메일</div>
-            <input type="email" value={userEmail} onChange={handleEmailChange} />
-            <button onClick={onClickMail} className={styles.input}>인증번호 전송</button>
-        </div>
-        <div>
-            <div className={styles.input}>이메일 인증</div>
-            <input type="text" value={userSubmit} onChange={handleSubmitChange} />
-        </div>
-        <div>
-            <button onClick={onClickCheck} className={styles.input}>확인</button>
-        </div>
-        <div>
-            <div className={styles.input}>비밀번호</div>
-            <input
+        <br></br>
+        <div className={styles.contentWrap}>
+
+            <div className={styles.inputTitle}>이름</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={userName}
+                       onChange={handleNameChange} />
+            </div>
+
+            <div className={styles.inputTitle}>닉네임</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={nickname}
+                       onChange={handleNicknameChange} />
+            </div>
+
+            <div className={styles.inputTitle}>전화번호</div>
+                <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={userPhone}
+                       onChange={handleUserPhone} />
+            </div>
+
+            <div className={styles.inputTitle}>이메일</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                   type="email" value={userEmail}
+                   onChange={handleEmailChange} />
+                <button onClick={onClickMail} className={styles.submit}>전송</button>
+            </div>
+
+
+            <div className={styles.inputTitle}>이메일 인증</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                   type="text" value={userSubmit}
+                   onChange={handleSubmitChange} />
+                <button onClick={onClickCheck} className={styles.submit}>확인</button>
+            </div>
+            <div className={styles.inputTitle}>비밀번호</div>
+            <div className={`${styles.inputWrap}`}>
+                <input
+                className={styles.input}
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
                 onKeyDown={handleKeyDown}
                 />
+            </div>
         </div>
       <div>
         <button onClick={() => onClickSignUp()} disabled={!userName || !nickname || !userPhone || !userEmail || !password} className={styles.bottomButton}>

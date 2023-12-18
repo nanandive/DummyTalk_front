@@ -91,6 +91,7 @@ export default function SignUp() {
 
   return (
     <div className={styles.page}>
+
       <div onClick={() => onClickTest()} className={styles.titleWrap}>
         이메일과 비밀번호를
         <br />
@@ -108,11 +109,12 @@ export default function SignUp() {
             onChange={handleEmail}
           />
         </div>
+
         <div className={styles.errorMessageWrap}>
           {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
         </div>
 
-        <div style={{ marginTop: '26px' }} className={styles.inputTitle}>
+        <div className={styles.inputTitle}>
           비밀번호
         </div>
         <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
