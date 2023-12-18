@@ -2,10 +2,6 @@ import { cn } from "src/lib/utils";
 import { UserAvatar } from "../user-avatar";
 
 const ChatItem = ({content, member, timestamp , name }) => {
-    //
-    console.log('membernickname', member.nickname)
-    console.log('membername', name)
-
     return (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
             <div className="group flex gap-x-2 items-start w-full">

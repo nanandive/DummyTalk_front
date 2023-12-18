@@ -44,7 +44,6 @@ function Chat({isOpen, setOpen}) {
             console.log("subscribe: ", result.chat);
 
             if (enabled && result.chat.sender !== parseInt(userInfo.sub)) {
-                // if (enabled) {
                 axios({
                     url: `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo.national_language}`,
                     method: "POST",

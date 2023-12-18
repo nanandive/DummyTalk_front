@@ -3,8 +3,8 @@ import { forwardRef, useCallback, useRef } from "react";
 import { useModal } from "../hooks/use-modal";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
 import { useSocket } from "../providers/sock-provider";
+import {Switch} from "@headlessui/react";
 
 const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
     const { onOpen, onClose } = useModal();
@@ -21,7 +21,7 @@ const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if (!isConnected) return;
+        if ( !isConnected || sendMessage.current.value === '' ) return;
 
         socket.send(
             `/app/${channelId}/message`,
@@ -33,11 +33,10 @@ const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
                 channelId,
             })
         );
-
         sendMessage.current.value = "";
-        // 메시지를 전송한 후에 메시지를 초기화
-        // setSendMessage("");
+
     }, [channelId, sendMessage, isConnected]);
+
 
     return (
         <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
