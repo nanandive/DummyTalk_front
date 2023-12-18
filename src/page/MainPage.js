@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Chat from "./Chat1";
+import Chat from "./Chat";
 import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
 import axios from "axios";

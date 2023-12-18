@@ -1,4 +1,4 @@
-import { GET_TEST, POST_LOGIN, POST_SIGN_UP } from "../modules/LoginModule";
+import {POST_LOGIN, POST_SIGN_UP, GET_TEST} from "../modules/LoginModule";
 
 export const callPostSignUp = (user) => {
 
@@ -47,11 +47,12 @@ export const callPotLogin = (user) => {
 
             window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
             console.log(localStorage.getItem('accessToken'))
-            dispatch({ type: POST_SIGN_UP, payload: result });
+            dispatch({ type: POST_LOGIN, payload: result });
             alert(result.message)
+            window.location.reload();
 
         } else{
-            dispatch({ type: POST_SIGN_UP, payload: result });
+            dispatch({ type: POST_LOGIN, payload: result });
             alert(result.message)
         }
     }
