@@ -1,4 +1,4 @@
-import {POST_LOGIN, POST_SIGN_UP, GET_TEST} from "../modules/LoginModule";
+import {POST_LOGIN, POST_SIGN_UP, GET_TEST, POST_MAIL} from "../modules/LoginModule";
 
 export const callPostSignUp = (user) => {
 
@@ -58,17 +58,18 @@ export const callPotLogin = (user) => {
     }
 }
 
-export const callTest = () => {
-    const requestURL = `${process.env.REACT_APP_API_URL}/get`;
+export const callPostMail = (userEmail) => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/userEmail/{}`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             },
+            body : JSON.stringify(userEmail)
         }).then(response => response.json());
 
-        dispatch({ type: GET_TEST, payload: result });
+        dispatch({ type: POST_MAIL, payload: result });
     }
 }
