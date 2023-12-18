@@ -46,6 +46,7 @@ const ChatMessages = ({ data }) => {
                         key={chat.chatId}
                         content={chat.message}
                         member={chat.sender}
+                        name={chat.nickname}
                         timestamp={format(new Date(), "yyyy MMM d, HH:mm:ss")}
                     />
                 ))}

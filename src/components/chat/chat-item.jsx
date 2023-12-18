@@ -1,10 +1,10 @@
 import { cn } from "src/lib/utils";
 import { UserAvatar } from "../user-avatar";
 
-const ChatItem = ({content, member, timestamp , name}) => {
+const ChatItem = ({content, member, timestamp , name }) => {
     //
     console.log('membernickname', member.nickname)
-    console.log('membername', member.nickname)
+    console.log('membername', name)
 
     return (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
@@ -18,7 +18,7 @@ const ChatItem = ({content, member, timestamp , name}) => {
                     <div className="flex items-center gap-x-2">
                         <div className="flex items-center">
                             <p className="font-semibold text-sm hover:underline cursor-pointer">
-                                {member.nickname}
+                                {member.nickname || name}
                             </p>
                             {/* <ActionTooltip label={member.role}>
                                 {roleIconMap[member.role]}
