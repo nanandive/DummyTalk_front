@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Navigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../../api/UserAPICalls'
-import '../SignUp.module.css';
+import styles from '../SignUp.module.css'; // Import your CSS module
 import { jwtDecode, InvalidTokenError } from 'jwt-decode';
 
 export default function SignUp() {
@@ -87,34 +87,34 @@ export default function SignUp() {
   }
 
   return (
-    <div className="page">
-      <div onClick={() => onClickTest()} className="titleWrap">
+    <div className={styles.page}>
+      <div onClick={() => onClickTest()} className={styles.titleWrap}>
         이메일과 비밀번호를
         <br />
-        입력해주세요          
+        입력해주세요
       </div>
 
-      <div className="contentWrap">
-        <div className="inputTitle">이메일 주소</div>
-        <div className={`inputWrap ${!emailValid && email.length > 0 ? 'error' : ''}`}>
+      <div className={styles.contentWrap}>
+        <div className={styles.inputTitle}>이메일 주소</div>
+        <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
           <input
-            className="input"
+            className={styles.input}
             type="text"
             placeholder="test@gmail.com"
             value={email}
             onChange={handleEmail}
           />
         </div>
-        <div className="errorMessageWrap">
+        <div className={styles.errorMessageWrap}>
           {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
         </div>
 
-        <div style={{ marginTop: '26px' }} className="inputTitle">
+        <div style={{ marginTop: '26px' }} className={styles.inputTitle}>
           비밀번호
         </div>
-        <div className={`inputWrap ${!pwValid && pw.length > 0 ? 'error' : ''}`}>
+        <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
           <input
-            className="input"
+            className={styles.input}
             type="password"
             placeholder="영문, 숫자, 특수문자 포함 8자 이상"
             value={pw}
@@ -122,19 +122,19 @@ export default function SignUp() {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className="errorMessageWrap">
+        <div className={styles.errorMessageWrap}>
           {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
         </div>
       </div>
 
       <div>
-        <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
+        <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
           확인
         </button>
-        <button onClick={onClickSignUpButton} className="bottomButton">
+        <button onClick={onClickSignUpButton} className={styles.bottomButton}>
           회원가입
         </button>
       </div>
     </div>
-  )
+  );
 }

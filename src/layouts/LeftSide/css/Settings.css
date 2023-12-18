@@ -1,10 +1,7 @@
 /* Settings.css */
 
-.settings-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+body {
+  background-color: #C0BBCF; /* Dark navy blue background */
 }
 
 .settings-container h2 {
@@ -44,3 +41,43 @@
 
 /* Modal Styles */
 /* ... Include your existing modal styles here ... */
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .settings-container1 {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #8a2be2; /* Purple color */
+    margin-bottom: 10px; /* Adjust spacing between icon and text */
+    transition: all 0.3s ease-in-out; /* CSS transition for a smooth effect */
+    font-size: 2em; /* Increase the font size for larger icons */
+  }
+  
+  .icon-btn:hover {
+    transform: scale(1.2); /* Scale the icon on hover to make it larger */
+    filter: drop-shadow(0 0 10px #8a2be2); /* Add a glowing effect */
+  }
+  
+  .icon-btn p {
+    margin: 0; /* Remove default paragraph margin */
+    opacity: 0; /* Initially hide the text */
+    transition: opacity 0.3s ease-in-out; /* Add a fade-in effect */
+  }
+  
+  .icon-btn:hover p {
+    opacity: 1; /* Show the text on hover */
+  }
