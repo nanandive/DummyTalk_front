@@ -1,0 +1,23 @@
+Index: src/App.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'; // Switch 대신 Routes를 사용합니다.\r\nimport { ModalProvider } from \"src/components/providers/modal-provider\";\r\nimport './App.css';\r\nimport Home from './components/pages/Home';\r\nimport Products from './components/pages/Products';\r\nimport Services from './components/pages/Services';\r\nimport SignUp from './components/pages/SignUp';\r\nimport SignUpForm from './components/pages/SignUpForm';\r\nimport IndexLayOut from \"./layouts/IndexLayout/index_layout\";\r\nimport Layout from \"./layouts/layout\";\r\n\r\nfunction App() {\r\n  return (\r\n    <>\r\n      <ModalProvider />\r\n      <Router>\r\n        <Routes>\r\n          <Route path='/' element={<IndexLayOut />}>\r\n            <Route index element={<Home />} />\r\n            <Route path='/services' element={<Services />} />\r\n            <Route path='/products' element={<Products />} />\r\n            <Route path='/sign-up' element={<SignUp />} />\r\n            <Route path='/sign-up-form' element={<SignUpForm />} /> {/* Add the new route */}\r\n          {/* <Route path='/Login' element={<Login />} /> */}\r\n          </Route>\r\n          <Route path=\"/main\" element={<Layout />} />\r\n        </Routes>\r\n      </Router>\r\n    </>\r\n  );\r\n}\r\n\r\nexport default App;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/App.js b/src/App.js
+--- a/src/App.js	
++++ b/src/App.js	
+@@ -8,11 +8,11 @@
+ import SignUpForm from './components/pages/SignUpForm';
+ import IndexLayOut from "./layouts/IndexLayout/index_layout";
+ import Layout from "./layouts/layout";
+-
+ function App() {
+   return (
+     <>
+       <ModalProvider />
++    
+       <Router>
+         <Routes>
+           <Route path='/' element={<IndexLayOut />}>

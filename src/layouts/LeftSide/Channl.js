@@ -102,19 +102,15 @@ const Channels = () => {
                                 key={channel.channelId}
                                 onClick={handleChannelClick}
                             >
-                                {channel.channelName}{" "}
-                                {/* 채널의 이름을 렌더링 */}
-                                {/* 추후 1:1채팅 색상 변경 */}
-
+                                {channel.channelName}
                             </Link>
                         ))}
                     </div>
 
-                    {/* 채널 생성 */}
                     <button
                         className="create-channel-btn"
                         onClick={() => onOpen("createChannel", { serverId })}
-                        disabled={channels.length >= 3}
+                        disabled={channels.length >= 10}
                     >
                         채널 생성
                     </button>
@@ -128,13 +124,13 @@ const Channels = () => {
                         >
                             채널명: {currentChannel.channelName}
                             <br />
-                            접속중인 사람: {connectedUsers.channelCount}
-                        </button>
+                            접속중인 사람: {connectedUsers.length}
+                        </button><br/>
                         <button
                             className="delete-channel-btn"
                             onClick={channelDelete}
                         >
-                            채널삭제
+                            채널 삭제
                         </button>
                     </div>
                 )}
