@@ -12,41 +12,50 @@ const ImageSendModal = () => {
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
-    const user = useState({
-            "id": userInfo.sub,
-            "nickname": userInfo.nickname
-        });
+    const [ form , setForm ] = useState({
+        userId : "",
+        nickname : ""
+    });
+
     const formData = new FormData();
+
     const handleAddImage = (e) => {
         console.log("버튼 눌림 !!!");
-        e.preventDefault();
+
+        formData.append("userId", userInfo.sub);
+        formData.append("nickname", userInfo.nickname);
+
 
         if (fileInput.current && fileInput.current.files) {
-            const files = fileInput.current.files;
-            let showImgList = [...showImages];
-            console.log("files:", files);
 
+            const files = fileInput.current.files;
+
+            let showImgList = [...showImages];
             // 10개 이상의 파일은 업로드 불가
             for (let i = 0; i < files.length; i++) {
-                formData.append(files[i].name, files[i]);
-                console.log("files[i]:", files[i]);
+                formData.append("fileInfo", files[i]);
+                console.log("files:", files[i]);
                 showImgList.push(URL.createObjectURL(files[i]));
             }
-            formData.append("user", user)
 
             if (showImgList.length > 10) {
                 showImgList = showImgList.slice(0, 10);
             }
             setShowImages(showImgList);
         }
-
     }
 
-    const onSubmit = async (e) => {
+    const onSubmit = async () => {
         try {
-            // console.log("formData:", formData.get());
             const response
-                = await axios.post("/img/save", formData, JSON.stringify(user));
+                = await axios.post(
+                `${process.env.REACT_APP_API_URL}/img/save`
+                , { data : formData }
+                , {
+                    config: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
             console.log("업로드 성공:", response.data);
         } catch (error) {
             console.error("업로드 실패:", error);
