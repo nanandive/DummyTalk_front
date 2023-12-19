@@ -6,8 +6,6 @@ import { useModal } from "../hooks/use-modal";
 import { useSocket } from "../providers/sock-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
-import { useSocket } from "../providers/sock-provider";
 
 const ChatInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -84,8 +82,8 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 channelId,
             })
         );
-        sendMessage.current.value = "";
-    }, [channelId, sendMessage, isConnected]);
+        sendMessageRef.current.value = "";
+    }, [channelId, sendMessageRef, isConnected]);
 
     return (
         <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
@@ -120,7 +118,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             {/* 메시지 입력란 */}
             <textarea
                 className="w-full h-full resize-none top-3 outline outline-zinc-300"
-                maxLength="500"
+                maxLength="150"
                 onKeyDown={enter_event}
                 ref={sendMessageRef}
                 placeholder="메시지를 입력하세요."
