@@ -11,10 +11,7 @@ const ImageSendModal = () => {
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
-    const [form, setForm] = useState({
-        userId: "",
-        nickname: "",
-    });
+
 
     const formData = new FormData();
 
@@ -25,7 +22,7 @@ const ImageSendModal = () => {
             let showImgList = [...showImages];
             // 10개 이상의 파일은 업로드 불가
             for (let i = 0; i < e.target.files.length; i++) {
-                showImgList.push(URL.createObjectURL(e.target.files[i]));
+                showImgList.push(URL.createObjectURL(e.target.files[i]));   // 요것이 문제 !!
             }
 
             if (showImgList.length > 10) {
@@ -52,11 +49,17 @@ const ImageSendModal = () => {
                     { "Content-Type": "multipart/form-data" }
                 );
                 console.log("업로드 성공:", response.data);
+                setShowImages([]);
+                fileInput.current.value = "";
+                onClose();
+
             }
         } catch (error) {
             console.error("업로드 실패:", error);
         }
     };
+
+    console.log("setShowImages:",setShowImages);
 
     return (
         <div
