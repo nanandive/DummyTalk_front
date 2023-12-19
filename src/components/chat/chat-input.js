@@ -76,6 +76,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
 
         socket.send(
             `/app/${channelId}/message`,
+            // `/app/audioMessage` //오디오로 담는부분
             JSON.stringify({
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
