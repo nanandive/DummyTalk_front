@@ -1,7 +1,7 @@
 import { ModalProvider } from "src/components/providers/modal-provider";
+import { SocketProvider } from "src/components/providers/sock-provider";
 import MainPage from "../../page/MainPage";
 import { Header } from "./Header";
-import { SocketProvider } from "src/components/providers/sock-provider";
 
 function Layout() {
     return (

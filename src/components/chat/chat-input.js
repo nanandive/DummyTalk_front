@@ -1,16 +1,67 @@
+import { Switch } from "@headlessui/react";
+import axios from "axios";
 import { ImagePlus } from "lucide-react";
-import { forwardRef, useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../providers/sock-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 import { useSocket } from "../providers/sock-provider";
-import {Switch} from "@headlessui/react";
 
-const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
-    const { onOpen, onClose } = useModal();
+const ChatInput = ({ channelId, userInfo, setData }) => {
+    const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
+    const { sub, nickname, national_language } = userInfo;
+    const { onOpen } = useModal();
 
-    const sendMessage = useRef(null);
+    const sendMessageRef = useRef(null);
+    /***
+     * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
+     * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
+     * - userId, channelId, message, language, timestamp, page
+     * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
+     * -- @DestinationVariable : channelId
+     * -- @Header : UserId
+     * -- @RequestParam : page
+     * endpoint : /websocket
+     * subscribe : /topic/msg/{channelId}
+     * send : /app/{channelId}/message
+     */
+    useEffect(() => {
+        if (!channelId || !isConnected) return;
+        const updateData = (chatData) => setData((prev) => [...prev, chatData]);
+
+        const subscription = socket.subscribe(
+            `/topic/msg/${channelId}`,
+            async (msg) => {
+                let result = JSON.parse(msg.body);
+
+                if (enabled && result.chat.sender !== parseInt(sub)) {
+                    const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${national_language}`;
+                    const axiosConfig = {
+                        url: apiUrl,
+                        method: "POST",
+                        data: { ...result.chat },
+                    };
+
+                    const { data } = await axios(axiosConfig);
+                    result = data;
+                }
+                updateData(result.chat);
+            }
+        );
+        return () => subscription.unsubscribe();
+    }, [
+        enabled,
+        isConnected,
+        channelId,
+        socket,
+        sub,
+        nickname,
+        national_language,
+        setData,
+    ]);
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -21,22 +72,20 @@ const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if ( !isConnected || sendMessage.current.value === '' ) return;
+        if (!isConnected) return;
 
         socket.send(
             `/app/${channelId}/message`,
             JSON.stringify({
-                message: sendMessage.current?.value,
-                sender: userInfo.sub,
-                nickname: userInfo.nickname,
+                message: sendMessageRef.current?.value,
+                sender: sub,
+                nickname: nickname,
                 language: "en",
                 channelId,
             })
         );
         sendMessage.current.value = "";
-
     }, [channelId, sendMessage, isConnected]);
-
 
     return (
         <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
@@ -51,7 +100,10 @@ const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
                 <Switch
                     id={"airplane-mode"}
                     checked={enabled}
-                    onChange={setEnabled}
+                    onClick={() => {
+                        console.log(!enabled);
+                        setEnabled((prev) => !prev);
+                    }}
                     className={`${
                         enabled ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
                     } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
@@ -69,8 +121,8 @@ const ChatInput = ({ enabled, setEnabled, channelId, userInfo }) => {
             <textarea
                 className="w-full h-full resize-none top-3 outline outline-zinc-300"
                 maxLength="500"
-                onKeyPress={enter_event}
-                ref={sendMessage}
+                onKeyDown={enter_event}
+                ref={sendMessageRef}
                 placeholder="메시지를 입력하세요."
             />
             <div className="absolute right-[5%] bottom-[10%] ">
