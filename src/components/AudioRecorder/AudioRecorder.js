@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
+import axios from "axios";
 
 const AudioRecorder = () => {
   const [stream, setStream] = useState(null);
@@ -39,7 +40,6 @@ const AudioRecorder = () => {
     }
   }, [analyser]);
 
-  console.log(audioUrl);
   const startRecording = () => {
     setDisabled(true);
 
@@ -61,10 +61,20 @@ const AudioRecorder = () => {
       setMedia(newMediaRecorder);
       makeSound(newStream);
     });
+
   };
 
   const stopRecording = () => {
-    media.ondataavailable = ondataavailableCallback;
+    media.ondataavailable = function (e) {
+      setAudioUrl(e.data);
+      setOnRec(true);
+
+      console.log(e);
+
+      const formData = new FormData();
+      formData.append("file", e.data)
+      axios.post('http://localhost:9999/audio/upload', formData)
+    };
 
     stream.getAudioTracks().forEach(function (track) {
       track.stop();
