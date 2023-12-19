@@ -1,0 +1,18 @@
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"name\": \"dummy_talk\",\r\n  \"version\": \"0.1.0\",\r\n  \"private\": true,\r\n  \"dependencies\": {\r\n    \"@headlessui/react\": \"^1.7.17\",\r\n    \"@radix-ui/react-avatar\": \"^1.0.4\",\r\n    \"@radix-ui/react-dialog\": \"^1.0.5\",\r\n    \"@radix-ui/react-dropdown-menu\": \"^2.0.6\",\r\n    \"@radix-ui/react-label\": \"^2.0.2\",\r\n    \"@radix-ui/react-scroll-area\": \"^1.0.5\",\r\n    \"@radix-ui/react-separator\": \"^1.0.3\",\r\n    \"@radix-ui/react-slot\": \"^1.0.2\",\r\n    \"@radix-ui/react-switch\": \"^1.0.3\",\r\n    \"@radix-ui/react-tooltip\": \"^1.0.7\",\r\n    \"@testing-library/jest-dom\": \"^5.14.1\",\r\n    \"@testing-library/react\": \"^13.0.0\",\r\n    \"@testing-library/user-event\": \"^13.2.1\",\r\n    \"axios\": \"^1.6.2\",\r\n    \"class-variance-authority\": \"^0.7.0\",\r\n    \"clsx\": \"^2.0.0\",\r\n    \"lucide-react\": \"^0.294.0\",\r\n    \"react\": \"^18.2.0\",\r\n    \"react-dom\": \"^18.2.0\",\r\n    \"react-query\": \"^3.39.3\",\r\n    \"react-router-dom\": \"^6.20.1\",\r\n    \"react-scripts\": \"5.0.1\",\r\n    \"styled-components\": \"^6.1.1\",\r\n    \"tailwind-merge\": \"^2.1.0\",\r\n    \"tailwindcss-animate\": \"^1.0.7\",\r\n    \"web-vitals\": \"^2.1.0\",\r\n    \"zustand\": \"^4.4.7\"\r\n  },\r\n  \"scripts\": {\r\n    \"start\": \"react-scripts start\",\r\n    \"build\": \"react-scripts build\",\r\n    \"test\": \"react-scripts test\",\r\n    \"eject\": \"react-scripts eject\"\r\n  },\r\n  \"eslintConfig\": {\r\n    \"extends\": [\r\n      \"react-app\",\r\n      \"react-app/jest\"\r\n    ]\r\n  },\r\n  \"browserslist\": {\r\n    \"production\": [\r\n      \">0.2%\",\r\n      \"not dead\",\r\n      \"not op_mini all\"\r\n    ],\r\n    \"development\": [\r\n      \"last 1 chrome version\",\r\n      \"last 1 firefox version\",\r\n      \"last 1 safari version\"\r\n    ]\r\n  },\r\n  \"devDependencies\": {\r\n    \"eslint-plugin-css-modules\": \"^2.12.0\",\r\n    \"tailwindcss\": \"^3.3.6\"\r\n  },\r\n  \"proxy\": \"http://localhost:9999\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/package.json b/package.json
+--- a/package.json	(revision 781a724c4d22811b02c1fd8d298436c32952afe9)
++++ b/package.json	(date 1702368300937)
+@@ -58,6 +58,5 @@
+   "devDependencies": {
+     "eslint-plugin-css-modules": "^2.12.0",
+     "tailwindcss": "^3.3.6"
+-  },
+-  "proxy": "http://localhost:9999"
++  }
+ }

@@ -86,23 +86,18 @@ const SettingsModal = () => {
           </label>
 
           <label>
-            새로운 서버 이미지:
-            <input type="file" onChange={handleImgChange} />
-          </label>
-
-          <label>
-            초대할 사용자:
+            초대할 사용자:<br />
             <input type="text" value={invitedUser} onChange={handleInviteUserChange} />
           </label>
 
           <label>
-            강퇴할 사용자:
+            강퇴할 사용자:<br />
             <input type="text" value={resignUser} onChange={handleKickUserChange} />
           </label>
 
           <div className="button-container">
+            <button onClick={handleDelete} >서버삭제</button>
             <button onClick={handleSaveSettings}>저장</button>
-            <button onClick={handleDelete}>삭제</button>
             <button onClick={onClose}>취소</button>
           </div>
         </div>
