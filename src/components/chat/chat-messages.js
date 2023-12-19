@@ -70,10 +70,8 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
                 {data.map((chat) => (
                     <ChatItem
                         key={chat.chatId}
-                        content={chat.message}
-                        member={chat.sender}
+                        chat={chat}
                         name={chat.nickname}
-                        timestamp={format(new Date(), "yyyy MMM d, HH:mm:ss")}
                     />
                 ))}
                 <div ref={bottomRef}></div>

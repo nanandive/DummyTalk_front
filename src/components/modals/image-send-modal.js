@@ -32,16 +32,20 @@ const ImageSendModal = () => {
         }
     };
 
+    console.log(data)
+
     const onSubmit = async () => {
         try {
             formData.append("userId", userInfo.sub);
             formData.append("nickname", userInfo.nickname);
+            formData.append("channelId", data.channelId);
 
             if (fileInput.current && fileInput.current.files) {
                 const files = fileInput.current.files;
 
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
+                console.log(files[i])
                 }
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
