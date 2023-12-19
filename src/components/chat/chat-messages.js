@@ -1,16 +1,16 @@
 import axios from "axios";
-import { format } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import {format} from "date-fns";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "./ChatEmpty";
 
-const ChatMessages = ({ channelId, data, setData, userInfo }) => {
+const ChatMessages = ({channelId, data, setData, userInfo}) => {
     const [hasInitialized, setHasInitialized] = useState(false);
 
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
+    const channelName = createContext();
 
-    
 
     useEffect(() => {
         const bottomDiv = bottomRef?.current;
@@ -39,9 +39,9 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
         }
     }, [bottomRef, chatRef, hasInitialized, data]);
 
+
     useEffect(() => {
         if (!channelId) return;
-
         const fetchChatData = async () => {
             try {
                 console.log("===================================== fetchChatData");
@@ -70,10 +70,8 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
                 {data.map((chat) => (
                     <ChatItem
                         key={chat.chatId}
-                        content={chat.message}
-                        member={chat.sender}
+                        chat={chat}
                         name={chat.nickname}
-                        timestamp={format(new Date(), "yyyy MMM d, HH:mm:ss")}
                     />
                 ))}
                 <div ref={bottomRef}></div>
