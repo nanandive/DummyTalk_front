@@ -1,0 +1,165 @@
+Index: package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/package-lock.json b/package-lock.json
+--- a/package-lock.json	
++++ b/package-lock.json	
+@@ -30,10 +30,12 @@
+         "react-query": "^3.39.3",
+         "react-router-dom": "^6.20.1",
+         "react-scripts": "5.0.1",
++        "sockjs-client": "^1.6.1",
+         "styled-components": "^6.1.1",
+         "tailwind-merge": "^2.1.0",
+         "tailwindcss-animate": "^1.0.7",
+         "web-vitals": "^2.1.0",
++        "webstomp-client": "^1.2.6",
+         "zustand": "^4.4.7"
+       },
+       "devDependencies": {
+@@ -6486,6 +6488,20 @@
+       "resolved": "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.2.tgz",
+       "integrity": "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="
+     },
++    "node_modules/bufferutil": {
++      "version": "4.0.8",
++      "resolved": "https://registry.npmjs.org/bufferutil/-/bufferutil-4.0.8.tgz",
++      "integrity": "sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==",
++      "hasInstallScript": true,
++      "optional": true,
++      "peer": true,
++      "dependencies": {
++        "node-gyp-build": "^4.3.0"
++      },
++      "engines": {
++        "node": ">=6.14.2"
++      }
++    },
+     "node_modules/builtin-modules": {
+       "version": "3.3.0",
+       "resolved": "https://registry.npmjs.org/builtin-modules/-/builtin-modules-3.3.0.tgz",
+@@ -8774,6 +8790,14 @@
+         "node": ">=0.8.x"
+       }
+     },
++    "node_modules/eventsource": {
++      "version": "2.0.2",
++      "resolved": "https://registry.npmjs.org/eventsource/-/eventsource-2.0.2.tgz",
++      "integrity": "sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==",
++      "engines": {
++        "node": ">=12.0.0"
++      }
++    },
+     "node_modules/execa": {
+       "version": "5.1.1",
+       "resolved": "https://registry.npmjs.org/execa/-/execa-5.1.1.tgz",
+@@ -13190,6 +13214,18 @@
+         "node": ">= 6.13.0"
+       }
+     },
++    "node_modules/node-gyp-build": {
++      "version": "4.7.1",
++      "resolved": "https://registry.npmjs.org/node-gyp-build/-/node-gyp-build-4.7.1.tgz",
++      "integrity": "sha512-wTSrZ+8lsRRa3I3H8Xr65dLWSgCvY2l4AOnaeKdPA9TB/WYMPaTcrzf3rXvFoVvjKNVnu0CcWSx54qq9GKRUYg==",
++      "optional": true,
++      "peer": true,
++      "bin": {
++        "node-gyp-build": "bin.js",
++        "node-gyp-build-optional": "optional.js",
++        "node-gyp-build-test": "build-test.js"
++      }
++    },
+     "node_modules/node-int64": {
+       "version": "0.4.0",
+       "resolved": "https://registry.npmjs.org/node-int64/-/node-int64-0.4.0.tgz",
+@@ -16358,6 +16394,32 @@
+         "websocket-driver": "^0.7.4"
+       }
+     },
++    "node_modules/sockjs-client": {
++      "version": "1.6.1",
++      "resolved": "https://registry.npmjs.org/sockjs-client/-/sockjs-client-1.6.1.tgz",
++      "integrity": "sha512-2g0tjOR+fRs0amxENLi/q5TiJTqY+WXFOzb5UwXndlK6TO3U/mirZznpx6w34HVMoc3g7cY24yC/ZMIYnDlfkw==",
++      "dependencies": {
++        "debug": "^3.2.7",
++        "eventsource": "^2.0.2",
++        "faye-websocket": "^0.11.4",
++        "inherits": "^2.0.4",
++        "url-parse": "^1.5.10"
++      },
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://tidelift.com/funding/github/npm/sockjs-client"
++      }
++    },
++    "node_modules/sockjs-client/node_modules/debug": {
++      "version": "3.2.7",
++      "resolved": "https://registry.npmjs.org/debug/-/debug-3.2.7.tgz",
++      "integrity": "sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==",
++      "dependencies": {
++        "ms": "^2.1.1"
++      }
++    },
+     "node_modules/source-list-map": {
+       "version": "2.0.1",
+       "resolved": "https://registry.npmjs.org/source-list-map/-/source-list-map-2.0.1.tgz",
+@@ -17744,6 +17806,20 @@
+         "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+       }
+     },
++    "node_modules/utf-8-validate": {
++      "version": "5.0.10",
++      "resolved": "https://registry.npmjs.org/utf-8-validate/-/utf-8-validate-5.0.10.tgz",
++      "integrity": "sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==",
++      "hasInstallScript": true,
++      "optional": true,
++      "peer": true,
++      "dependencies": {
++        "node-gyp-build": "^4.3.0"
++      },
++      "engines": {
++        "node": ">=6.14.2"
++      }
++    },
+     "node_modules/util-deprecate": {
+       "version": "1.0.2",
+       "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz",
+@@ -18199,6 +18275,11 @@
+         "node": ">=0.8.0"
+       }
+     },
++    "node_modules/webstomp-client": {
++      "version": "1.2.6",
++      "resolved": "https://registry.npmjs.org/webstomp-client/-/webstomp-client-1.2.6.tgz",
++      "integrity": "sha512-9HajO6Ki2ViEGIusLZtjM2lcO2VaQUvtXhLQQ4Cm543RLjfTCEgI3sFaiXts3TvfZgrtY/vI/+qUkm2qWD/NVg=="
++    },
+     "node_modules/whatwg-encoding": {
+       "version": "1.0.5",
+       "resolved": "https://registry.npmjs.org/whatwg-encoding/-/whatwg-encoding-1.0.5.tgz",
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"name\": \"dummy_talk\",\r\n  \"version\": \"0.1.0\",\r\n  \"private\": true,\r\n  \"dependencies\": {\r\n    \"@headlessui/react\": \"^1.7.17\",\r\n    \"@radix-ui/react-avatar\": \"^1.0.4\",\r\n    \"@radix-ui/react-dialog\": \"^1.0.5\",\r\n    \"@radix-ui/react-dropdown-menu\": \"^2.0.6\",\r\n    \"@radix-ui/react-label\": \"^2.0.2\",\r\n    \"@radix-ui/react-scroll-area\": \"^1.0.5\",\r\n    \"@radix-ui/react-separator\": \"^1.0.3\",\r\n    \"@radix-ui/react-slot\": \"^1.0.2\",\r\n    \"@radix-ui/react-switch\": \"^1.0.3\",\r\n    \"@radix-ui/react-tooltip\": \"^1.0.7\",\r\n    \"@testing-library/jest-dom\": \"^5.14.1\",\r\n    \"@testing-library/react\": \"^13.0.0\",\r\n    \"@testing-library/user-event\": \"^13.2.1\",\r\n    \"axios\": \"^1.6.2\",\r\n    \"class-variance-authority\": \"^0.7.0\",\r\n    \"clsx\": \"^2.0.0\",\r\n    \"lucide-react\": \"^0.294.0\",\r\n    \"react\": \"^18.2.0\",\r\n    \"react-dom\": \"^18.2.0\",\r\n    \"react-query\": \"^3.39.3\",\r\n    \"react-router-dom\": \"^6.20.1\",\r\n    \"react-scripts\": \"5.0.1\",\r\n    \"styled-components\": \"^6.1.1\",\r\n    \"tailwind-merge\": \"^2.1.0\",\r\n    \"tailwindcss-animate\": \"^1.0.7\",\r\n    \"web-vitals\": \"^2.1.0\",\r\n    \"zustand\": \"^4.4.7\"\r\n  },\r\n  \"scripts\": {\r\n    \"start\": \"react-scripts start\",\r\n    \"build\": \"react-scripts build\",\r\n    \"test\": \"react-scripts test\",\r\n    \"eject\": \"react-scripts eject\"\r\n  },\r\n  \"eslintConfig\": {\r\n    \"extends\": [\r\n      \"react-app\",\r\n      \"react-app/jest\"\r\n    ]\r\n  },\r\n  \"browserslist\": {\r\n    \"production\": [\r\n      \">0.2%\",\r\n      \"not dead\",\r\n      \"not op_mini all\"\r\n    ],\r\n    \"development\": [\r\n      \"last 1 chrome version\",\r\n      \"last 1 firefox version\",\r\n      \"last 1 safari version\"\r\n    ]\r\n  },\r\n  \"devDependencies\": {\r\n    \"eslint-plugin-css-modules\": \"^2.12.0\",\r\n    \"tailwindcss\": \"^3.3.6\"\r\n  },\r\n  \"proxy\": \"http://localhost:9999\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/package.json b/package.json
+--- a/package.json	
++++ b/package.json	
+@@ -25,10 +25,12 @@
+     "react-query": "^3.39.3",
+     "react-router-dom": "^6.20.1",
+     "react-scripts": "5.0.1",
++    "sockjs-client": "^1.6.1",
+     "styled-components": "^6.1.1",
+     "tailwind-merge": "^2.1.0",
+     "tailwindcss-animate": "^1.0.7",
+     "web-vitals": "^2.1.0",
++    "webstomp-client": "^1.2.6",
+     "zustand": "^4.4.7"
+   },
+   "scripts": {

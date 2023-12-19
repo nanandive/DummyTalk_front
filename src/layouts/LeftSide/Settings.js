@@ -20,13 +20,15 @@ import VideoModal from "../../components/modals/VideoModal.js"; // Import the Vi
 function Settings() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
-  const serverId = query.get("server");
+  const serverId = query.get("serverId");
   const [serverSettings, setServerSettings] = useState({});
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharingOn, setIsScreenSharingOn] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isMicrophoneMuted, setIsMicrophoneMuted] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false); // New state for VideoModal
+
+
 
   const handleVideoToggle = () => {
     setIsVideoOn(!isVideoOn);
@@ -97,14 +99,8 @@ function Settings() {
           <p>Mute Microphone</p>
         </button>
       </div>
-      <AudioRecorder /><br/>
-      <button
-        className="open-settings-btn"
-        onClick={() => onOpen("settings", { serverId })}
-      >
-        <FontAwesomeIcon icon={faCog} />
-      </button>
-      <p>서버이름: {serverId} 채널이름: {serverId}</p>
+      <AudioRecorder />
+
       <button
         className={`icon-btn ${isVideoOn ? "active" : ""}`}
         onClick={handleOpenVideoModal}
@@ -115,6 +111,11 @@ function Settings() {
       {isVideoModalOpen && (
         <VideoModal onClose={handleCloseVideoModal} />
       )}
+      <button
+          className="open-settings-btn"
+          onClick={() => onOpen("settings", { serverId })}
+      >
+      </button>
     </div>
   );
 }
