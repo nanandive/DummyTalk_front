@@ -25,8 +25,6 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
      * subscribe : /topic/msg/{channelId}
      * send : /app/{channelId}/message
      */
-    // stomp 옵션 설정
-
     useEffect(() => {
         if (!channelId || !isConnected || !userInfo) return;
 
@@ -48,11 +46,9 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                     const { data } = await axios(axiosConfig);
                     result = data;
                 }
-
                 updateData(result.chat);
             }
         );
-
         return () => subscription.unsubscribe();
     }, [
         enabled,
@@ -85,7 +81,6 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 channelId,
             })
         );
-
         sendMessageRef.current.value = "";
         // 메시지를 전송한 후에 메시지를 초기화
         // setsendMessageRef("");
@@ -124,7 +119,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             {/* 메시지 입력란 */}
             <textarea
                 className="w-full h-full resize-none top-3 outline outline-zinc-300"
-                maxLength="500"
+                maxLength="150"
                 onKeyDown={enter_event}
                 ref={sendMessageRef}
                 placeholder="메시지를 입력하세요."

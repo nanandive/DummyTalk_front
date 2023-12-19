@@ -57,9 +57,7 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
                 console.error("채팅 리스트 뽑아보기 에러", error);
             }
         };
-
         fetchChatData()
-
     }, [channelId, userInfo, setData]);
 
 

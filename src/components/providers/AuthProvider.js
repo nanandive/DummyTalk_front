@@ -35,7 +35,6 @@ export const AuthProvider = () => {
 
 const TokenExpiration = (decodedToken) => {
 
-
     if (decodedToken.exp*1000 < Date.now()) {
         window.localStorage.removeItem("accessToken")
         return false;
