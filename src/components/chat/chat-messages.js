@@ -51,7 +51,7 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
 
                 setData(response.data.data);
                 console.log(
-                    "===================================== response " + response
+                    "===================================== response ", response
                 );
             } catch (error) {
                 console.error("채팅 리스트 뽑아보기 에러", error);
@@ -62,7 +62,6 @@ const ChatMessages = ({ channelId, data, setData, userInfo }) => {
 
     }, [channelId, userInfo, setData]);
 
-    if (!channelId) return <ChatEmpty />;
 
     return (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">

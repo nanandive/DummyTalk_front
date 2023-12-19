@@ -23,6 +23,7 @@ export const AuthProvider = () => {
             if (verified === false) {
                 alert('로그인 세션시간이 만료되었습니다.');
                 navigate("/sign-up", {replace: true});
+                return null;
             }
         }
 

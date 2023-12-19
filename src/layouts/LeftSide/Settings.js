@@ -69,35 +69,35 @@ function Settings() {
       <br />
       <div className="settings-container1">
         <button
-          className={`icon-btn ${isVideoOn ? "active" : ""}`}
+          className={`icon-btn ${isVideoOn ? "active" : ""} w-1/4`}
           onClick={handleVideoToggle}
         >
           <FontAwesomeIcon icon={faVideo} />
           <p>Video</p>
         </button>
         <button
-          className={`icon-btn ${isScreenSharingOn ? "active" : ""}`}
+          className={`icon-btn ${isScreenSharingOn ? "active" : ""} w-1/4`}
           onClick={handleScreenShare}
         >
           <FontAwesomeIcon icon={faDesktop} />
           <p>Screen Share</p>
         </button>
         <button
-          className={`icon-btn ${isAudioMuted ? "active" : ""}`}
+          className={`icon-btn ${isAudioMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteAudio}
         >
           <FontAwesomeIcon icon={faVolumeMute} />
           <p>Mute Audio</p>
         </button>
         <button
-          className={`icon-btn ${isMicrophoneMuted ? "active" : ""}`}
+          className={`icon-btn ${isMicrophoneMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteMicrophone}
         >
           <FontAwesomeIcon icon={faMicrophone} />
           <p>Mute Microphone</p>
         </button>
       </div>
-      <AudioRecorder />
+      <AudioRecorder /><br/>
       <button
         className="open-settings-btn"
         onClick={() => onOpen("settings", { serverId })}

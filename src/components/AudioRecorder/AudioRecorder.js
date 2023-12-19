@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Activity, Mic } from "lucide-react";
+import { useState } from "react";
+import { Button } from "../ui/button";
 import "./AudioRecorder.css";
 
 const AudioRecorder = () => {
@@ -55,6 +57,7 @@ const AudioRecorder = () => {
       });
   };
 
+  console.log(audioUrl);
   const stopRecording = () => {
     media.ondataavailable = function (e) {
       setAudioUrl(e.data);
@@ -102,15 +105,19 @@ const AudioRecorder = () => {
     window.URL.revokeObjectURL(url);
   };
 
+      // <button className={`record_btn ${isRecording ? 'recording' : ''}`} onClick={onRec ? startRecording : stopRecording}>
+      //   {onRec ? "" : ""} {/* 버튼 텍스트 수정 */}
+      // </button>
   return (
     <>
-      <button className={`record_btn ${isRecording ? 'recording' : ''}`} onClick={onRec ? startRecording : stopRecording}>
-        {onRec ? "" : ""} {/* 버튼 텍스트 수정 */}
-      </button>
-      <button onClick={play} disabled={disabled}>
+      <Button variant="ghost" className='w-[70px] h-[70px] bg-transparent border-2 border-[#8e44ad] rounded-full hover:scale-105 transition-transform' onClick={onRec ? startRecording : stopRecording}>
+        {onRec && <Mic className="text-[#8e44ad] w-full h-full font-bold " />}
+        {!onRec && <Activity className="text-[#8e44ad] w-full h-full font-bold" />}
+      </Button>
+      <button onClick={play} className={`${disabled ? "hidden" : "block"}`}>
         Play
       </button>
-      <button onClick={download} disabled={!audioUrl || disabled}>
+      <button onClick={download} className={`${disabled ? "hidden" : "block"}`}>
         Download
       </button>
     </>

@@ -5,6 +5,7 @@ import RightBar from "../MainLayout/RightBar";
 import { useMemo, useState } from "react";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { decodeJwt } from "src/lib/tokenUtils";
+import ChatEmpty from "src/components/chat/ChatEmpty";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
@@ -15,6 +16,8 @@ function Chat() {
 
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+
+    if (!channelId) return <ChatEmpty />;
 
     return (
         <>

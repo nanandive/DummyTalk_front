@@ -1,15 +1,13 @@
 import { cn } from "src/lib/utils";
 import { UserAvatar } from "../user-avatar";
 
-const ChatItem = ({content, member, timestamp , name }) => {
+const ChatItem = ({ content, member, timestamp, name }) => {
     //
 
     return (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
             <div className="group flex gap-x-2 items-start w-full">
-                <div
-                    className="cursor-pointer hover:drop-shadow-md transition"
-                >
+                <div className="cursor-pointer hover:drop-shadow-md transition">
                     <UserAvatar src={member.userImgPath} />
                 </div>
                 <div className="flex flex-col w-full">
@@ -27,12 +25,12 @@ const ChatItem = ({content, member, timestamp , name }) => {
                         </span>
                     </div>
                     <p
-                            className={cn(
-                                "text-sm text-zinc-600"
-                            )}
-                        >
-                            {content}
-                        </p>
+                        className={cn(
+                            "text-sm text-zinc-600 whitespace-pre-wrap"
+                        )}
+                    >
+                        {content}
+                    </p>
                     {/* {isImage && (
                         <a
                             href={fileUrl}

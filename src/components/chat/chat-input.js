@@ -3,14 +3,13 @@ import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/sock-provider";
+import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
 const ChatInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
-    const { sub, nickname, national_language } = userInfo;
     const { onOpen } = useModal();
 
     const sendMessageRef = useRef(null);
@@ -29,7 +28,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
     // stomp 옵션 설정
 
     useEffect(() => {
-        if (!channelId || !isConnected) return;
+        if (!channelId || !isConnected || !userInfo) return;
 
         const updateData = (chatData) => setData((prev) => [...prev, chatData]);
 
@@ -38,8 +37,8 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             async (msg) => {
                 let result = JSON.parse(msg.body);
 
-                if (enabled && result.chat.sender !== parseInt(sub)) {
-                    const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${national_language}`;
+                if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
+                    const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",
@@ -60,10 +59,8 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
         isConnected,
         channelId,
         socket,
-        sub,
-        nickname,
-        national_language,
-        setData,
+        userInfo,
+        setData
     ]);
 
     // 엔터키 눌렀을 때 메시지 전송
@@ -75,14 +72,14 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if (!isConnected) return;
+        if (!isConnected || !userInfo) return;
 
         socket.send(
             `/app/${channelId}/message`,
             JSON.stringify({
                 message: sendMessageRef.current?.value,
-                sender: sub,
-                nickname: nickname,
+                sender: userInfo?.sub,
+                nickname: userInfo?.nickname,
                 language: "en",
                 channelId,
             })
@@ -91,7 +88,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
         sendMessageRef.current.value = "";
         // 메시지를 전송한 후에 메시지를 초기화
         // setsendMessageRef("");
-    }, [channelId, isConnected, socket, sub, nickname]);
+    }, [channelId, isConnected, socket, userInfo]);
 
     return (
         <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
