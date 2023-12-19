@@ -1,10 +1,12 @@
 import {cn} from "src/lib/utils";
 import {UserAvatar} from "../user-avatar";
 import {format} from "date-fns";
+import moment from "moment";
 
 const ChatItem = ({chat, name}) => {
 
     console.log(chat.type)
+    const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
     // const localDate = new Date(chat.timestamp);
     // const formattedDate = LocalDateTime.of(chat.timestamp.toLocalDate(), chat.timestamp.toLocalTime()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -25,7 +27,7 @@ const ChatItem = ({chat, name}) => {
                             </ActionTooltip> */}
                         </div>
                         <span className="text-xs text-zinc-500">
-                            {/*{formattedDate}*/}
+                            {timestamp}
                         </span>
                     </div>
                     <p

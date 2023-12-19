@@ -16,7 +16,6 @@ const ImageSendModal = () => {
     const formData = new FormData();
 
     const handleAddImage = (e) => {
-        console.log("버튼 눌림 !!!");
 
         if (fileInput.current && fileInput.current.files) {
             let showImgList = [...showImages];
@@ -31,8 +30,6 @@ const ImageSendModal = () => {
             setShowImages(showImgList);
         }
     };
-
-    console.log(data)
 
     const onSubmit = async () => {
         try {
@@ -63,8 +60,6 @@ const ImageSendModal = () => {
         }
     };
 
-    console.log("setShowImages:",setShowImages);
-
     return (
         <div
             className={`fixed top-0 left-0 w-full h-full ${
@@ -92,7 +87,7 @@ const ImageSendModal = () => {
                         multiple={true}
                     />
                 </label>
-                <Label className="">사진 크기 10MB 이하</Label>
+                <Label className="">사진 전송 10개 이하</Label>
                 <div className="w-100 h-100 grid grid-cols-4 gap-4 ">
                     {showImages.map((image, id) => (
                         // <div key={id} className="flex flex-col items-center">
