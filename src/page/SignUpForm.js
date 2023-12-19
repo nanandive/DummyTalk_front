@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { callPostSignUp, callPostMail } from '../api/UserAPICalls';
+import { callPostSignUp, callPostMail, callPostCheck } from '../api/UserAPICalls';
+import { useGoogleLogin } from "@react-oauth/google";
+
 import styles from './SignUp.module.css'
 
 
@@ -13,11 +15,15 @@ const SignUpForm = () => {
     const [userEmail, setUserEmail] = useState('');
     const [userSubmit, setUserSubmit] = useState('');
     const [password, setPassword] = useState('');
+
+    const [click, setClick] = useState(false);
+
     const navigate = useNavigate(); // Initialize navigate for navigation
     const dispatch = useDispatch();
 
+    const data = useSelector(state => state.checkReducer);
+    const [stateData, setStateData] = useState(data);
 
-  const data = useSelector(state => state.mailReducer);
 
   const handleNameChange = (e) => {
     setUserName(e.target.value);
@@ -56,10 +62,10 @@ const SignUpForm = () => {
   };
 
 
-  const onClickSignUp = () =>{
-    dispatch(callPostSignUp(user))
-    navigate('/');
-  }
+    const onClickSignUp = () =>{
+        navigate("/")
+        dispatch(callPostSignUp(user))
+    }
   const handleKeyDown = (event) => {
     const key = event.code;
     switch(key){
@@ -76,16 +82,12 @@ const SignUpForm = () => {
   }
 
   const onClickCheck = () =>{
-      if(data == userSubmit){
-          alert("인증 되었습니다.")
-      } else{
-          alert("다시 입력해주시길 바랍니다.")
-      }
+      dispatch(callPostCheck(userSubmit))
   }
 
     const onClickTest = () =>{
         console.log(userSubmit)
-        console.log(data)
+        console.log()
     }
 
 
@@ -135,6 +137,11 @@ const SignUpForm = () => {
                    onChange={handleSubmitChange} />
                 <button onClick={onClickCheck} className={styles.submit}>확인</button>
             </div>
+            {data &&
+                <div style={ data.status == 200 ? {color:"green"}: {color:"red"} }>
+                    {data.data}
+                </div>
+            }
             <div className={styles.inputTitle}>비밀번호</div>
             <div className={`${styles.inputWrap}`}>
                 <input
@@ -147,7 +154,7 @@ const SignUpForm = () => {
             </div>
         </div>
       <div>
-        <button onClick={() => onClickSignUp()} disabled={!userName || !nickname || !userPhone || !userEmail || !password} className={styles.bottomButton}>
+        <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !password || data.status== 500} className={styles.bottomButton}>
           가입하기
         </button>
       </div>

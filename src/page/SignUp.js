@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
 import styles from './SignUp.module.css'; // Import your CSS module
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleLoginButton from "../page/GoogleLoginButton"
 
 export default function SignUp() {
 
@@ -136,6 +138,9 @@ export default function SignUp() {
         <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
           확인
         </button>
+        <GoogleOAuthProvider clientId={`787323111781-di6f7rf1qa8c4u3lie57vjiftc53amvk.apps.googleusercontent.com`}>
+          <GoogleLoginButton />
+        </GoogleOAuthProvider>
         <button onClick={onClickSignUpButton} className={styles.bottomButton}>
           회원가입
         </button>

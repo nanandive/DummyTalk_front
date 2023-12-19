@@ -1,4 +1,5 @@
-import {POST_LOGIN, POST_SIGN_UP, GET_TEST, POST_MAIL} from "../modules/LoginModule";
+import {POST_LOGIN, POST_SIGN_UP, POST_CHECK, POST_MAIL} from "../modules/LoginModule";
+
 
 export const callPostSignUp = (user) => {
 
@@ -69,7 +70,23 @@ export const callPostMail = (userEmail) => {
             },
             body : JSON.stringify(userEmail)
         }).then(response => response.json());
-
+        alert(result.data)
         dispatch({ type: POST_MAIL, payload: result });
     }
 }
+
+export const callPostCheck = (userSubmit) =>{
+    const requestURL = `${process.env.REACT_APP_API_URL}/checkNum`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body : JSON.stringify(userSubmit)
+        }).then(response => response.json());
+        dispatch({ type: POST_CHECK, payload: result });
+    }
+}
+
