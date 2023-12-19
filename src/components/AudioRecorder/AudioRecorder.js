@@ -102,6 +102,31 @@ const AudioRecorder = () => {
     window.URL.revokeObjectURL(url);
   };
 
+
+  const uploadAudio = () => {
+    const blob = new Blob([audioUrl], { type: "audio/wav" });
+    const formData = new FormData();
+    formData.append("audioFile", blob, "recordedAudio.wav");
+  
+    axios.post("http://localhost:9999/api/uploadAudio", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      console.log("Audio upload successful:", response);
+    })
+    .catch(error => {
+      console.error("Error uploading audio:", error);
+    });
+  };
+
+
+
+
+
+
+
   return (
     <>
       <button className={`record_btn ${isRecording ? 'recording' : ''}`} onClick={onRec ? startRecording : stopRecording}>
