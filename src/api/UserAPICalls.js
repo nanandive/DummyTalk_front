@@ -73,15 +73,15 @@ export const callPostGoogleLogin = (credential) =>{
         }).then(response => response.json());
 
         console.log(result.data)
-        // if(result.status == 201){
-        //
-        //     window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
-        //     console.log(localStorage.getItem('accessToken'))
-        //     dispatch({ type: POST_LOGIN, payload: result });
-        //     alert(result.message)
-        //     window.location.reload();
-        //
-        // }
+        if(result.status == 201){
+
+            window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
+            console.log(localStorage.getItem('accessToken'))
+            dispatch({ type: POST_LOGIN, payload: result });
+            alert(result.message)
+            window.location.reload();
+
+        }
     }
 }
 

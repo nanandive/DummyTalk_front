@@ -13,6 +13,7 @@ export default function GoogleLogin() {
 
     const onGoogleSignIn= (res) =>{
         dispatch(callPostGoogleLogin(res.credential))
+        // console.log(res)
     }
 
     useScript('https://accounts.google.com/gsi/client', () => {
