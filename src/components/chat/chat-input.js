@@ -34,8 +34,8 @@ const ChatInput = ({channelId, userInfo, setData}) => {
         const subscription = socket.subscribe(
             `/topic/msg/${channelId}`,
             async (msg) => {
-                console.log("msg   :", msg)
                 let result = JSON.parse(msg.body);
+                console.log("result   :", result)
 
                 if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
                     const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
@@ -85,8 +85,6 @@ const ChatInput = ({channelId, userInfo, setData}) => {
             })
         );
         sendMessageRef.current.value = "";
-        // 메시지를 전송한 후에 메시지를 초기화
-        // setsendMessageRef("");
     }, [channelId, isConnected, socket, userInfo]);
 
     return (

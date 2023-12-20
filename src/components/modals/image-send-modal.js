@@ -16,7 +16,6 @@ const ImageSendModal = () => {
     const [showImages, setShowImages] = useState([]);
 
 
-
     const formData = new FormData();
 
     const handleAddImage = (e) => {
@@ -63,9 +62,9 @@ const ImageSendModal = () => {
                 setShowImages([]);
                 fileInput.current.value = "";
 
-                if ( !response || response.data === null ) return alert("이미지 전송에 실패했습니다.");
+                if (!response || response.data === null) return alert("이미지 전송에 실패했습니다.");
 
-                if ( response.status === 200  ){
+                if (response?.status === 200) {
                     ImageViewUpdateRequest(response.data.chatList);
                 }
 
@@ -76,13 +75,12 @@ const ImageSendModal = () => {
         }
     };
 
-    const ImageViewUpdateRequest = useCallback( (res) => {
-        if (!isConnected || !sub) return;
+    const ImageViewUpdateRequest = useCallback((res) => {
+        if (!isConnected || !sub || !res) return;
 
-        socket.send(
-            `/app/${data.channelId}/message`,
-            JSON.stringify({
-                chatList: res.map((chat) => ({
+        res.map((chat) => (
+            socket.send( `/app/${data.channelId}/message`
+                ,JSON.stringify({
                     chatId: chat.chatId,
                     channelId: chat.channelId,
                     nickname: chat.nickname,
@@ -90,9 +88,10 @@ const ImageSendModal = () => {
                     timestamp: chat.timestamp,
                     type: chat.type,
                     profileImage: chat.profileImage
-                })),
-                type: "IMAGE"
-            }));
+                })
+            )
+        ));
+
     }, [data.channelId, isConnected, socket]);
 
     return (
