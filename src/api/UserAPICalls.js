@@ -1,4 +1,4 @@
-import {POST_LOGIN, POST_SIGN_UP, POST_CHECK, POST_MAIL} from "../modules/LoginModule";
+import {POST_LOGIN, POST_SIGN_UP, POST_CHECK, POST_MAIL, POST_GOOGLE_LOGIN} from "../modules/LoginModule";
 
 
 export const callPostSignUp = (user) => {
@@ -56,6 +56,32 @@ export const callPotLogin = (user) => {
             dispatch({ type: POST_LOGIN, payload: result });
             alert(result.message)
         }
+    }
+}
+
+// 구글 로그인
+export const callPostGoogleLogin = (credential) =>{
+    const requestURL = `${process.env.REACT_APP_API_URL}/googleLogin`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body : JSON.stringify(credential)
+        }).then(response => response.json());
+
+        console.log(result.data)
+        // if(result.status == 201){
+        //
+        //     window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
+        //     console.log(localStorage.getItem('accessToken'))
+        //     dispatch({ type: POST_LOGIN, payload: result });
+        //     alert(result.message)
+        //     window.location.reload();
+        //
+        // }
     }
 }
 

@@ -72,7 +72,6 @@ export default function SignUp() {
 
 
   const onClickTest = () =>{
-
     // console.log(new Date().getTime())
     // console.log(decodedToken.exp* 1000)
     console.log("haha")

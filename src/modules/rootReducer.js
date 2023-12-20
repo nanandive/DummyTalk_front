@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
-import {checkReducer, loginReducer, mailReducer, signUpReducer} from './LoginModule'
+import {checkReducer, googleLoginReducer, loginReducer, mailReducer, signUpReducer} from './LoginModule'
 
 const rootReducer = combineReducers({
     signUpReducer,
     loginReducer,
     mailReducer,
-    checkReducer
+    checkReducer,
+    googleLoginReducer
 })
 
 export default rootReducer;

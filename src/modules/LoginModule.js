@@ -8,6 +8,7 @@ const initialState = {
 
 //액션
 export const POST_LOGIN = 'login/POST_LOGIN';
+export const POST_GOOGLE_LOGIN = 'login/POST_GOOGLE_LOGIN';
 export const POST_SIGN_UP = 'sign/POST_SIGN_UP';
 export const POST_CHECK = 'sign/POST_CHECK';
 export const POST_MAIL = 'test/POST_MAIL';
@@ -40,6 +41,16 @@ export const loginReducer = handleActions(
     },
     initialState
 );
+
+export const googleLoginReducer = handleActions(
+    {
+        [POST_GOOGLE_LOGIN] : (state, { payload }) =>{
+            return payload
+        },
+    },
+    initialState
+);
+
 
 export const mailReducer = handleActions(
     {
