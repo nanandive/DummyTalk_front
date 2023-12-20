@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
 import styles from './SignUp.module.css'; // Import your CSS module
-// import {GoogleOAuthProvider, GoogleLogin, googleLogout  } from "@react-oauth/google";
 import GoogleLogin from "../page/GoogleLogin";
+// import {GoogleOAuthProvider, GoogleLogin, googleLogout  } from "@react-oauth/google";
 
 
 export default function SignUp() {

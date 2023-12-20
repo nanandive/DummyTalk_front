@@ -6,12 +6,17 @@ import useScript from '../hooks/useScript';
 export default function GoogleLogin() {
     const googleSignInButton = useRef(null);
 
+    const onGoogleSignIn = async (res) => {
+        console.log(res)
+        //콜백 함수
+    };
+
 
     useScript('https://accounts.google.com/gsi/client', () => {
         // https://developers.google.com/identity/gsi/web/reference/js-reference#google.accounts.id.initialize
         window.google.accounts.id.initialize({
             client_id: "787323111781-di6f7rf1qa8c4u3lie57vjiftc53amvk.apps.googleusercontent.com",
-            // callback: onGoogleSignIn,
+            callback: onGoogleSignIn,
         });
         // https://developers.google.com/identity/gsi/web/reference/js-reference#google.accounts.id.renderButton
         window.google.accounts.id.renderButton(
