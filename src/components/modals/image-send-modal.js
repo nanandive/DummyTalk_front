@@ -11,21 +11,17 @@ const ImageSendModal = () => {
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
-    const [form, setForm] = useState({
-        userId: "",
-        nickname: "",
-    });
+
 
     const formData = new FormData();
 
     const handleAddImage = (e) => {
-        console.log("버튼 눌림 !!!");
 
         if (fileInput.current && fileInput.current.files) {
             let showImgList = [...showImages];
             // 10개 이상의 파일은 업로드 불가
             for (let i = 0; i < e.target.files.length; i++) {
-                showImgList.push(URL.createObjectURL(e.target.files[i]));
+                showImgList.push(URL.createObjectURL(e.target.files[i]));   // 요것이 문제 !!
             }
 
             if (showImgList.length > 10) {
@@ -39,12 +35,14 @@ const ImageSendModal = () => {
         try {
             formData.append("userId", userInfo.sub);
             formData.append("nickname", userInfo.nickname);
+            formData.append("channelId", data.channelId);
 
             if (fileInput.current && fileInput.current.files) {
                 const files = fileInput.current.files;
 
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
+                console.log(files[i])
                 }
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
@@ -52,6 +50,10 @@ const ImageSendModal = () => {
                     { "Content-Type": "multipart/form-data" }
                 );
                 console.log("업로드 성공:", response.data);
+                setShowImages([]);
+                fileInput.current.value = "";
+                onClose();
+
             }
         } catch (error) {
             console.error("업로드 실패:", error);
@@ -85,7 +87,7 @@ const ImageSendModal = () => {
                         multiple={true}
                     />
                 </label>
-                <Label className="">사진 크기 10MB 이하</Label>
+                <Label className="">사진 전송 10개 이하</Label>
                 <div className="w-100 h-100 grid grid-cols-4 gap-4 ">
                     {showImages.map((image, id) => (
                         // <div key={id} className="flex flex-col items-center">

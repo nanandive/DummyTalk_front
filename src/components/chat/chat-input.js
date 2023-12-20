@@ -6,6 +6,7 @@ import { useModal } from "../hooks/use-modal";
 import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import {Textarea} from "src/components/ui/textarea";
 
 const ChatInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -117,7 +118,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 </Switch>
             </div>
             {/* 메시지 입력란 */}
-            <textarea
+            <Textarea
                 className="w-full h-full resize-none top-3 outline outline-zinc-300"
                 maxLength="150"
                 onKeyDown={enter_event}
@@ -128,7 +129,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 {/* 사진 전송 버튼 */}
                 <Button
                     className="place-self-center"
-                    onClick={() => onOpen("imageSend")}
+                    onClick={() => onOpen("imageSend", { channelId })}
                 >
                     <ImagePlus />
                 </Button>
