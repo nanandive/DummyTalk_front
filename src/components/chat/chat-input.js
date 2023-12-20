@@ -130,7 +130,7 @@ const ChatInput = ({channelId, userInfo, setData}) => {
             <div className="absolute right-[5%] bottom-[10%] ">
                 {/* 사진 전송 버튼 */}
                 <Button
-                    className="place-self-center"
+                    className="absolute right-[95%] bottom-[-20%] "
                     onClick={() => onOpen("imageSend", {channelId})}
                 >
                     <ImagePlus/>
