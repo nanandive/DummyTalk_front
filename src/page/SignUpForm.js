@@ -2,22 +2,28 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { callPostSignUp } from '../api/UserAPICalls';
-import styles from './SignUp.module.css'; // Import your CSS module
+import { callPostSignUp, callPostMail, callPostCheck } from '../api/UserAPICalls';
+import { useGoogleLogin } from "@react-oauth/google";
+
+import styles from './SignUp.module.css'
 
 
 const SignUpForm = () => {
-  const [userName, setUserName] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [userPhone, setUserPhone] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize navigate for navigation
-  const dispatch = useDispatch();
+    const [userName, setUserName] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [userPhone, setUserPhone] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [userSubmit, setUserSubmit] = useState('');
+    const [password, setPassword] = useState('');
 
+    const [click, setClick] = useState(false);
 
+    const navigate = useNavigate(); // Initialize navigate for navigation
+    const dispatch = useDispatch();
 
-  const data = useSelector(state => state.signUpReducer);
+    const data = useSelector(state => state.checkReducer);
+    const [stateData, setStateData] = useState(data);
+
 
   const handleNameChange = (e) => {
     setUserName(e.target.value);
@@ -30,6 +36,12 @@ const SignUpForm = () => {
   const handleEmailChange = (e) => {
     setUserEmail(e.target.value);
   };
+    const handleSubmitChange = (e) => {
+        const regex =
+            /^[0-9]+$/
+        if (regex.test(e.target.value) || e.target.value === '')
+        setUserSubmit(e.target.value);
+    };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -45,14 +57,15 @@ const SignUpForm = () => {
     nickname : nickname,
     userEmail: userEmail,
     password: password,
-    userPhone : userPhone
+    userPhone : userPhone,
+    userSubmit:userSubmit
   };
 
 
-  const onClickSignUp = () =>{
-    dispatch(callPostSignUp(user))
-    navigate('/');
-  }
+    const onClickSignUp = () =>{
+        navigate("/")
+        dispatch(callPostSignUp(user))
+    }
   const handleKeyDown = (event) => {
     const key = event.code;
     switch(key){
@@ -64,53 +77,84 @@ const SignUpForm = () => {
   }
 
 
-  const onClickTest = () =>{
-    console.log(user)
+  const onClickMail = () =>{
+      dispatch(callPostMail(userEmail))
   }
 
+  const onClickCheck = () =>{
+      dispatch(callPostCheck(userSubmit))
+  }
+
+    const onClickTest = () =>{
+        console.log(userSubmit)
+        console.log()
+    }
 
 
   return (
     <div className={styles.page}>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <h2 onClick={() => onClickTest()}>회원가입 양식</h2>
-      환영합니다
-        <br />
-        더미톡!!!
+        <br></br>
+        <div onClick={onClickTest} className={styles.titleWrap}>
+            <h1>회원가입 양식</h1>
+        </div>
+        <br></br>
+        <div className={styles.contentWrap}>
+
+            <div className={styles.inputTitle}>이름</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={userName}
+                       onChange={handleNameChange} />
+            </div>
+
+            <div className={styles.inputTitle}>닉네임</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={nickname}
+                       onChange={handleNicknameChange} />
+            </div>
+
+            <div className={styles.inputTitle}>전화번호</div>
+                <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                       type="text" value={userPhone}
+                       onChange={handleUserPhone} />
+            </div>
+
+            <div className={styles.inputTitle}>이메일</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                   type="email" value={userEmail}
+                   onChange={handleEmailChange} />
+                <button onClick={onClickMail} className={styles.submit}>전송</button>
+            </div>
+
+
+            <div className={styles.inputTitle}>이메일 인증</div>
+            <div className={`${styles.inputWrap}`}>
+                <input className={styles.input}
+                   type="text" value={userSubmit}
+                   onChange={handleSubmitChange} />
+                <button onClick={onClickCheck} className={styles.submit}>확인</button>
+            </div>
+            {data &&
+                <div style={ data.status == 200 ? {color:"green"}: {color:"red"} }>
+                    {data.data}
+                </div>
+            }
+            <div className={styles.inputTitle}>비밀번호</div>
+            <div className={`${styles.inputWrap}`}>
+                <input
+                className={styles.input}
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                onKeyDown={handleKeyDown}
+                />
+            </div>
+        </div>
       <div>
-        <div className={styles.input}>이름</div>
-        <input type="text" value={userName} onChange={handleNameChange} />
-      </div>
-      <div>
-        <div className={styles.input}>닉네임</div>
-        <input type="text" value={nickname} onChange={handleNicknameChange} />
-      </div>
-      <div>
-        <div className={styles.input}>전화번호</div>
-        <input type="text" value={userPhone} onChange={handleUserPhone} />
-      </div>
-      <div>
-        <div className={styles.input}>이메일</div>
-        <input type="email" value={userEmail} onChange={handleEmailChange} />
-      </div>
-      <div>
-        <div className={styles.input}>비밀번호</div>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          onKeyDown={handleKeyDown}
-        />
-      </div>
-      <div>
-        <button onClick={() => onClickSignUp()} disabled={!userName || !nickname || !userPhone || !userEmail || !password} className={styles.bottomButton}>
+        <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !password || data.status== 500} className={styles.bottomButton}>
           가입하기
         </button>
       </div>

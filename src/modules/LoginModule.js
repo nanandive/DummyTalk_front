@@ -7,15 +7,25 @@ const initialState = {
 };
 
 //액션
-export const POST_LOGIN = 'login/POST_LOGIN'
+export const POST_LOGIN = 'login/POST_LOGIN';
 export const POST_SIGN_UP = 'sign/POST_SIGN_UP';
-export const GET_TEST = 'test/GET_TEST'
+export const POST_CHECK = 'sign/POST_CHECK';
+export const POST_MAIL = 'test/POST_MAIL';
 
 
 //리듀서
 export const signUpReducer = handleActions(
     {
         [POST_SIGN_UP] : (state, { payload }) =>{
+            return payload
+        },
+    },
+    initialState
+);
+
+export const checkReducer = handleActions(
+    {
+        [POST_CHECK] : (state, { payload }) =>{
             return payload
         },
     },
@@ -31,9 +41,9 @@ export const loginReducer = handleActions(
     initialState
 );
 
-export const testReducer = handleActions(
+export const mailReducer = handleActions(
     {
-        [GET_TEST] : (state, { payload }) =>{
+        [POST_MAIL] : (state, { payload }) =>{
             return payload
         },
     },
