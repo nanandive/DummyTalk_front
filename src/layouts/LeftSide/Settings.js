@@ -1,21 +1,20 @@
 // src/layouts/LeftSide/Settings.js
-import React, { useState } from "react";
-import AudioRecorder from "../../components/AudioRecorder/AudioRecorder";
-import axios from "axios";
-import { useModal } from "../../components/hooks/use-modal"; // Update the path
-import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../components/modals/VideoModal.css"
 import {
-  faVideo,
   faDesktop,
   faMicrophone,
-  faVolumeMute,
-  faCog,
+  faVideo,
+  faVolumeMute
 } from "@fortawesome/free-solid-svg-icons";
-import "./css/Settings.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useState } from "react";
+import AudioRecorderTest from "src/components/AudioRecorder/AudioRecorderTest";
 import "../../components/AudioRecorder/AudioRecorder.css"; // Update the path
+import { useModal } from "../../components/hooks/use-modal"; // Update the path
+import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
+import "../../components/modals/VideoModal.css";
 import VideoModal from "../../components/modals/VideoModal.js"; // Import the VideoModal component
+import "./css/Settings.css";
 
 function Settings() {
   const { onOpen, onClose } = useModal();
@@ -66,6 +65,8 @@ function Settings() {
     setIsVideoModalOpen(false);
   };
 
+  console.log('setting');
+
   return (
     <div className="settings-container">
       <br />
@@ -99,8 +100,8 @@ function Settings() {
           <p>Mute Microphone</p>
         </button>
       </div>
-      <AudioRecorder />
-
+      {/* <AudioRecorder /> */}
+      <AudioRecorderTest />
       <button
         className={`icon-btn ${isVideoOn ? "active" : ""}`}
         onClick={handleOpenVideoModal}
