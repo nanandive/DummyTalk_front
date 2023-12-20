@@ -20,13 +20,15 @@ import VideoModal from "../../components/modals/VideoModal.js"; // Import the Vi
 function Settings() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
-  const serverId = query.get("server");
+  const serverId = query.get("serverId");
   const [serverSettings, setServerSettings] = useState({});
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharingOn, setIsScreenSharingOn] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isMicrophoneMuted, setIsMicrophoneMuted] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false); // New state for VideoModal
+
+
 
   const handleVideoToggle = () => {
     setIsVideoOn(!isVideoOn);
@@ -69,28 +71,28 @@ function Settings() {
       <br />
       <div className="settings-container1">
         <button
-          className={`icon-btn ${isVideoOn ? "active" : ""}`}
+          className={`icon-btn ${isVideoOn ? "active" : ""} w-1/4`}
           onClick={handleVideoToggle}
         >
           <FontAwesomeIcon icon={faVideo} />
           <p>Video</p>
         </button>
         <button
-          className={`icon-btn ${isScreenSharingOn ? "active" : ""}`}
+          className={`icon-btn ${isScreenSharingOn ? "active" : ""} w-1/4`}
           onClick={handleScreenShare}
         >
           <FontAwesomeIcon icon={faDesktop} />
           <p>Screen Share</p>
         </button>
         <button
-          className={`icon-btn ${isAudioMuted ? "active" : ""}`}
+          className={`icon-btn ${isAudioMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteAudio}
         >
           <FontAwesomeIcon icon={faVolumeMute} />
           <p>Mute Audio</p>
         </button>
         <button
-          className={`icon-btn ${isMicrophoneMuted ? "active" : ""}`}
+          className={`icon-btn ${isMicrophoneMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteMicrophone}
         >
           <FontAwesomeIcon icon={faMicrophone} />
@@ -98,13 +100,7 @@ function Settings() {
         </button>
       </div>
       <AudioRecorder />
-      <button
-        className="open-settings-btn"
-        onClick={() => onOpen("settings", { serverId })}
-      >
-        <FontAwesomeIcon icon={faCog} />
-      </button>
-      <p>서버이름: {serverId} 채널이름: {serverId}</p>
+
       <button
         className={`icon-btn ${isVideoOn ? "active" : ""}`}
         onClick={handleOpenVideoModal}
@@ -115,6 +111,11 @@ function Settings() {
       {isVideoModalOpen && (
         <VideoModal onClose={handleCloseVideoModal} />
       )}
+      <button
+          className="open-settings-btn"
+          onClick={() => onOpen("settings", { serverId })}
+      >
+      </button>
     </div>
   );
 }

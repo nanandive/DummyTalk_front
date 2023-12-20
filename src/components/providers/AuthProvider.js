@@ -23,6 +23,7 @@ export const AuthProvider = () => {
             if (verified === false) {
                 alert('로그인 세션시간이 만료되었습니다.');
                 navigate("/sign-up", {replace: true});
+                return null;
             }
         }
 
@@ -33,7 +34,6 @@ export const AuthProvider = () => {
 }
 
 const TokenExpiration = (decodedToken) => {
-
 
     if (decodedToken.exp*1000 < Date.now()) {
         window.localStorage.removeItem("accessToken")
