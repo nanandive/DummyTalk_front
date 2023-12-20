@@ -13,7 +13,7 @@ export const AuthProvider = () => {
 
     useEffect(() => {
 
-        if (accessToken === null) {
+        if (decodedToken === null) {
             alert('로그인이 필요합니다.');
             navigate("/sign-up", {replace: true});
         } else {

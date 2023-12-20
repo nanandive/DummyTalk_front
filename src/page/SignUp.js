@@ -11,7 +11,7 @@ import GoogleLogin from "../page/GoogleLogin";
 export default function SignUp() {
 
   const accessToken = window.localStorage.getItem('accessToken');
-  const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+  // const decodedToken = accessToken ? jwtDecode(accessToken) : null;
 
   const navigate = useNavigate(); // Initialize navigate for navigation
 
@@ -72,8 +72,6 @@ export default function SignUp() {
 
 
   const onClickTest = () =>{
-    // console.log(new Date().getTime())
-    // console.log(decodedToken.exp* 1000)
     console.log("haha")
   }
 
@@ -94,13 +92,13 @@ export default function SignUp() {
   return (
     <div className={styles.page}>
 
-      <div onClick={() => onClickTest()} className={styles.titleWrap}>
+      <h1 style={{marginTop:"170px"}} onClick={() => onClickTest()} className={styles.titleWrap}>
         이메일과 비밀번호를
         <br />
         입력해주세요
-      </div>
+      </h1>
 
-      <div className={styles.contentWrap}>
+      <div>
         <div className={styles.inputTitle}>이메일 주소</div>
         <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
           <input
@@ -134,26 +132,16 @@ export default function SignUp() {
         </div>
       </div>
 
-      <div>
+      <div className={styles.submitWrap}>
         <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
           확인
         </button>
         <button onClick={onClickSignUpButton} className={styles.bottomButton}>
           회원가입
         </button>
-        <div style={{margin:"0px 30px"}}>
+        <div style={{margin:"50px 30px"}}>
           <GoogleLogin />
         </div>
-        {/*<GoogleOAuthProvider clientId={"787323111781-di6f7rf1qa8c4u3lie57vjiftc53amvk.apps.googleusercontent.com"}>*/}
-        {/*  <GoogleLogin*/}
-        {/*      onSuccess={credentialResponse => {*/}
-        {/*        console.log(credentialResponse);*/}
-        {/*      }}*/}
-        {/*      onError={() => {*/}
-        {/*        console.log('Login Failed');*/}
-        {/*      }}*/}
-        {/*  />*/}
-        {/*</GoogleOAuthProvider>*/}
       </div>
     </div>
   );

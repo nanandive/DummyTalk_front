@@ -73,7 +73,7 @@ export const callPostGoogleLogin = (credential) =>{
         }).then(response => response.json());
 
         console.log(result.data)
-        if(result.status == 201){
+        if(result.status == 200){
 
             window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
             console.log(localStorage.getItem('accessToken'))
