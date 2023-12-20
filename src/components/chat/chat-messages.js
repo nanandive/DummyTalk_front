@@ -41,15 +41,12 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
         if (!channelId) return;
         const fetchChatData = async () => {
             try {
-                console.log("===================================== fetchChatData");
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
                 );
 
                 setData(response.data.data);
-                console.log(
-                    "===================================== response ", response.data
-                );
+                console.log("response ", response.data);
             } catch (error) {
                 console.error("채팅 리스트 뽑아보기 에러", error);
             }

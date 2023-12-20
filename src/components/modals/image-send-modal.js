@@ -6,14 +6,15 @@ import {decodeJwt} from "src/lib/tokenUtils";
 import {useSocket} from "../providers/socket-provider";
 
 const ImageSendModal = () => {
-    // const [enabled, setEnabled] = useState(false);
-    // const {socket, isConnected} = useSocket();
+    const [enabled, setEnabled] = useState(false);
+    const {socket, isConnected} = useSocket();
     const {data, isOpen, onClose, type} = useModal();
     const isModalOpen = isOpen && type === "imageSend";
     const accessToken = localStorage.getItem("accessToken");
     const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
+
 
 
     const formData = new FormData();
@@ -34,12 +35,9 @@ const ImageSendModal = () => {
         }
     };
 
-    console.log(sub)
-
     const onSubmit = async () => {
         try {
 
-            console.log("data.channelId=======================", data.channelId)
             formData.append("userId", sub);
             formData.append("nickname", nickname);
             formData.append("channelId", data.channelId);
@@ -49,47 +47,53 @@ const ImageSendModal = () => {
 
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
-                    console.log(files[i])
                 }
 
-                for (const [key, value] of formData.entries()) {
-                    console.log(`key: ${key}, value: ${value}`);
-                }
-
-                console.log("formData=======================", data.channelId)
-
+                // for (const [key, value] of formData.entries()) {
+                //     console.log(`key: ${key}, value: ${value}`);
+                // }
+                // console.log("formData=======================", data.channelId)
 
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
                     formData,
                     {"Content-Type": "multipart/form-data"}
                 );
-                console.log("업로드 성공:", response.data);
+                console.log("업로드 성공:", response);
                 setShowImages([]);
                 fileInput.current.value = "";
-                onClose();
 
-                // ImageViewUpdateRequest();
+                if ( !response || response.data === null ) return alert("이미지 전송에 실패했습니다.");
+
+                if ( response.status === 200  ){
+                    ImageViewUpdateRequest(response.data.chatList);
+                }
+
+                onClose();
             }
         } catch (error) {
             console.error("업로드 실패:", error);
         }
     };
 
-    // const ImageViewUpdateRequest = useCallback(() => {
-    //     if (!isConnected || !sub) return;
-    //
-    //     socket.send(
-    //         `/app/${data.channelId}/complete`,
-    //         JSON.stringify({
-    //             type: "IMAGE",
-    //             sub,
-    //             nickname,
-    //             channelId : data.channelId
-    //         })
-    //     );
-    // }, [data.channelId, isConnected, socket]);
+    const ImageViewUpdateRequest = useCallback( (res) => {
+        if (!isConnected || !sub) return;
 
+        socket.send(
+            `/app/${data.channelId}/message`,
+            JSON.stringify({
+                chatList: res.map((chat) => ({
+                    chatId: chat.chatId,
+                    channelId: chat.channelId,
+                    nickname: chat.nickname,
+                    message: chat.message,
+                    timestamp: chat.timestamp,
+                    type: chat.type,
+                    profileImage: chat.profileImage
+                })),
+                type: "IMAGE"
+            }));
+    }, [data.channelId, isConnected, socket]);
 
     return (
         <div

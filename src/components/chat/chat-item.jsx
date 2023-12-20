@@ -7,10 +7,8 @@ const ChatItem = ({chat, name}) => {
 
     const REACT_FILE_PATH = "http://localhost:3000"
 
-    console.log(chat.type)
+    // console.log(chat.type)
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
-    // const localDate = new Date(chat.timestamp);
-    // const formattedDate = LocalDateTime.of(chat.timestamp.toLocalDate(), chat.timestamp.toLocalTime()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     return chat && (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
