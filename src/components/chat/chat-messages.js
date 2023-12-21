@@ -1,15 +1,12 @@
 import axios from "axios";
-import {format} from "date-fns";
-import {createContext, useContext, useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
-import ChatEmpty from "./ChatEmpty";
 
 const ChatMessages = ({channelId, data, setData, userInfo}) => {
     const [hasInitialized, setHasInitialized] = useState(false);
 
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
-    const channelName = createContext();
 
 
     useEffect(() => {
@@ -44,15 +41,12 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
         if (!channelId) return;
         const fetchChatData = async () => {
             try {
-                console.log("===================================== fetchChatData");
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
                 );
 
                 setData(response.data.data);
-                console.log(
-                    "===================================== response ", response
-                );
+                console.log("response ", response.data);
             } catch (error) {
                 console.error("채팅 리스트 뽑아보기 에러", error);
             }
@@ -63,7 +57,7 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
 
     return (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">
-            <div
+            <divs
                 className="mt-auto w-full"
                 ref={chatRef}
             >
@@ -75,7 +69,7 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
                     />
                 ))}
                 <div ref={bottomRef}></div>
-            </div>
+            </divs>
         </div>
     );
 };

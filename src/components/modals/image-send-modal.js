@@ -1,14 +1,17 @@
 import axios from "axios";
-import { useMemo, useRef, useState } from "react";
-import { useModal } from "src/components/hooks/use-modal";
-import { Label } from "src/components/ui/label";
-import { decodeJwt } from "src/lib/tokenUtils";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useModal} from "src/components/hooks/use-modal";
+import {Label} from "src/components/ui/label";
+import {decodeJwt} from "src/lib/tokenUtils";
+import {useSocket} from "../providers/socket-provider";
 
 const ImageSendModal = () => {
-    const { data, isOpen, onClose, type } = useModal();
+    const [enabled, setEnabled] = useState(false);
+    const {socket, isConnected} = useSocket();
+    const {data, isOpen, onClose, type} = useModal();
     const isModalOpen = isOpen && type === "imageSend";
     const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
 
@@ -33,8 +36,9 @@ const ImageSendModal = () => {
 
     const onSubmit = async () => {
         try {
-            formData.append("userId", userInfo.sub);
-            formData.append("nickname", userInfo.nickname);
+
+            formData.append("userId", sub);
+            formData.append("nickname", nickname);
             formData.append("channelId", data.channelId);
 
             if (fileInput.current && fileInput.current.files) {
@@ -42,23 +46,53 @@ const ImageSendModal = () => {
 
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
-                console.log(files[i])
                 }
+
+                // for (const [key, value] of formData.entries()) {
+                //     console.log(`key: ${key}, value: ${value}`);
+                // }
+                // console.log("formData=======================", data.channelId)
+
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
                     formData,
-                    { "Content-Type": "multipart/form-data" }
+                    {"Content-Type": "multipart/form-data"}
                 );
-                console.log("업로드 성공:", response.data);
+                console.log("업로드 성공:", response);
                 setShowImages([]);
                 fileInput.current.value = "";
-                onClose();
 
+                if (!response || response.data === null) return alert("이미지 전송에 실패했습니다.");
+
+                if (response?.status === 200) {
+                    ImageViewUpdateRequest(response.data.chatList);
+                }
+
+                onClose();
             }
         } catch (error) {
             console.error("업로드 실패:", error);
         }
     };
+
+    const ImageViewUpdateRequest = useCallback((res) => {
+        if (!isConnected || !sub || !res) return;
+
+        res.map((chat) => (
+            socket.send( `/app/${data.channelId}/message`
+                ,JSON.stringify({
+                    chatId: chat.chatId,
+                    channelId: chat.channelId,
+                    nickname: chat.nickname,
+                    message: chat.message,
+                    timestamp: chat.timestamp,
+                    type: chat.type,
+                    profileImage: chat.profileImage
+                })
+            )
+        ));
+
+    }, [data.channelId, isConnected, socket]);
 
     return (
         <div
@@ -66,7 +100,8 @@ const ImageSendModal = () => {
                 isModalOpen ? "block" : "hidden"
             } bg-[rgba(0,0,0,0.4)] z-10`}
         >
-            <div className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
+            <div
+                className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
                 <span
                     className="text-gray-700 float-right text-2xl font-extrabold cursor-pointer"
                     onClick={onClose}

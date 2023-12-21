@@ -1,17 +1,17 @@
-import { Switch } from "@headlessui/react";
+import {Switch} from "@headlessui/react";
 import axios from "axios";
-import { ImagePlus } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/socket-provider";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import {ImagePlus} from "lucide-react";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useModal} from "../hooks/use-modal";
+import {useSocket} from "../providers/socket-provider";
+import {Button} from "../ui/button";
+import {Label} from "../ui/label";
 import {Textarea} from "src/components/ui/textarea";
 
-const ChatInput = ({ channelId, userInfo, setData }) => {
+const ChatInput = ({channelId, userInfo, setData}) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
-    const { socket, isConnected } = useSocket();
-    const { onOpen } = useModal();
+    const {socket, isConnected} = useSocket();
+    const {onOpen} = useModal();
 
     const sendMessageRef = useRef(null);
     /***
@@ -35,16 +35,17 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             `/topic/msg/${channelId}`,
             async (msg) => {
                 let result = JSON.parse(msg.body);
+                console.log("result   :", result)
 
                 if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
                     const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",
-                        data: { ...result.chat },
+                        data: {...result.chat},
                     };
 
-                    const { data } = await axios(axiosConfig);
+                    const {data} = await axios(axiosConfig);
                     result = data;
                 }
                 updateData(result.chat);
@@ -59,6 +60,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
         userInfo,
         setData
     ]);
+
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -83,8 +85,6 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             })
         );
         sendMessageRef.current.value = "";
-        // 메시지를 전송한 후에 메시지를 초기화
-        // setsendMessageRef("");
     }, [channelId, isConnected, socket, userInfo]);
 
     return (
@@ -128,10 +128,10 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             <div className="absolute right-[5%] bottom-[10%] ">
                 {/* 사진 전송 버튼 */}
                 <Button
-                    className="place-self-center"
-                    onClick={() => onOpen("imageSend", { channelId })}
+                    className="absolute right-[95%] bottom-[-20%] "
+                    onClick={() => onOpen("imageSend", {channelId})}
                 >
-                    <ImagePlus />
+                    <ImagePlus/>
                 </Button>
                 {/* 메시지 전송 버튼 */}
                 <Button
