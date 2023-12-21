@@ -5,10 +5,10 @@ import moment from "moment";
 
 const ChatItem = ({chat, name}) => {
 
-    console.log(chat.type)
+    const REACT_FILE_PATH = "http://localhost:3000"
+
+    // console.log(chat.type)
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
-    // const localDate = new Date(chat.timestamp);
-    // const formattedDate = LocalDateTime.of(chat.timestamp.toLocalDate(), chat.timestamp.toLocalTime()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     return chat && (
         <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
@@ -35,8 +35,7 @@ const ChatItem = ({chat, name}) => {
                             "text-sm text-zinc-600 whitespace-pre-wrap"
                         )}
                     >
-                        {chat.type === "TEXT" ? chat.message : null }
-                        {/*<img src="./dummytalk/server/channel/chat8040c515-baf3-487d-8303-1a33f23a87a9_스크린샷 2023-12-18 185532.png"/>*/}
+                        {chat?.type === "TEXT" ? chat.message : null }
                     </p>
                     {chat.type === "IMAGE" && (
                         <a
@@ -46,10 +45,9 @@ const ChatItem = ({chat, name}) => {
                             className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
                         >
                             <img
-                                src={chat.message}
+                                src={REACT_FILE_PATH+"/images/"+"0d7c3a5d-8bfb-4460-a993-c5b1fe238d43_스크린샷 2023-12-17 004312.png"}
                                 alt={chat.message}
-                                fill
-                                className="object-cover"
+                                className="w-full h-full object-cover"
                             />
                         </a>
                     )}
