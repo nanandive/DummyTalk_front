@@ -7,9 +7,6 @@ import { useModal } from "src/components/hooks/use-modal";
 import "./css/ChannelModal.css";
 
 
-
-
-
 const CreateChannelModal = () => {
     const navigate = useNavigate();
     const { data, isOpen, onClose, type } = useModal();
@@ -39,7 +36,7 @@ const CreateChannelModal = () => {
             console.log("채널 생성 성공");
             onClose();
 
-            navigate(`/ChatVoice?server=${serverId}`, {
+            navigate(`/main?server=${serverId}`, {
                 replace: true,
                 state: uuid(),
             });
