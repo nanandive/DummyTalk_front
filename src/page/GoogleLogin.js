@@ -12,8 +12,9 @@ export default function GoogleLogin() {
     const googleSignInButton = useRef(null);
 
     const onGoogleSignIn= (res) =>{
-        dispatch(callPostGoogleLogin(res.credential))
+        dispatch(callPostGoogleLogin({credential : res.credential}))
         // console.log(res)
+        // console.log(res.credential.split('.'))
     }
 
     useScript('https://accounts.google.com/gsi/client', () => {

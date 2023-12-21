@@ -25,7 +25,6 @@ export const AuthProvider = () => {
                 navigate("/sign-up", {replace: true});
             }
         }
-
     }, [])
 
 
