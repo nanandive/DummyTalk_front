@@ -29,6 +29,7 @@ const AddFriendModal = () =>{
         dispatch(callPostFriend({
             email:email
         }))
+        onClose()
     }
 
 
