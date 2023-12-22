@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { callPostSignUp, callPostMail, callPostCheck } from '../api/UserAPICalls';
-import { useGoogleLogin } from "@react-oauth/google";
 
 import styles from './SignUpForm.module.css'
 
