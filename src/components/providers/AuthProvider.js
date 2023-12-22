@@ -13,15 +13,15 @@ export const AuthProvider = () => {
 
         return <Navigate to={"/sign-up"} replace={true} />
     }
-        
+
     const verified = TokenExpiration(decodedToken);
 
     if (verified === false) {
         alert("로그인 세션시간이 만료되었습니다.");
-        
+
         return <Navigate to={"/sign-up"} replace={true} />
     }
-    
+
 
     return <Outlet />;
 };
