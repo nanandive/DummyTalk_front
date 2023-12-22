@@ -25,7 +25,6 @@ function Header() {
     const data = useSelector(state => state.userReducer);
 
 
-
     /* 서버 리스트 가져오기 */
     useEffect(() => {
         const fetchServers = async () => {
