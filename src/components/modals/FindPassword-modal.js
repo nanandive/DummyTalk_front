@@ -11,14 +11,13 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {callPostFriend} from "../../api/MainAPICalls";
 
-const AddFriendModal = () =>{
-
+const FindPasswordModal = () =>{
 
     const [email, setEmail] = useState('');
     const { isOpen, onOpen, onClose, type, data } = useModal();
     const dispatch = useDispatch();
 
-    const isModalOpen = isOpen && type === "addFriend";
+    const isModalOpen = isOpen && type === "findPassword";
 
     const handleEmailChange = (e) =>{
         setEmail(e.target.value)
@@ -66,4 +65,4 @@ const AddFriendModal = () =>{
     )
 }
 
-export default AddFriendModal;
+export default FindPasswordModal;

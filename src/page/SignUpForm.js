@@ -26,9 +26,9 @@ const SignUpForm = () => {
     const [stateData, setStateData] = useState(data);
 
 
-  const handleNameChange = (e) => {
+    const handleNameChange = (e) => {
     setUserName(e.target.value);
-  };
+    };
 
   const handleNicknameChange = (e) =>{
     setNickname(e.target.value);
