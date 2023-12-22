@@ -1,10 +1,10 @@
 import { useMicVAD, utils } from "@ricky0123/vad-react";
+import axios from "axios";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
-import axios from "axios";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",
@@ -36,13 +36,13 @@ const AudioRecorderTest = () => {
             // const url = `data:audio/wav;base64,${base64}`;
             // setAudioList((old) => [url, ...old]);
         },
-        positiveSpeechThreshold: 0.3,
-        negativeSpeechThreshold: 0.2,
+        positiveSpeechThreshold: 0.55,
+        negativeSpeechThreshold: 0.4,
         startOnLoad: false
     });
 
     return (
-        <ui>
+        <ul>
             {audioList.map((audio) => {
                 return (
                     <li>
@@ -56,7 +56,7 @@ const AudioRecorderTest = () => {
             <Button
                 variant="ghost"
                 className={`w-[70px] h-[70px] bg-transparent border-2 border-[#8e44ad] rounded-full hover:scale-105 transition-transform ${
-                    vad?.loading ? "hidden" : "block"
+                    (vad?.loading || !!vad?.errored) ? "hidden" : "block"
                 }`}
                 onClick={() => vad.toggle()}
             >
@@ -67,7 +67,7 @@ const AudioRecorderTest = () => {
                     <Activity className="text-[#8e44ad] w-full h-full font-bold" />
                 )}
             </Button>
-        </ui>
+        </ul>
     );
 };
 
