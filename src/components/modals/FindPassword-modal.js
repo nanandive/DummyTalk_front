@@ -14,15 +14,8 @@ import {callPostFriend} from "../../api/MainAPICalls";
 const FindPasswordModal = () =>{
 
     const [email, setEmail] = useState('');
-    const { isOpen, onOpen, onClose, type, data } = useModal();
     const dispatch = useDispatch();
 
-    const isModalOpen = isOpen && type === "findPassword";
-
-    const handleEmailChange = (e) =>{
-        setEmail(e.target.value)
-        console.log(email)
-    }
 
     const onClickAddFriend = () =>{
         dispatch(callPostFriend({
@@ -33,10 +26,7 @@ const FindPasswordModal = () =>{
 
 
     return(
-        <Dialog
-            open={isModalOpen}
-            onOpenChange={onClose}
-        >
+        <Dialog>
             <DialogContent className="bg-white text-black overflow-hidden">
                 <DialogHeader className="px-6">
                     <DialogTitle className="text-2xl text-center font-bold">

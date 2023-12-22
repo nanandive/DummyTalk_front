@@ -144,6 +144,7 @@ export default function SignUp() {
         <Button
             onClick={() => onOpen("findPassword")}
             className={styles.bottomButton}
+            type={"button"}
         >
           비밀번호 찾기
         </Button>
