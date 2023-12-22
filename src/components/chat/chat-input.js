@@ -95,6 +95,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
                 nickname: userInfo?.nickname,
+                type: "TEXT",
                 language: "en",
                 channelId,
             })
