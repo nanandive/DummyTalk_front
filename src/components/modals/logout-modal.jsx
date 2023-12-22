@@ -7,17 +7,24 @@ import {
     DialogHeader,
     DialogTitle,
 } from "src/components/ui/dialog";
+import {useNavigate} from "react-router-dom";
 
 function LogOutModal() {
     const { isOpen, onClose, type } = useModal();
 
     const isModalOpen = isOpen && type === "logout";
 
+    const navigate = useNavigate();
+
+    const onClickLogout = () => {
+        alert("로그아웃이 되었습니다~");
+        window.localStorage.removeItem("accessToken");
+        navigate("/")
+    };
+
+
     return (
-        <Dialog
-            open={isModalOpen}
-            onOpenChange={onClose}
-        >
+        <Dialog open={isModalOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white text-black overflow-hidden">
                 <DialogHeader className="px-6 flex flex-col gap-5">
                     <DialogTitle className="text-2xl text-center font-bold">
@@ -35,7 +42,7 @@ function LogOutModal() {
                             </Button>
                             <Button
                                 className="bg-red-400 hover:bg-red-500 font-semibold text-sm text-black w-[80px]"
-                                
+                                onClick={onClickLogout}
                             >
                                 로그아웃
                             </Button>
