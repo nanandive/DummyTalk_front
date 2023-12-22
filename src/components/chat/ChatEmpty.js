@@ -4,8 +4,8 @@ const ChatEmpty = () => {
 
     return (
         <div className="h-full w-full">
-            <div className="h-1/2 w-1/2 flex flex-col">
-                <img className="" src={ChatEmptyImg} alt="채팅이 없습니다." />
+                <img className="w-1/2 h-fit"  src={ChatEmptyImg} alt="채팅이 없습니다." />
+            <div className="flex flex-col">
                 <p>채팅을 시작해보세요!</p>
             </div>
         </div>

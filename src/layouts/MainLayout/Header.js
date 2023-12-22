@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
@@ -8,9 +8,14 @@ import { UserAvatar } from "src/components/user-avatar";
 import {useDispatch, useSelector} from "react-redux";
 import {callGetNickname} from "../../api/MainAPICalls";
 import AddFriendModal  from "../../components/modals/Add-Friend-modal"
+import { decodeJwt } from "src/lib/tokenUtils";
 
 
 function Header() {
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userId = userInfo.sub;
+
     const { onOpen } = useModal();
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
@@ -19,21 +24,26 @@ function Header() {
 
     const data = useSelector(state => state.userReducer);
 
+
+
     /* 서버 리스트 가져오기 */
     useEffect(() => {
         const fetchServers = async () => {
+            if(!userId) return;
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/list`);
-                setServerList(Array.isArray(response.data) ? response.data : []); // 배열인지 확인
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/list/${userId}`);
+                setServerList(Array.isArray(response.data) ? response.data : []);
                 console.log("요청 성공", response);
+                console.log("요청 성공", setServerList);
             } catch (error) {
                 console.error('서버 리스트 가져오기 실패', error);
                 setServerList([]); // 오류 발생 시 빈 배열로 설정
             }
         };
-
+        // if(userId){
+        //     console.log('-----!!!!----')
+        // }
         fetchServers();
-        console.log('-----!!!!----')
     }, [state]);
 
     useEffect(() => {

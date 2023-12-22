@@ -1,32 +1,33 @@
 // src/layouts/LeftSide/Settings.js
-import React, { useState } from "react";
-import AudioRecorder from "../../components/AudioRecorder/AudioRecorder";
-import axios from "axios";
-import { useModal } from "../../components/hooks/use-modal"; // Update the path
-import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../components/modals/VideoModal.css"
 import {
-  faVideo,
   faDesktop,
   faMicrophone,
-  faVolumeMute,
-  faCog,
+  faVideo,
+  faVolumeMute
 } from "@fortawesome/free-solid-svg-icons";
-import "./css/Settings.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useState } from "react";
+import AudioRecorderTest from "src/components/AudioRecorder/AudioRecorderTest";
 import "../../components/AudioRecorder/AudioRecorder.css"; // Update the path
+import { useModal } from "../../components/hooks/use-modal"; // Update the path
+import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
+import "../../components/modals/VideoModal.css";
 import VideoModal from "../../components/modals/VideoModal.js"; // Import the VideoModal component
+import "./css/Settings.css";
 
 function Settings() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
-  const serverId = query.get("server");
+  const serverId = query.get("serverId");
   const [serverSettings, setServerSettings] = useState({});
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharingOn, setIsScreenSharingOn] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isMicrophoneMuted, setIsMicrophoneMuted] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false); // New state for VideoModal
+
+
 
   const handleVideoToggle = () => {
     setIsVideoOn(!isVideoOn);
@@ -64,47 +65,43 @@ function Settings() {
     setIsVideoModalOpen(false);
   };
 
+  console.log('setting');
+
   return (
     <div className="settings-container">
       <br />
       <div className="settings-container1">
         <button
-          className={`icon-btn ${isVideoOn ? "active" : ""}`}
+          className={`icon-btn ${isVideoOn ? "active" : ""} w-1/4`}
           onClick={handleVideoToggle}
         >
           <FontAwesomeIcon icon={faVideo} />
           <p>Video</p>
         </button>
         <button
-          className={`icon-btn ${isScreenSharingOn ? "active" : ""}`}
+          className={`icon-btn ${isScreenSharingOn ? "active" : ""} w-1/4`}
           onClick={handleScreenShare}
         >
           <FontAwesomeIcon icon={faDesktop} />
           <p>Screen Share</p>
         </button>
         <button
-          className={`icon-btn ${isAudioMuted ? "active" : ""}`}
+          className={`icon-btn ${isAudioMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteAudio}
         >
           <FontAwesomeIcon icon={faVolumeMute} />
           <p>Mute Audio</p>
         </button>
         <button
-          className={`icon-btn ${isMicrophoneMuted ? "active" : ""}`}
+          className={`icon-btn ${isMicrophoneMuted ? "active" : ""} w-1/4`}
           onClick={handleMuteMicrophone}
         >
           <FontAwesomeIcon icon={faMicrophone} />
           <p>Mute Microphone</p>
         </button>
       </div>
-      <AudioRecorder />
-      <button
-        className="open-settings-btn"
-        onClick={() => onOpen("settings", { serverId })}
-      >
-        <FontAwesomeIcon icon={faCog} />
-      </button>
-      <p>서버이름: {serverId} 채널이름: {serverId}</p>
+      {/* <AudioRecorder /> */}
+      <AudioRecorderTest />
       <button
         className={`icon-btn ${isVideoOn ? "active" : ""}`}
         onClick={handleOpenVideoModal}
@@ -115,6 +112,11 @@ function Settings() {
       {isVideoModalOpen && (
         <VideoModal onClose={handleCloseVideoModal} />
       )}
+      <button
+          className="open-settings-btn"
+          onClick={() => onOpen("settings", { serverId })}
+      >
+      </button>
     </div>
   );
 }

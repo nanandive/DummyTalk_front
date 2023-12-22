@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import {useMemo, useRef, useState} from "react";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "../ui/button";
 import {
@@ -11,18 +11,26 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { decodeJwt } from "src/lib/tokenUtils";
 
 function CreateServerModal() {
     const navigate = useNavigate();
     const { isOpen, onClose, type } = useModal();
     const [serverName, setServerName] = useState(""); // 서버 이름 상태
     const isModalOpen = isOpen && type === "createServer";
-
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userName = userInfo.userName;
     const fileInputRef = useRef();
+    const userId = userInfo.sub;
+
 
     const handleCreateServer = async () => {
+        console.log(">>>>>>>> 유저정보 : " + userName )
         const formData = new FormData();
         formData.append("serverName", serverName);
+        formData.append("userName", userName);
+        formData.append("userId", userId);
         if (fileInputRef.current && fileInputRef.current.files[0]) {
             formData.append("file", fileInputRef.current.files[0]);
         }

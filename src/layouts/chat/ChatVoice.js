@@ -13,6 +13,7 @@ import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { useSocket } from "src/components/providers/sock-provider";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";
@@ -21,7 +22,7 @@ import Stomp from "webstomp-client";
 
 function Chat({ isOpen, setOpen }) {
   const { onOpen, onClose } = useModal();
-
+  const { socket } = useSocket();
   const query = useUrlQuery();
   const channelId = query.get("channel");
 
@@ -30,12 +31,13 @@ function Chat({ isOpen, setOpen }) {
 
   const [enabled, setEnabled] = useState(false); // 채팅번역 기능
   const [data, setData] = useState([]);
-  const [newMessage, setNewMessage] = useState([]);
-  const [onRec, setOnRec] = useState(true);
+  //audio message
+  const [newMessage, setNewMessage] = useState([]); // 초기값으로 빈 배열을 설정
+  const [onRec, setOnRec] = useState(false); // 초기값을 false로 설정
 
   const [isDragging, setIsDragging] = useState(false); //drag&drop
   const [isMouseOver, setIsMouseOver] = useState(false); // 마우스가 채팅창 위에 있는지 여부
-  const socket = useRef(null);
+
 
   //drag & drop
 
@@ -88,7 +90,7 @@ function Chat({ isOpen, setOpen }) {
   };
 
   const sendChatMessage = useCallback(() => {
-    socket.current.send(
+    socket.send(
       `/app/${channelId}/message`,
       JSON.stringify({
         message: sendMessage.current?.value,
@@ -104,8 +106,6 @@ function Chat({ isOpen, setOpen }) {
     // setSendMessage("");
   }, [channelId, sendMessage]);
 
-
-
   const stopRecording = async (media, userInfo, channelId, socket) => {
     media.ondataavailable = function (e) {
       const audioBlob = new Blob([e.data], { type: "audio/wav" });
@@ -113,22 +113,19 @@ function Chat({ isOpen, setOpen }) {
       const formData = new FormData();
       formData.append("audio", audioBlob);
   
-      axios
-        .post("http://localhost:8080/channel/audioMessage", formData)
+      axios.post("http://localhost:9999/channel/audioMessage", formData)
         .then((response) => {
           console.log("오디오 업로드 성공:", response);
-          const audioUrl = response.data.audioUrl;
+          const audioUrl = response.data.audioUrl; 
           sendAudioMessage(audioUrl, userInfo, channelId, socket);
         })
         .catch((error) => {
           console.error("오디오 업로드 오류:", error);
         });
-  
-      // Additional logic...
     };
   };
-
-  const sendAudioMessage = (audioUrl, userInfo, channelId, socket) => {
+  
+  const sendAudioMessage = useCallback((audioUrl, userInfo, channelId, socket) => {
     socket.current.send(
       `/app/${channelId}/audioMessage`,
       JSON.stringify({
@@ -140,8 +137,7 @@ function Chat({ isOpen, setOpen }) {
         audioUrl: audioUrl,
       })
     );
-  };
-  
+  }, []);
 
   // 이미지 전송
   const imageSend = () => {
@@ -188,7 +184,7 @@ function Chat({ isOpen, setOpen }) {
     socket.current.connect({}, function (frame) {
       console.log("Connected: " + frame);
 
-      socket.current.subscribe(
+      stompSocket.subscribe(
         `/topic/msg/${channelId}`,
         function (msg) {
           console.log(msg);
@@ -201,8 +197,8 @@ function Chat({ isOpen, setOpen }) {
       );
     });
 
-    return () => socket.current.disconnect(() => {});
-  }, [channelId]);
+    return () => stompSocket.disconnect(() => {});
+  }, [channelId, newMessage]); // 의존성 배열에 newMessage 추가
 
   if (!channelId) return <ChatEmpty />;
 

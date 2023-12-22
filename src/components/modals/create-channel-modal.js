@@ -4,8 +4,7 @@ import uuid from "react-uuid";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
-
-
+import "./css/ChannelModal.css";
 
 
 const CreateChannelModal = () => {
@@ -35,6 +34,8 @@ const CreateChannelModal = () => {
             );
 
             console.log("채널 생성 성공");
+            onClose();
+
             navigate(`/main?server=${serverId}`, {
                 replace: true,
                 state: uuid(),
@@ -45,7 +46,6 @@ const CreateChannelModal = () => {
             onClose();
         }
     };
-    
 
 
     const handleSubmit = async (e) => {
@@ -73,89 +73,21 @@ const CreateChannelModal = () => {
     };
     
     return (
-        <div
-            style={{
-                display: isModalOpen ? "block" : "none",
-                position: "fixed",
-                zIndex: 1,
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%",
-                overflow: "auto",
-                backgroundColor: "rgba(0,0,0,0.4)",
-            }}
-        >
-            <div
-                style={{
-                    backgroundColor: "#fefefe",
-                    margin: "10% auto",
-                    padding: "20px",
-                    border: "1px solid #888",
-                    width: "50%",
-                }}
-            >
-                <span
-                    style={{
-                        color: "#aaa",
-                        float: "right",
-                        fontSize: "28px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                    }}
-                    onClick={onClose}
-                >
-                    &times;
-                </span>
-                <h2 style={{ textAlign: "center" }}>채널 생성</h2>
-                <form onSubmit={handleSubmit} style={{ color: isFormDataComplete ? "green" : "defaultColor" }}>
-                    <label style={{ marginBottom: "10px", display: "block" }}>
+        <div className="create-channel-modal" style={{ display: isModalOpen ? "block" : "none" }}>
+            <div className="create-channel-modal-content">
+                <span className="create-channel-modal-close" onClick={onClose}>&times;</span>
+                <h2 className="create-channel-modal-header">채널 생성</h2>
+                <form className="create-channel-modal-form" onSubmit={handleSubmit}>
+                    <label>
                         채널 이름:
                         <input
                             type="text"
                             value={channelName}
                             onChange={handleInputChange}
-                            style={{
-                                width: "100%",
-                                padding: "8px",
-                                margin: "8px 0",
-                                boxSizing: "border-box",
-                                border: "1px solid black",
-                            }}
                         />
                     </label>
-                    <button
-                        type="submit"
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            background: "#4CAF50",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        생성
-                    </button>
-
-
-                    <button
-                    type="button" // type을 'button'으로 설정하여 폼 제출을 방지
-                    onClick={handleOneToOneChat}
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        marginTop: "10px",
-                        background: "#2196F3",
-                        color: isFormDataComplete ? "white" : "white", // Example color change
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                    }}
-                >
-                    1:1 번역채팅방
-                </button>
+                    <button type="submit">생성</button>
+                    <button type="button" onClick={handleOneToOneChat}>1:1 번역채팅방</button>
                 </form>
             </div>
         </div>
