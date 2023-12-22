@@ -11,7 +11,7 @@ function Navbar() {
     const accessToken = localStorage.getItem('accessToken');
 
     const onClickLogout = () => {
-        alert("로그아웃이 되었습니다~");
+        alert("로그아웃이 되었습니다");
         setClick(!click);
         window.localStorage.removeItem("accessToken");
     };

@@ -1,14 +1,17 @@
-import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
 import styles from './SignUp.module.css'; // Import your CSS module
+import GoogleLogin from "../page/GoogleLogin";
+import { useModal } from "src/components/hooks/use-modal";
+import { Button } from "src/components/ui/button";
+
 
 export default function SignUp() {
 
   const accessToken = window.localStorage.getItem('accessToken');
-  const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+  // const decodedToken = accessToken ? jwtDecode(accessToken) : null;
 
   const navigate = useNavigate(); // Initialize navigate for navigation
 
@@ -18,6 +21,8 @@ export default function SignUp() {
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
   const dispatch = useDispatch();
+
+  const { onOpen } = useModal();
 
 
   const user = {
@@ -69,10 +74,7 @@ export default function SignUp() {
 
 
   const onClickTest = () =>{
-
-    console.log(new Date().getTime())
-    console.log(decodedToken.exp* 1000)
-
+    console.log("haha")
   }
 
   if(accessToken){
@@ -91,13 +93,14 @@ export default function SignUp() {
 
   return (
     <div className={styles.page}>
-      <div onClick={() => onClickTest()} className={styles.titleWrap}>
+
+      <h1 style={{marginTop:"170px"}} onClick={() => onClickTest()} className={styles.titleWrap}>
         이메일과 비밀번호를
         <br />
         입력해주세요
-      </div>
+      </h1>
 
-      <div className={styles.contentWrap}>
+      <div>
         <div className={styles.inputTitle}>이메일 주소</div>
         <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
           <input
@@ -108,11 +111,12 @@ export default function SignUp() {
             onChange={handleEmail}
           />
         </div>
+
         <div className={styles.errorMessageWrap}>
           {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
         </div>
 
-        <div style={{ marginTop: '26px' }} className={styles.inputTitle}>
+        <div className={styles.inputTitle}>
           비밀번호
         </div>
         <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
@@ -130,14 +134,23 @@ export default function SignUp() {
         </div>
       </div>
 
-      <div>
+      <div className={styles.submitWrap}>
         <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
           확인
         </button>
         <button onClick={onClickSignUpButton} className={styles.bottomButton}>
           회원가입
         </button>
+        <Button
+            onClick={() => onOpen("findPassword")}
+            className={styles.bottomButton}
+        >
+          비밀번호 찾기
+        </Button>
+        <div style={{margin:"50px 30px"}}>
+          <GoogleLogin />
+        </div>
       </div>
     </div>
-  );
+  )
 }
