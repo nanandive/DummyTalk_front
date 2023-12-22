@@ -24,13 +24,13 @@ export const callPostFriend = (email) => {
     const requestURL = `${process.env.REACT_APP_API_URL}/friend/${decodedToken.sub}`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             },body: JSON.stringify(email)
         }).then(response => response.json());
-        console.log(result.data)
+        alert(result.message)
         dispatch({ type: POST_ADD_FRIEND, payload: result.data });
     }
 }
