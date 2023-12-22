@@ -1,4 +1,3 @@
-// ChannelModal.js
 import axios from "axios";
 import uuid from "react-uuid";
 import { useState } from "react";
@@ -6,75 +5,70 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import "./css/ChannelModal.css";
 
-
-
-
-
 const CreateChannelModal = () => {
     const navigate = useNavigate();
     const { data, isOpen, onClose, type } = useModal();
     const { serverId } = data;
     const isModalOpen = isOpen && type === "createChannel";
     const [channelName, setChannelName] = useState("");
-    const [isFormDataComplete, setIsFormDataComplete] = useState(false);
 
     const handleInputChange = (e) => {
         setChannelName(e.target.value);
     };
-
-
-    const handleOneToOneChat = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("channelName", channelName);
-        formData.append("serverId", serverId);
-        setIsFormDataComplete(channelName && serverId);
-
-        try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/channel/writePro`,
-                formData
-            );
-
-            console.log("채널 생성 성공");
-            onClose();
-
-            navigate(`/ChatVoice?server=${serverId}`, {
-                replace: true,
-                state: uuid(),
-            });
-        } catch (error) {
-            console.log("채널 생성 실패");
-        } finally {
-            onClose();
-        }
-    };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("channelName", channelName);
         formData.append("serverId", serverId);
+        formData.append("channelType", "TEXT");  // 채널 타입을 TEXT로 설정
 
         try {
             await axios.post(
-                `${process.env.REACT_APP_API_URL}/channel/writePro`,
+                `${process.env.REACT_APP_API_URL}/channel/writePro1`,
                 formData
             );
-
             console.log("채널 생성 성공");
+            onClose();
             navigate(`/main?server=${serverId}`, {
                 replace: true,
                 state: uuid(),
             });
         } catch (error) {
             console.log("채널 생성 실패");
+            console.log(formData.getAll);
+
+
         } finally {
             onClose();
         }
     };
-    
+
+    const handleOneToOneChat = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("channelName", channelName);
+        formData.append("serverId", serverId);
+        formData.append("channelType", "VOICE");  // 채널 타입을 VOICE로 설정
+
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_API_URL}/channel/writePro1`,
+                formData
+            );
+            console.log("1:1 번역채팅방 생성 성공");
+            onClose();
+            navigate(`/Chat?server=${serverId}`, {
+                replace: true,
+                state: uuid(),
+            });
+        } catch (error) {
+            console.log("1:1 번역채팅방 생성 실패");
+        } finally {
+            onClose();
+        }
+    };
+
     return (
         <div className="create-channel-modal" style={{ display: isModalOpen ? "block" : "none" }}>
             <div className="create-channel-modal-content">
