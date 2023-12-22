@@ -4,8 +4,8 @@ import {format} from "date-fns";
 import moment from "moment";
 
 const ChatItem = ({chat, name}) => {
-
-    const REACT_FILE_PATH = "http://localhost:3000"
+    // src={"http://localhost:9999/upload/01e778ab-5713-47f8-82c6-7b71a5979ce0_스크린샷 2023-12-20 224416.png"}
+    const SERVER_FILE_PATH = "http://localhost:9999/upload/"
 
     // console.log(chat.type)
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
@@ -45,8 +45,9 @@ const ChatItem = ({chat, name}) => {
                             className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
                         >
                             <img
-                                src={REACT_FILE_PATH+"/images/"+"0d7c3a5d-8bfb-4460-a993-c5b1fe238d43_스크린샷 2023-12-17 004312.png"}
+                                // src={chat.message}
                                 alt={chat.message}
+                                src={SERVER_FILE_PATH+chat.message}
                                 className="w-full h-full object-cover"
                             />
                         </a>
