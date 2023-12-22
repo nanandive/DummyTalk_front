@@ -8,4 +8,3 @@ async function getChatList() {
         console.error(e);
     }
 }
-

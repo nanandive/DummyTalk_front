@@ -5,6 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
+import {useDispatch, useSelector} from "react-redux";
+import {callGetNickname} from "../../api/MainAPICalls";
+import AddFriendModal  from "../../components/modals/Add-Friend-modal"
 import { decodeJwt } from "src/lib/tokenUtils";
 
 
@@ -17,6 +20,9 @@ function Header() {
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
     const { state } = useLocation()
+    const dispatch =  useDispatch()
+
+    const data = useSelector(state => state.userReducer);
 
 
 
@@ -39,6 +45,10 @@ function Header() {
         // }
         fetchServers();
     }, [state]);
+
+    useEffect(() => {
+        dispatch( callGetNickname() )
+    }, []);
 
     const [page, setPage] = useState(0);
     const validServerList = Array.isArray(serverList) ? serverList : [];
@@ -103,7 +113,7 @@ function Header() {
                         </div>
                     ))}
 
-
+                    <AddFriendModal />
 
                     <button
                         onClick={() => setPage((prev) => prev + 1)}
@@ -116,14 +126,20 @@ function Header() {
                         <ChevronRight className={"text-yellow-600"} />
                     </button>
                 </div>
+                <Button
+                    onClick={() => onOpen("addFriend")}
+                    className="w-[80px] h-[30px] bg-yellow-400 hover:bg-yellow-500 font-bold ml-auto"
+                >
+                    친구추가
+                </Button>
                 <div
                     style={{ cursor: "pointer" }}
-                    className="h-8 w-8 md:h-8 md:w-8 mr-2 ml-auto"
+                    className="h-8 w-8 md:h-8 md:w-8 mr-2"
                     onClick={() => onOpen("members")}
                 >
                     <UserAvatar src={imageUrl} />
                 </div>
-                <div style={{ margin: "0px 20px 0px 10px" }}>김지수</div>
+                <div style={{ margin: "0px 20px 0px 10px" }}>{data.nickname}</div>
                 <Button
                     onClick={() => onOpen("logout")}
                     className="w-[80px] h-[30px] bg-yellow-400 hover:bg-yellow-500 font-bold"
