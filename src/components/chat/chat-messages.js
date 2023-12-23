@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
+import { useChatData } from "../hooks/use-chat-data";
 
-const ChatMessages = ({channelId, data, setData, userInfo}) => {
+const ChatMessages = ({channelId, userInfo}) => {
     const [hasInitialized, setHasInitialized] = useState(false);
-
+    const { data, setData } = useChatData()
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
 
@@ -55,6 +56,8 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
     }, [channelId, userInfo, setData]);
 
 
+    console.log(data);
+    
     return (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">
             <div

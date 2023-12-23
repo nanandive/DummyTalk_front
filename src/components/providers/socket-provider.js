@@ -6,7 +6,7 @@ import { useSocket } from "../hooks/use-socket";
 export const SocketProvider = ({ children }) => {
   // const [socket, setSocket] = useState(null);
   // const [isConnected, setIsConnected] = useState(false);
-  const { setSocket } = useSocket();
+  const { setSocket, isConnected } = useSocket();
   const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
@@ -17,9 +17,8 @@ export const SocketProvider = ({ children }) => {
 
     stomp.connect({}, function (frame) {
       console.log("Connected: " + frame);
+      setSocket(stomp);
     });
-
-    setSocket(stomp);
 
     return () => stomp.disconnect(() => {});
   }, [accessToken]);
