@@ -1,9 +1,9 @@
 import { Activity, Mic } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
 import axios from "axios";
+import { useSocket } from "../hooks/use-socket";
 
 const AudioRecorder = () => {
   const [stream, setStream] = useState(null);

@@ -1,40 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
-
-const SocketContext = createContext({
-    socket: null,
-    isConnected: false,
-});
-
-export const useSocket = () => {
-    return useContext(SocketContext);
-};
+import { useSocket } from "../hooks/use-socket";
 
 export const SocketProvider = ({ children }) => {
-    const [socket, setSocket] = useState(null);
-    const [isConnected, setIsConnected] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
+  // const [socket, setSocket] = useState(null);
+  // const [isConnected, setIsConnected] = useState(false);
+  const { setSocket } = useSocket();
+  const accessToken = localStorage.getItem("accessToken");
 
-    useEffect(() => {
-        if (!accessToken) return
-        
-        const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
-        const stomp = Stomp.over(sockJs, { debug: false });
+  useEffect(() => {
+    if (!accessToken) return;
 
-        stomp.connect({}, function (frame) {
-            console.log("Connected: " + frame);
+    const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
+    const stomp = Stomp.over(sockJs, { debug: false });
 
-            setIsConnected(true);
-        });
+    stomp.connect({}, function (frame) {
+      console.log("Connected: " + frame);
+    });
 
-        setSocket(stomp);
-        return () => stomp.disconnect(() => {});
-    }, [accessToken]);
+    setSocket(stomp);
 
-    return (
-        <SocketContext.Provider value={{ socket, isConnected }}>
-            {children}
-        </SocketContext.Provider>
-    );
+    return () => stomp.disconnect(() => {});
+  }, [accessToken]);
+
+  return <>{children};</>;
 };
