@@ -1,14 +1,14 @@
 import axios from "axios";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
-import { useDispatch, useSelector } from "react-redux";
+import { decodeJwt } from "src/lib/tokenUtils";
 import { callGetNickname } from "../../api/MainAPICalls";
 import AddFriendModal from "../../components/modals/Add-Friend-modal";
-import { decodeJwt } from "src/lib/tokenUtils";
 
 function Header() {
   const accessToken = localStorage.getItem("accessToken");
@@ -73,15 +73,13 @@ function Header() {
 
   return (
     <>
-      <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#30304D]">
-        <div onClick={() => onOpen("settings")} className="w-[200px]">
-          <img
-            className="h-full w-[150px] min-w-[150px] flex items-center"
-            src="/logo.svg"
-            alt=""
-          ></img>
-        </div>
-        <div className="flex">
+      <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#30304D] gap-5">
+        <img
+          className="h-full w-[150px] min-w-[150px] flex items-center"
+          src="/logo.svg"
+          alt=""
+        />
+        <div className="flex items-center">
           <div onClick={() => onOpen("createServer")}>
             <Button className="bg-yellow-600" size="icon">
               <Plus />
@@ -131,20 +129,24 @@ function Header() {
             <ChevronRight className={"text-yellow-600"} />
           </button>
         </div>
+
         <Button
           onClick={() => onOpen("addFriend")}
           className="w-[80px] h-[30px] bg-yellow-400 hover:bg-yellow-500 font-bold ml-auto"
         >
           친구추가
         </Button>
-        <div
-          style={{ cursor: "pointer" }}
-          className="h-8 w-8 md:h-8 md:w-8 mr-2"
-          onClick={() => onOpen("members")}
+        <div className="flex items-center gap-3 cursor-pointer" 
+            onClick={() => onOpen("members")}
         >
-          <UserAvatar src={imageUrl} />
+          <div
+            className="h-8 w-8 md:h-8 md:w-8 flex items-center justify-center"
+          >
+            <UserAvatar src={imageUrl} />
+          </div>
+          <div className="text-[#B3A35D] font-bold">{data.nickname}</div>
         </div>
-        <div style={{ margin: "0px 20px 0px 10px" }}>{data.nickname}</div>
+
         <Button
           onClick={() => onOpen("logout")}
           className="w-[80px] h-[30px] bg-yellow-400 hover:bg-yellow-500 font-bold"
@@ -157,3 +159,4 @@ function Header() {
 }
 
 export { Header };
+

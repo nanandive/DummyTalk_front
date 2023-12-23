@@ -43,8 +43,9 @@ function UserModal() {
             <select
               placeholder={"국가선택"}
               className="pl-1 border border-[#F1F1F1] w-[250px] h-[30px]  rounded-md"
+              defaultValue="국가선택"
             >
-              <option value="국가선택" disabled selected hidden>
+              <option value="국가선택" disabled hidden>
                 국가선택
               </option>
               <option value="국가1">국가1</option>
