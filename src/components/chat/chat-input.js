@@ -93,7 +93,7 @@ const ChatInput = ({ channelId, userInfo }) => {
         <Switch
           id={"airplane-mode"}
           checked={enabled}
-          onClick={setEnabled}
+          onClick={() => setEnabled(prev => !prev)}
           className={`${
             enabled ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
           } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
