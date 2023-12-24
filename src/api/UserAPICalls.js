@@ -1,4 +1,11 @@
-import {POST_LOGIN, POST_SIGN_UP, POST_CHECK, POST_MAIL, POST_GOOGLE_LOGIN} from "../modules/LoginModule";
+import {
+    POST_LOGIN,
+    POST_SIGN_UP,
+    POST_CHECK,
+    POST_MAIL,
+    POST_GOOGLE_LOGIN,
+    POST_FIND_EMAIL
+} from "../modules/LoginModule";
 
 
 export const callPostSignUp = (user) => {
@@ -77,7 +84,7 @@ export const callPostGoogleLogin = (credential) =>{
 
             window.localStorage.setItem('accessToken', result.data.accessToken); // key : value
             console.log(localStorage.getItem('accessToken'))
-            dispatch({ type: POST_LOGIN, payload: result });
+            dispatch({ type: POST_GOOGLE_LOGIN, payload: result });
             alert(result.message)
             window.location.reload();
 
@@ -112,7 +119,23 @@ export const callPostCheck = (userSubmit) =>{
             },
             body : JSON.stringify(userSubmit)
         }).then(response => response.json());
+        alert(result.message)
         dispatch({ type: POST_CHECK, payload: result });
+    }
+}
+
+export const callPostEmail = (email) =>{
+    const requestURL = `${process.env.REACT_APP_API_URL}/findEmail`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body : JSON.stringify(email)
+        }).then(response => response.json());
+        dispatch({ type: POST_FIND_EMAIL, payload: result });
     }
 }
 

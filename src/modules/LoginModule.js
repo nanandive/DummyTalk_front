@@ -12,6 +12,7 @@ export const POST_GOOGLE_LOGIN = 'login/POST_GOOGLE_LOGIN';
 export const POST_SIGN_UP = 'sign/POST_SIGN_UP';
 export const POST_CHECK = 'sign/POST_CHECK';
 export const POST_MAIL = 'test/POST_MAIL';
+export const POST_FIND_EMAIL = "login/POST_FIND_EMAIL"
 
 
 //리듀서
@@ -55,6 +56,15 @@ export const googleLoginReducer = handleActions(
 export const mailReducer = handleActions(
     {
         [POST_MAIL] : (state, { payload }) =>{
+            return payload
+        },
+    },
+    initialState
+);
+
+export const findEmailReducer = handleActions(
+    {
+        [POST_FIND_EMAIL] : (state, { payload }) =>{
             return payload
         },
     },
