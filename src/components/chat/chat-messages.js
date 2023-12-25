@@ -56,7 +56,7 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
 
 
     return (
-        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">
+        <div className="h-3/4 flex items-end mx-3 overflow-y-auto scrollbar-hidden relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}
@@ -65,6 +65,7 @@ const ChatMessages = ({channelId, data, setData, userInfo}) => {
                     <ChatItem
                         key={chat.chatId}
                         chat={chat}
+                        channel={channelId}
                         name={chat.nickname}
                     />
                 ))}

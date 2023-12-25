@@ -18,10 +18,18 @@ const ImageSendModal = () => {
 
     const formData = new FormData();
 
+    const onCloseHandler = () =>{
+        onClose();
+        fileInput.current.value = "";
+        setShowImages([]);
+    }
+
+
     const handleAddImage = (e) => {
 
         if (fileInput.current && fileInput.current.files) {
             let showImgList = [...showImages];
+
             // 10개 이상의 파일은 업로드 불가
             for (let i = 0; i < e.target.files.length; i++) {
                 showImgList.push(URL.createObjectURL(e.target.files[i]));   // 요것이 문제 !!
@@ -44,14 +52,10 @@ const ImageSendModal = () => {
             if (fileInput.current && fileInput.current.files) {
                 const files = fileInput.current.files;
 
+
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
                 }
-
-                // for (const [key, value] of formData.entries()) {
-                //     console.log(`key: ${key}, value: ${value}`);
-                // }
-                // console.log("formData=======================", data.channelId)
 
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
@@ -94,6 +98,7 @@ const ImageSendModal = () => {
 
     }, [data.channelId, isConnected, socket]);
 
+
     return (
         <div
             className={`fixed top-0 left-0 w-full h-full ${
@@ -104,7 +109,7 @@ const ImageSendModal = () => {
                 className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
                 <span
                     className="text-gray-700 float-right text-2xl font-extrabold cursor-pointer"
-                    onClick={onClose}
+                    onClick={onCloseHandler}
                 >
                     &times;
                 </span>
@@ -124,8 +129,7 @@ const ImageSendModal = () => {
                 </label>
                 <Label className="">사진 전송 10개 이하</Label>
                 <div className="w-100 h-100 grid grid-cols-4 gap-4 ">
-                    {showImages.map((image, id) => (
-                        // <div key={id} className="flex flex-col items-center">
+                    { showImages.map((image, id) => (
                         <img
                             // 이미지 2x5로 나열 크기 고정
                             key={id}
