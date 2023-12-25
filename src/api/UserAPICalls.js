@@ -4,7 +4,7 @@ import {
     POST_CHECK,
     POST_MAIL,
     POST_GOOGLE_LOGIN,
-    POST_FIND_EMAIL
+    POST_FIND_EMAIL, POST_CHANGE_PASSWORD, POST_PASSWORD_MAIL
 } from "../modules/LoginModule";
 
 
@@ -138,4 +138,43 @@ export const callPostEmail = (email) =>{
         dispatch({ type: POST_FIND_EMAIL, payload: result });
     }
 }
+
+export const callPostPasswordMail = (email) =>{
+    const requestURL = `${process.env.REACT_APP_API_URL}/passwordMail`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body : JSON.stringify(email)
+        }).then(response => response.json());
+        dispatch({ type: POST_PASSWORD_MAIL, payload: result });
+        alert(result.message)
+        if(result.status == 500){
+            window.location.reload();
+        }
+    }
+}
+
+
+export const callPostPassword = (user) =>{
+    const requestURL = `${process.env.REACT_APP_API_URL}/changePassword`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body : JSON.stringify(user)
+        }).then(response => response.json());
+        dispatch({ type: POST_CHANGE_PASSWORD, payload: result });
+        alert(result.message)
+        window.location.reload();
+    }
+}
+
+
 

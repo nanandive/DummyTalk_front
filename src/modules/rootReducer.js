@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 import {
+    changePasswordReducer,
     checkReducer,
     findEmailReducer,
     googleLoginReducer,
     loginReducer,
-    mailReducer,
+    mailReducer, passwordMailReducer,
     signUpReducer
 } from './LoginModule'
 import {addFriendReducer, userReducer} from "./MainModule";
@@ -17,7 +18,9 @@ const rootReducer = combineReducers({
     googleLoginReducer,
     userReducer,
     addFriendReducer,
-    findEmailReducer
+    findEmailReducer,
+    changePasswordReducer,
+    passwordMailReducer
 })
 
 export default rootReducer;
