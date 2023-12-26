@@ -11,7 +11,6 @@ import axios from 'axios'
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
-    const [data, setData] = useState([])
     const [channelType, setChannelType] = useState(null);
 
     const query = useUrlQuery();
@@ -41,17 +40,17 @@ function Chat() {
                     setOpen={setOpen}
                 />
                 {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages channelId={channelId} data={data} setData={setData} userInfo={userInfo} />
+                <ChatMessages channelId={channelId} userInfo={userInfo} />
                 {channelType === "TEXT" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatInput channelId={channelId} setData={setData} userInfo={userInfo} />
+                        <ChatInput channelId={channelId} userInfo={userInfo} />
                     </>
                 )}
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInput channelId={channelId} setData={setData} userInfo={userInfo} />
+                        <ChatVoiceInput channelId={channelId} userInfo={userInfo} />
                     </>
                 )}
             </div>
