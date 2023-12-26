@@ -87,7 +87,7 @@ const CreateChannelModal = () => {
                         />
                     </label>
                     <button type="submit">생성</button>
-                    <button type="button" onClick={handleOneToOneChat}>1:1 번역채팅방</button>
+                    <button type="button" onClick={handleOneToOneChat}>1:1 음성번역 생성</button>
                 </form>
             </div>
         </div>

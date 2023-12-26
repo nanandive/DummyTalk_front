@@ -9,7 +9,6 @@ import ChatEmpty from "src/components/chat/ChatEmpty";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
-    const [data, setData] = useState([])
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
@@ -28,9 +27,9 @@ function Chat() {
                     setOpen={setOpen}
                 />
                 {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages channelId={channelId} data={data} setData={setData} userInfo={userInfo}/>
+                <ChatMessages channelId={channelId} userInfo={userInfo}/>
                 {/* 메시지 입력 */}
-                <ChatInput channelId={channelId} setData={setData} userInfo={userInfo}/>
+                <ChatInput channelId={channelId} userInfo={userInfo}/>
             </div>
             {isOpen && <RightBar />}
         </>

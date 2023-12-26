@@ -3,7 +3,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useModal} from "src/components/hooks/use-modal";
 import {Label} from "src/components/ui/label";
 import {decodeJwt} from "src/lib/tokenUtils";
-import {useSocket} from "../providers/socket-provider";
+import { useSocket } from "../hooks/use-socket";
 
 const ImageSendModal = () => {
     const [enabled, setEnabled] = useState(false);
