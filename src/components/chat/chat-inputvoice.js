@@ -1,18 +1,20 @@
-import {Switch} from "@headlessui/react";
+import { Switch } from "@headlessui/react";
 import axios from "axios";
-import {ImagePlus} from "lucide-react";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useModal} from "../hooks/use-modal";
-import {useSocket} from "../providers/sock-provider";
-import {Button} from "../ui/button";
-import {Label} from "../ui/label";
-import {Textarea} from "src/components/ui/textarea";
+import { ImagePlus } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Textarea } from "src/components/ui/textarea";
 import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
+import { useChatData } from "../hooks/use-chat-data";
+import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../providers/sock-provider";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 
-const ChatVoiceInput = ({channelId, userInfo, setData}) => {
+const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
-    const {socket, isConnected} = useSocket();
-    const {onOpen} = useModal();
+    const { socket, isConnected } = useSocket();
+    const { updateData } = useChatData();
+    const { onOpen } = useModal();
 
     const sendMessageRef = useRef(null);
     /***
@@ -30,38 +32,40 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
     useEffect(() => {
         if (!channelId || !isConnected || !userInfo) return;
 
-        const updateData = (chatData) => setData((prev) => [...prev, chatData]);
-
         const subscription = socket.subscribe(
-            `/topic/msg/${channelId}`,
+            `/topic/audio/${channelId}`,
             async (msg) => {
                 let result = JSON.parse(msg.body);
-                console.log("result   :", result)
+                console.log("result   :", result);
 
-                if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
-                    const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
+                if (
+                    result.chat.type === "AUDIO" &&
+                    result.chat.sender !== parseInt(userInfo?.sub)
+                ) {
+                    console.log("AUDIO 시작");
+                    const apiUrl = `http://localhost:8000/api/v1/audio/audio/${userInfo?.national_language}`;
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",
-                        data: {...result.chat},
+                        responseType: "blob",
+                        data: { ...result.chat },
                     };
 
-                    const {data} = await axios(axiosConfig);
-                    result = data;
+                    axios(axiosConfig).then((response) => {
+                        const url = window.URL.createObjectURL(
+                            new Blob([response.data])
+                        );
+                        const audio = new Audio(url);
+                        audio.play();
+                    });
+
+                    return;
                 }
                 updateData(result.chat);
             }
         );
         return () => subscription.unsubscribe();
-    }, [
-        enabled,
-        isConnected,
-        channelId,
-        socket,
-        userInfo,
-        setData
-    ]);
-
+    }, [enabled, isConnected, channelId, socket, userInfo, setData]);
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -83,7 +87,7 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                 nickname: userInfo?.nickname,
                 language: "en",
                 channelId,
-                type: "TEXT"
+                type: "TEXT",
             })
         );
         sendMessageRef.current.value = "";
@@ -97,7 +101,7 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                     htmlFor="airplane-mode"
                     className="font-bold text-2 self-center "
                 >
-                    음성번역<AudioRecorderTest />
+                    음성번역
                 </Label>
                 <Switch
                     id={"airplane-mode"}
@@ -118,6 +122,7 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                         } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                     />
                 </Switch>
+                <AudioRecorderTest />
             </div>
             {/* 메시지 입력란 */}
             <Textarea
@@ -131,9 +136,9 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                 {/* 사진 전송 버튼 */}
                 <Button
                     className="absolute right-[95%] bottom-[-20%] "
-                    onClick={() => onOpen("imageSend", {channelId})}
+                    onClick={() => onOpen("imageSend", { channelId })}
                 >
-                    <ImagePlus/>
+                    <ImagePlus />
                 </Button>
                 {/* 메시지 전송 버튼 */}
                 <Button
