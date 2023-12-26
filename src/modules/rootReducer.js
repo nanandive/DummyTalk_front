@@ -8,7 +8,14 @@ import {
     mailReducer, passwordMailReducer,
     signUpReducer
 } from './LoginModule'
-import {addFriendReducer, friendReducer, userReducer} from "./MainModule";
+import {
+    addFriendReducer,
+    approvalReducer,
+    chageUserReducer,
+    friendReducer, refusalReducer,
+    requestReducer,
+    userReducer
+} from "./MainModule";
 
 const rootReducer = combineReducers({
     signUpReducer,
@@ -21,7 +28,11 @@ const rootReducer = combineReducers({
     findEmailReducer,
     changePasswordReducer,
     passwordMailReducer,
-    friendReducer
+    friendReducer,
+    chageUserReducer,
+    requestReducer,
+    approvalReducer,
+    refusalReducer
 })
 
 export default rootReducer;

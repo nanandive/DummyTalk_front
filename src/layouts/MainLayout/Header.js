@@ -6,8 +6,9 @@ import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
 import {useDispatch, useSelector} from "react-redux";
-import {callGetNickname} from "../../api/MainAPICalls";
+import {callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal} from "../../api/MainAPICalls";
 import AddFriendModal  from "../../components/modals/Add-Friend-modal"
+
 import { decodeJwt } from "src/lib/tokenUtils";
 
 
@@ -19,10 +20,13 @@ function Header() {
     const { onOpen } = useModal();
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
+    const [onRequest, setOnRequest] = useState(false);
+    const [click, setClick] = useState(false);
     const { state } = useLocation()
     const dispatch =  useDispatch()
 
     const data = useSelector(state => state.userReducer);
+    const FriendData = useSelector(state => state.requestReducer);
 
 
     /* 서버 리스트 가져오기 */
@@ -47,7 +51,8 @@ function Header() {
 
     useEffect(() => {
         dispatch( callGetNickname() )
-    }, []);
+        dispatch( callGetFriendRequest() )
+    }, [click]);
 
     const [page, setPage] = useState(0);
     const validServerList = Array.isArray(serverList) ? serverList : [];
@@ -59,7 +64,22 @@ function Header() {
         navigate(`/main?server=${serverId}`);
     };
 
+    const onClickApproval = (friendId) =>{
+        dispatch(callPostApproval(friendId))
+        dispatch( callGetFriendRequest() )
+    }
 
+    const onClick = () =>{
+        setClick(prev => !prev)
+    }
+
+    const onClickRefusal = (friendId) =>{
+        dispatch(callPostRefusal(friendId))
+    }
+
+    const onClickRequest = () =>{
+        setOnRequest(prev => !prev);
+    }
 
     return (
         <>
@@ -131,12 +151,38 @@ function Header() {
                 >
                     친구추가
                 </Button>
+                <Button
+                    onClick={ onClickRequest }
+                    className="w-[80px] h-[30px] bg-yellow-400 hover:bg-yellow-500 font-bold"
+                >
+                    친구요청
+                </Button>
+                <div style={onRequest ? {width:"400px", height:"500px", top:"33%" ,left:"87%", border:"1px solid black", transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto"} : {display : "none"}}>
+                    <div style={{width: "395px", height:"50px", alignItems:"center", display:"flex"}}>
+                        {FriendData.length > 0 && FriendData.map(friend =>(
+                            <>
+                                <div style={{margin:"0px 20px"}}>
+                                    {friend.name}
+                                </div>
+                                <div>
+                                    {friend.userEmail}
+                                </div>
+                                <button onClick={() => onClickApproval({friendId: friend.userId})} style={{margin:"0px 0px 0px auto"}}>
+                                    수락
+                                </button>
+                                <button onClick={() => onClickRefusal({friendId: friend.userId})}style={{margin:"0px 20px"}}>
+                                    삭제
+                                </button>
+                            </>
+                        ))}
+                    </div>
+                </div>
                 <div
                     style={{ cursor: "pointer" }}
                     className="h-8 w-8 md:h-8 md:w-8 mr-2"
                     onClick={() => onOpen("members")}
                 >
-                    <UserAvatar src={imageUrl} />
+                    {data.userImgPath ? <UserAvatar src={"../../../../server/17b124ce-45a4-4182-9626-87cb765175ff_KakaoTalk_20230917_201137478.jpg"} />  : <UserAvatar src={imageUrl} />}
                 </div>
                 <div style={{ margin: "0px 20px 0px 10px" }}>{data.nickname}</div>
                 <Button
