@@ -4,12 +4,15 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    color: #1C2D41
   }
   
   .friends-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    color: #1C2D41
+
   }
   
   .friends-list li {
@@ -31,7 +34,7 @@
   .invite-button {
     margin-top: 16px;
     padding: 12px;
-    background-color: #4caf50;
+    background-color: #51CBB6;
     color: white;
     border: none;
     border-radius: 5px;
