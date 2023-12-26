@@ -40,7 +40,7 @@ const AudioRecorderTest = () => {
             console.log(wavBuffer);
             const formData = new FormData();
             formData.append("file", new Blob([wavBuffer]), "audio.wav");
-            axios.post("http://localhost:9999/audio/upload", formData)
+            axios.post(`${process.env.REACT_APP_API_URL}/audio/upload`, formData)
             .then((result) => {
                 console.log(result, channelId);
                 socket.send(
