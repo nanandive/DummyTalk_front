@@ -3,7 +3,7 @@ import axios from "axios";
 import {ImagePlus} from "lucide-react";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useModal} from "../hooks/use-modal";
-import {useSocket} from "../providers/socket-provider";
+import {useSocket} from "../providers/sock-provider";
 import {Button} from "../ui/button";
 import {Label} from "../ui/label";
 import {Textarea} from "src/components/ui/textarea";

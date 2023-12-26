@@ -1,11 +1,12 @@
-import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
 import styles from './SignUp.module.css'; // Import your CSS module
 import GoogleLogin from "../page/GoogleLogin";
-// import {GoogleOAuthProvider, GoogleLogin, googleLogout  } from "@react-oauth/google";
+import { useModal } from "src/components/hooks/use-modal";
+import { Button } from "src/components/ui/button";
+import { jwtDecode } from 'jwt-decode';
 
 
 export default function SignUp() {
@@ -21,6 +22,8 @@ export default function SignUp() {
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
   const dispatch = useDispatch();
+
+  const { onOpen } = useModal();
 
 
   const user = {
@@ -139,10 +142,16 @@ export default function SignUp() {
         <button onClick={onClickSignUpButton} className={styles.bottomButton}>
           회원가입
         </button>
+        <Button
+            onClick={() => onOpen("findPassword")}
+            className={styles.bottomButton}
+        >
+          비밀번호 찾기
+        </Button>
         <div style={{margin:"50px 30px"}}>
           <GoogleLogin />
         </div>
       </div>
     </div>
-  );
+  )
 }

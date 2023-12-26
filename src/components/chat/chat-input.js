@@ -3,11 +3,12 @@ import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "src/components/ui/textarea";
 import { utils } from "@ricky0123/vad-react";
+import {useSocket} from "../providers/sock-provider";
+
 
 const ChatInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능

@@ -14,11 +14,8 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        if (!accessToken) return
-        
         const sockJs = new SockJS(`${process.env.REACT_APP_API_URL}/websocket`);
         const stomp = Stomp.over(sockJs, { debug: false });
 
@@ -30,7 +27,7 @@ export const SocketProvider = ({ children }) => {
 
         setSocket(stomp);
         return () => stomp.disconnect(() => {});
-    }, [accessToken]);
+    }, []);
 
     return (
         <SocketContext.Provider value={{ socket, isConnected }}>

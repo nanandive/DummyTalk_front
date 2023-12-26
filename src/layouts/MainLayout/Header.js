@@ -11,9 +11,9 @@ import AddFriendModal from "../../components/modals/Add-Friend-modal";
 import { decodeJwt } from "src/lib/tokenUtils";
 
 function Header() {
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
-    const userId = userInfo.sub;
+  const accessToken = localStorage.getItem("accessToken");
+  const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+  const userId = userInfo.sub;
 
     const { onOpen } = useModal();
     const imageUrl = "./test.png";
@@ -41,9 +41,12 @@ function Header() {
         dispatch(callGetNickname());
     }, [dispatch]);
 
-    const [page, setPage] = useState(0);
-    const validServerList = Array.isArray(serverList) ? serverList : [];
-    const slicedData = validServerList.length > 6 ? validServerList.slice(page, 6 + page) : validServerList;
+  const [page, setPage] = useState(0);
+  const validServerList = Array.isArray(serverList) ? serverList : [];
+  const slicedData =
+    validServerList.length > 6
+      ? validServerList.slice(page, 6 + page)
+      : validServerList;
 
     const navigate = useNavigate();
     const handleServerClick = (serverId) => {
