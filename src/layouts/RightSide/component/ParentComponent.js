@@ -11,7 +11,7 @@ function ParentComponent() {
 
   return (
     <div>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+      <div className="flex fle: 'row', alignItems: 'center'">
         <input
           type="text"
           value={searchQuery}
