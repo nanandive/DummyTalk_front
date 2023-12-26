@@ -38,9 +38,7 @@ function Header() {
         setServerList([]); // 오류 발생 시 빈 배열로 설정
       }
     };
-    // if(userId){
-    //     console.log('-----!!!!----')
-    // }
+
     fetchServers();
   }, [state]);
 
@@ -59,15 +57,6 @@ function Header() {
   const navigate = useNavigate();
   const handleServerClick = (serverId) => {
     navigate(`/main?server=${serverId}`);
-    // try {
-    //   const response = axios.post(
-    //     `${process.env.REACT_APP_API_URL}/server/joinUser/${serverId}/${userId}`
-    //   );
-    //   console.log("서버로 유저 접속제한 보내기 성공", response);
-    //   console.log(">>>>>${serverId}, ${userId}");
-    // } catch (error) {
-    //   console.log("서버로 유저 접속제한 보내기 실패");
-    // }
   };
 
   return (

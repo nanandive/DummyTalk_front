@@ -7,6 +7,7 @@ import ImageSendModal from "src/components/modals/image-send-modal";
 import LogOutModal from "src/components/modals/logout-modal";
 import SettingsModal from "src/components/modals/settings-modal";
 import UserModal from "src/components/modals/user-modal";
+import InvitedUserModal from "src/components/modals/invited-user-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -29,6 +30,7 @@ export const ModalProvider = () => {
       <FriendsModal />
       <ImageSendModal />
       <AddFriendModal />
+      <InvitedUserModal />
     </>
   );
 };
