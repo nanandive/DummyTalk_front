@@ -8,7 +8,7 @@ import {
     mailReducer, passwordMailReducer,
     signUpReducer
 } from './LoginModule'
-import {addFriendReducer, userReducer} from "./MainModule";
+import {addFriendReducer, friendReducer, userReducer} from "./MainModule";
 
 const rootReducer = combineReducers({
     signUpReducer,
@@ -20,7 +20,8 @@ const rootReducer = combineReducers({
     addFriendReducer,
     findEmailReducer,
     changePasswordReducer,
-    passwordMailReducer
+    passwordMailReducer,
+    friendReducer
 })
 
 export default rootReducer;
