@@ -150,7 +150,7 @@ const ChatInput = ({ userInfo }) => {
                 {/* 사진 전송 버튼 */}
                 <Button
                     className="absolute right-[95%] bottom-[-20%] "
-                    onClick={() => onOpen("imageSend", { channelId })}
+                    onClick={() => onOpen("imageSend", { channelId, socket, isConnected })}
                 >
                     <ImagePlus />
                 </Button>

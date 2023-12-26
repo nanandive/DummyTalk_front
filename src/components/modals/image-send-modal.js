@@ -3,22 +3,23 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useModal} from "src/components/hooks/use-modal";
 import {Label} from "src/components/ui/label";
 import {decodeJwt} from "src/lib/tokenUtils";
-import { useSocket } from "../hooks/use-socket";
+import {useSocket} from "../hooks/use-socket";
 
 const ImageSendModal = () => {
     const [enabled, setEnabled] = useState(false);
-    const {socket, isConnected} = useSocket();
     const {data, isOpen, onClose, type} = useModal();
+    const {channelId, socket, isConnected } = data
     const isModalOpen = isOpen && type === "imageSend";
     const accessToken = localStorage.getItem("accessToken");
     const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
+    const [response, setResponse] = useState([]);
 
 
-    const formData = new FormData();
 
-    const onCloseHandler = () =>{
+
+    const onCloseHandler = () => {
         onClose();
         fileInput.current.value = "";
         setShowImages([]);
@@ -44,10 +45,10 @@ const ImageSendModal = () => {
 
     const onSubmit = async () => {
         try {
-
+            const formData = new FormData();
             formData.append("userId", sub);
             formData.append("nickname", nickname);
-            formData.append("channelId", data.channelId);
+            formData.append("channelId", channelId);
 
             if (fileInput.current && fileInput.current.files) {
                 const files = fileInput.current.files;
@@ -62,15 +63,29 @@ const ImageSendModal = () => {
                     formData,
                     {"Content-Type": "multipart/form-data"}
                 );
-                console.log("업로드 성공:", response);
-                setShowImages([]);
-                fileInput.current.value = "";
 
-                if (!response || response.data === null) return alert("이미지 전송에 실패했습니다.");
+                console.log("업로드 성공:", response);
 
                 if (response?.status === 200) {
-                    ImageViewUpdateRequest(response.data.chatList);
+                    if (!isConnected || !response) return;
+
+                    response.data.data.map((chat) => (
+                        socket.send(`/app/${channelId}/message`
+                            , JSON.stringify({
+                                chatId: chat.chatId,
+                                channelId: channelId,
+                                nickname: chat.nickname,
+                                message: chat.message,
+                                timestamp: chat.timestamp,
+                                type: chat.type,
+                                profileImage: chat.profileImage
+                            })
+                        )
+                    ));
                 }
+
+                setShowImages([]);
+                fileInput.current.value = "";
 
                 onClose();
             }
@@ -79,26 +94,30 @@ const ImageSendModal = () => {
         }
     };
 
-    const ImageViewUpdateRequest = useCallback((res) => {
-        if (!isConnected || !sub || !res) return;
+    // const ImageViewUpdateRequest = useCallback(() => {
+    //
+    //     console.log("response.data.data 나와라", isConnected);
+    //     console.log("response.data.data 나와라", sub);
+    //     console.log("response.data.data 나와라@@@@", response);
+    //     if (!isConnected || !response) return;
+    //
+    //     response.map((chat) => (
+    //         socket.send(`/app/${channelId}/message`
+    //             , JSON.stringify({
+    //                 chatId: chat.chatId,
+    //                 channelId: channelId,
+    //                 nickname: chat.nickname,
+    //                 message: chat.message,
+    //                 timestamp: chat.timestamp,
+    //                 type: chat.type,
+    //                 profileImage: chat.profileImage
+    //             })
+    //         )
+    //     ));
+    //
+    // }, [isConnected, isOpen, socket, response]);
 
-        res.map((chat) => (
-            socket.send( `/app/${data.channelId}/message`
-                ,JSON.stringify({
-                    chatId: chat.chatId,
-                    channelId: chat.channelId,
-                    nickname: chat.nickname,
-                    message: chat.message,
-                    timestamp: chat.timestamp,
-                    type: chat.type,
-                    profileImage: chat.profileImage
-                })
-            )
-        ));
-
-    }, [data.channelId, isConnected, socket]);
-
-
+    console.log(isConnected)
     return (
         <div
             className={`fixed top-0 left-0 w-full h-full ${
@@ -129,7 +148,7 @@ const ImageSendModal = () => {
                 </label>
                 <Label className="">사진 전송 10개 이하</Label>
                 <div className="w-100 h-100 grid grid-cols-4 gap-4 ">
-                    { showImages.map((image, id) => (
+                    {showImages.map((image, id) => (
                         <img
                             // 이미지 2x5로 나열 크기 고정
                             key={id}
