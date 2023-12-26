@@ -8,8 +8,13 @@ import { useModal } from "../hooks/use-modal";
 import { useSocket } from "../hooks/use-socket";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
 
-const ChatInput = ({ channelId, userInfo }) => {
+const ChatInput = ({ userInfo }) => {
+
+  const query = useUrlQuery();
+  const channelId = query.get("channel");
+
   const [enabled, setEnabled] = useState(false); // 채팅번역 기능
   const { socket, isConnected } = useSocket();
   const { updateData } = useChatData();

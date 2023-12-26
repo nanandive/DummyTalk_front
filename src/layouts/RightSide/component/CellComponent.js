@@ -25,7 +25,7 @@ const CellComponent = ({searchQuery}) => {
 
     useEffect(() => {
 
-        if( !channelId || searchQuery ) return;
+        if( !channelId || searchQuery ) return null;
         console.log("searchQuery", searchQuery);
         console.log(channelId);
 
@@ -35,7 +35,7 @@ const CellComponent = ({searchQuery}) => {
 
   return channelId && (
       <div className="grid grid-cols-3 gap-5">
-          {data.map((img, index) => (
+          {data.length ===0 ? null : data.map((img, index) => (
               <div key={index} className="relative aspect-w-3 aspect-h-4">
                   <img
                       src={img.filePath}
