@@ -47,10 +47,7 @@ const ChatItem = ({chat, channel, name}) => {
         setContext(false);
     };
 
-    console.log(chat)
-
     const [chosen, setChosen] = useState();
-
 
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
 

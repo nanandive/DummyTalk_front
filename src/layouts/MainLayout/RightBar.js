@@ -52,8 +52,8 @@ const RightBar = ({isOpen}) => {
                     ref={topRef}
                 />
             </div>
-            <div className="h-[85%] flex items-end mx-3 mt-10 overflow-y-auto scrollbar-hidden relative">
-                <CellComponent searchQuery={searchQuery} />
+            <div className="flex-grow mx-3 mt-10 overflow-y-auto scrollbar-hidden relative">
+                <CellComponent searchQuery={searchQuery}/>
             </div>
             <div ref={bottomRef}></div>
         </div>

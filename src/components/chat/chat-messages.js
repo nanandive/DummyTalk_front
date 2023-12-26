@@ -2,14 +2,21 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
 import { useChatData } from "../hooks/use-chat-data";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
 
-const ChatMessages = ({ channelId, userInfo }) => {
-  const [hasInitialized, setHasInitialized] = useState(false);
-  const { data, setData } = useChatData();
+const ChatMessages = ({ userInfo }) => {
+
+  const query = useUrlQuery();
+  const channelId = query.get("channel");
+
   const chatRef = useRef(null);
   const bottomRef = useRef(null);
 
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const { data, setData } = useChatData();
+
   useEffect(() => {
+
     const bottomDiv = bottomRef?.current;
     const topDiv = chatRef.current;
     const shouldAutoScroll = () => {
@@ -37,7 +44,8 @@ const ChatMessages = ({ channelId, userInfo }) => {
   }, [bottomRef, chatRef, hasInitialized, data]);
 
   useEffect(() => {
-    if (!channelId) return;
+
+    if (!channelId || channelId === '' ) return;
     const fetchChatData = async () => {
       try {
         const response = await axios.get(
@@ -52,8 +60,6 @@ const ChatMessages = ({ channelId, userInfo }) => {
     };
     fetchChatData();
   }, [channelId, userInfo, setData]);
-
-  console.log(data);
 
     return (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
