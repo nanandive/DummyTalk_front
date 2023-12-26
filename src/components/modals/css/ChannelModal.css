@@ -11,7 +11,7 @@
 }
 
 .create-channel-modal-content {
-    background-color: #FFF;
+    background-color: #1C2D41;
     padding: 30px;
     border-radius: 8px;
     width: 30%;
@@ -57,7 +57,7 @@
 }
 
 .create-channel-modal-form button:first-child {
-    background-color: #4CAF50;
+    background-color: #51CBB6;
     color: white;
 }
 

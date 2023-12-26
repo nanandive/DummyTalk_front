@@ -6,6 +6,7 @@ import styles from './SignUp.module.css'; // Import your CSS module
 import GoogleLogin from "../page/GoogleLogin";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
+import { jwtDecode } from 'jwt-decode';
 
 
 export default function SignUp() {
