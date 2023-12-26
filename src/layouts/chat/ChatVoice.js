@@ -2,18 +2,17 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ChevronsLeft, ChevronsRight, ImagePlus } from "lucide-react";
 import {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
 } from "react";
 import SockJS from "sockjs-client";
 import ChatItem from "src/components/chat/chat-item";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import { useModal } from "src/components/hooks/use-modal";
+import { useSocket } from "src/components/hooks/use-socket";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
-import { useSocket } from "src/components/providers/sock-provider";
 import { Button } from "src/components/ui/button";
 import { Label } from "src/components/ui/label";
 import { Textarea } from "src/components/ui/textarea";

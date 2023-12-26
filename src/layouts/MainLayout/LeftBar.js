@@ -4,7 +4,7 @@ function LeftBar() {
 
     return (
         <>
-            <div className="w-[420px] h-full border border-black overflow-y-scroll">
+            <div className="w-[420px] h-full border-r-[1px] border-black overflow-y-scroll">
                 <LeftSide />
             </div>
         </>
