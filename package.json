@@ -20,7 +20,7 @@
         "@radix-ui/react-slot": "^1.0.2",
         "@radix-ui/react-switch": "^1.0.3",
         "@radix-ui/react-tooltip": "^1.0.7",
-        "@ricky0123/vad-react": "^0.0.20",
+        "@ricky0123/vad-react": "^0.0.21",
         "@svgr/webpack": "^5.5.0",
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^13.0.0",
