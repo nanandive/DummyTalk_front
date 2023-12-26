@@ -56,7 +56,7 @@ const ChatMessages = ({ channelId, userInfo }) => {
   console.log(data);
 
     return (
-        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">
+        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}

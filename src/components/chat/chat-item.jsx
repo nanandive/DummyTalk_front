@@ -3,7 +3,9 @@ import {UserAvatar} from "../user-avatar";
 import moment from "moment";
 import {useMemo, useState} from "react";
 import {decodeJwt} from "src/lib/tokenUtils";
-import axios from "axios"; // Import css
+import {Button} from "src/components/ui/button";
+import axios from "axios";
+import {Trash2} from "lucide-react"; // Import css
 
 
 const ChatItem = ({chat, channel, name}) => {
@@ -14,9 +16,25 @@ const ChatItem = ({chat, channel, name}) => {
     const [context, setContext] = useState(false);
     const [xyPosition, setxyPosition] = useState({x: 0, y: 0});
 
+    const deleteRequest = (chosen) => {
+
+        console.log("들어왔다")
+        axios.post(
+            `${process.env.REACT_APP_API_URL}/chat/del/${channel}/${chat.chatId}`
+        ).then((res) => {
+            if (res.status === 200) {
+                setChosen(chosen);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+
+    }
+
     const showNav = (e) => {
         e.preventDefault();
         setContext(false);
+
 
         if (chat.sender.sender !== +sub) return;
 
@@ -32,20 +50,6 @@ const ChatItem = ({chat, channel, name}) => {
     console.log(chat)
 
     const [chosen, setChosen] = useState();
-    const deleteRequest = async (chosen) => {
-
-        console.log(chat.chatId, chat.channelId)
-        await axios.post(
-            `${process.env.REACT_APP_API_URL}/chat/del/${channel}/${chat.chatId}`
-        ).then((res) => {
-            if (res.status === 200) {
-                setChosen(chosen);
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
-
-    }
 
 
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
@@ -54,16 +58,15 @@ const ChatItem = ({chat, channel, name}) => {
 
 
     return chat && (
-        <div className="relative group flex items-center hover:bg-black/5 p-2 mt-1 transition w-full bg-gray-200 bg-opacity-50 rounded-[3px]"
-             onContextMenu={showNav}
-             onClick={hideContext}
+        <div
+            className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-50 rounded-[3px] text-white"
+            onContextMenu={showNav}
+            onClick={hideContext}
         >
             {context && (
-                <div className={`absolute top-[${xyPosition.y}px] left-[${xyPosition.x}px]`}>
-                    <div onClick={deleteRequest}>
-                        삭제
-                    </div>
-                </div>
+                <Button className={`absolute top-[${xyPosition.y}px] left-[${xyPosition.x}px] z-10`} onClick={() => deleteRequest(true)}>
+                    <Trash2/>
+                </Button>
             )}
             {chosen ? <h4>메시지가 삭제되었습니다.</h4> :
                 <div className="group flex gap-x-2 items-start w-full">
@@ -81,13 +84,13 @@ const ChatItem = ({chat, channel, name}) => {
                                 {roleIconMap[member.role]}
                             </ActionTooltip> */}
                             </div>
-                            <span className="text-xs text-zinc-500">
+                            <span className="text-xs text-white">
                             {timestamp}
                         </span>
                         </div>
                         <p
                             className={cn(
-                                "text-sm text-zinc-600 whitespace-pre-wrap"
+                                "text-sm text-white whitespace-pre-wrap"
                             )}
                         >
                             {chat?.type === "TEXT" ? chat.message : null}

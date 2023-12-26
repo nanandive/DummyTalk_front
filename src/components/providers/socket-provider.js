@@ -23,5 +23,5 @@ export const SocketProvider = ({ children }) => {
     return () => stomp.disconnect(() => {});
   }, [accessToken]);
 
-  return <>{children};</>;
+  return <>{children}</>;
 };

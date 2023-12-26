@@ -16,22 +16,22 @@ function Chat() {
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
 
-    if (!channelId) return <ChatEmpty />;
+    if (!channelId) return <ChnatEmpty />;
 
-    return (
-        <>
-            <div className="flex w-full flex-col h-full">
-                {/* 채널명 */}
-                <ChatHeader
-                    isOpen={isOpen}
-                    setOpen={setOpen}
-                />
-                {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages channelId={channelId} userInfo={userInfo}/>
+                return (
+                <>
+                    <div className="flex w-full flex-col h-full">
+                        {/* 채널명 */}
+                        <ChatHeader
+                            isOpen={isOpen}
+                            setOpen={setOpen}
+                        />
+                        {/* 채팅방 스크롤 바 구역 */}
+                        <ChatMessages chanelId={channelId} userInfo={userInfo}/>
                 {/* 메시지 입력 */}
                 <ChatInput channelId={channelId} userInfo={userInfo}/>
             </div>
-            {isOpen && <RightBar />}
+            {isOpen && <RightBar isOpen={isOpen}/>}
         </>
     );
 }
