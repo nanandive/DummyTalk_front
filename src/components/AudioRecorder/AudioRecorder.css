@@ -14,15 +14,11 @@ html {
 
 .recorder_wrapper {
     width: 100%;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flex;
-    display: -o-flex;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    justify-content: flex-end;
+    position: relative;
 }
 
 .recorder {
@@ -30,7 +26,17 @@ html {
     text-align: center;
     width: 500px;
     max-width: 100%;
+    margin-right: 20px; /* Adjust the right margin as needed */
 }
+
+/* Add this media query to adjust the layout for smaller screens */
+@media (max-width: 768px) {
+    .recorder {
+        width: 100%; /* Make it full-width on smaller screens */
+        margin-right: 0; /* Remove the right margin */
+    }
+}
+
 .record_btn {
     width: 70px; /* Adjusted size */
     height: 70px; /* Adjusted size */
@@ -42,61 +48,43 @@ html {
     border-radius: 50%;
     cursor: pointer;
     transition: 0.15s linear;
-  }
-  
-  .record_btn:hover {
+}
+
+.record_btn:hover {
     transition: 0.15s linear;
     transform: scale(1.05);
-  }
-  
-  .record_btn:active {
+}
+
+.record_btn:active {
     background: #f5f5f5;
-  }
-  
-  .record_btn:after {
+}
+
+.record_btn:after {
     content: '\E029';
-  }
-  
-  .record_btn[disabled] {
+}
+
+.record_btn[disabled] {
     border: 2px solid #ccc;
-  }
-  
-  .record_btn[disabled]:after {
+}
+
+.record_btn[disabled]:after {
     content: '\E02B';
     color: #ccc;
-  }
-  
-  .record_btn[disabled]:hover {
+}
+
+.record_btn[disabled]:hover {
     transition: 0.15s linear;
     transform: none;
-  }
-  
-  .record_btn[disabled]:active {
+}
+
+.record_btn[disabled]:active {
     background: none;
-  }
-  
-  .record_btn.recording {
-    animation: recording 2s infinite ease-in-out;
-  }
-  
-  .record_btn.recording:before {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0px;
-    height: 0px;
-    margin: 0px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.05);
-    animation: recording_before 2s infinite ease-in-out;
-  }
+}
 
 .record_btn.recording {
     animation: recording 2s infinite ease-in-out;
-  }
-  
+}
+
 .record_btn.recording:before {
     content: '';
     display: inline-block;
@@ -109,13 +97,11 @@ html {
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.05);
     animation: recording_before 2s infinite ease-in-out;
-  }
-  
-
+}
 
 @keyframes recording {
     from {
-        transform: scale( 1.1 );
+        transform: scale(1.1);
     }
 
     50% {
@@ -123,7 +109,7 @@ html {
     }
 
     to {
-        transform: scale( 1.1 );
+        transform: scale(1.1);
     }
 }
 
@@ -144,7 +130,6 @@ html {
     width: 60px;
     height: 100px;
     display: inline-block;
-    
 }
 
 .txt_btn {

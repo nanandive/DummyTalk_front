@@ -7,6 +7,7 @@ import {useSocket} from "../providers/socket-provider";
 import {Button} from "../ui/button";
 import {Label} from "../ui/label";
 import {Textarea} from "src/components/ui/textarea";
+import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
 
 const ChatVoiceInput = ({channelId, userInfo, setData}) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -82,6 +83,7 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                 nickname: userInfo?.nickname,
                 language: "en",
                 channelId,
+                type: "TEXT"
             })
         );
         sendMessageRef.current.value = "";
@@ -95,7 +97,7 @@ const ChatVoiceInput = ({channelId, userInfo, setData}) => {
                     htmlFor="airplane-mode"
                     className="font-bold text-2 self-center "
                 >
-                    음성번역
+                    음성번역<AudioRecorderTest />
                 </Label>
                 <Switch
                     id={"airplane-mode"}

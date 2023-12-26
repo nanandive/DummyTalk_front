@@ -12,6 +12,7 @@ const CreateChannelModal = () => {
     const { serverId } = data;
     const isModalOpen = isOpen && type === "createChannel";
     const [channelName, setChannelName] = useState("");
+    const { channelId } = data;
 
     const handleInputChange = (e) => {
         setChannelName(e.target.value);
@@ -32,7 +33,7 @@ const CreateChannelModal = () => {
             console.log("채널 생성 성공");
             onClose();
 
-            navigate(`/main?server=${serverId}`, {
+            navigate(`/main?server=${serverId}&channel=${channelId}`, {
                 replace: true,
                 state: uuid(),
             });
@@ -52,6 +53,7 @@ const CreateChannelModal = () => {
         formData.append("channelName", channelName);
         formData.append("serverId", serverId);
         formData.append("channelType", "VOICE");  // 채널 타입을 VOICE로 설정
+        // formData.append("channelId", channelId);
 
         try {
             await axios.post(
@@ -60,7 +62,7 @@ const CreateChannelModal = () => {
             );
             console.log("1:1 번역채팅방 생성 성공");
             onClose();
-            navigate(`/Chat?server=${serverId}`, {
+            navigate(`/main?server=${serverId}&channel=${channelId}`, {
                 replace: true,
                 state: uuid(),
             });

@@ -97,6 +97,8 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 nickname: userInfo?.nickname,
                 language: "en",
                 channelId,
+                type: "TEXT"
+
             })
         );
         sendMessageRef.current.value = "";
