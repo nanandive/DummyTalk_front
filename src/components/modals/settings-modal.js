@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import {useMemo, useState} from 'react';
 import { useModal } from "src/components/hooks/use-modal";
 import "./css/SettingsModal.css";
+import {decodeJwt} from "src/lib/tokenUtils";
 
 const SettingsModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -10,6 +11,9 @@ const SettingsModal = () => {
   const [imgFile, setImgFile] = useState(null);
   const [invitedUser, setInvitedUser] = useState('');
   const [resignUser, setReSignUser] = useState('');
+  const accessToken = localStorage.getItem("accessToken");
+  const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+  const userId = userInfo.sub;
 
   const isModalOpen = isOpen && type === "settings";
 
@@ -38,7 +42,6 @@ const SettingsModal = () => {
         },
         data: formData
       });
-      console.log('서버 수정 완료:', response.data);
     } catch (error) {
       console.error('서버 수정 실패:', error);
     }
@@ -48,8 +51,7 @@ const SettingsModal = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/delete?id=${serverId}`);
-      console.log('서버 삭제 완료:', response.data);
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/server/delete?id=${serverId}&userId=${userId}`);
       onClose();
     } catch (error) {
       console.error('서버 삭제 실패:', error);

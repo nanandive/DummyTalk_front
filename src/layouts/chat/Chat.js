@@ -34,7 +34,7 @@ function Chat() {
 
     return (
         <>
-            <div className="flex w-full flex-col h-full" style={{ backgroundColor: '#141c26', borderTop: '1px solid #a9e5db' }}>
+            <div className="flex w-full flex-col h-full bg-[#122236]">
                 {/* 채널명 */}
                 <ChatHeader
                     isOpen={isOpen}

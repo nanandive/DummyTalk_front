@@ -56,13 +56,16 @@ const ChatItem = ({chat, channel, name}) => {
 
     return chat && (
         <div
-            className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-50 rounded-[3px] text-white"
+            className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-10 rounded-[3px] text-[#B5BAC1]"
             onContextMenu={showNav}
             onClick={hideContext}
         >
             {context && (
-                <Button className={`absolute top-[${xyPosition.y}px] left-[${xyPosition.x}px] z-10`} onClick={() => deleteRequest(true)}>
-                    <Trash2/>
+                <Button
+                    onClick={() => deleteRequest(true)}
+                    className="border-none"
+                >
+                    <Trash2 className={`absolute top-[${xyPosition.y}px] left-[${xyPosition.x}px] z-10`}/>
                 </Button>
             )}
             {chosen ? <h4>메시지가 삭제되었습니다.</h4> :
@@ -81,13 +84,13 @@ const ChatItem = ({chat, channel, name}) => {
                                 {roleIconMap[member.role]}
                             </ActionTooltip> */}
                             </div>
-                            <span className="text-xs text-white">
+                            <span className="text-xs text-[#B5BAC1]">
                             {timestamp}
                         </span>
                         </div>
                         <p
                             className={cn(
-                                "text-sm text-white whitespace-pre-wrap"
+                                "text-sm font-semibold text-[#DBDEE1] whitespace-pre-wrap"
                             )}
                         >
                             {chat?.type === "TEXT" ? chat.message : null}

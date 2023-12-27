@@ -94,7 +94,7 @@ function Friends() {
                 className={friend === selectedFriend ? 'selected-friend' : ''}
                 onClick={() => handleFriendClick(friend)}
             >
-                {friend.name}
+                {friend.nickname}
             </li>
             ))}
         </ul>
