@@ -7,6 +7,7 @@ import GoogleLogin from "../page/GoogleLogin";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { FindPasswordModal } from "src/components/modals/FindPassword-modal";
+import { jwtDecode } from 'jwt-decode';
 
 
 export default function SignUp() {
@@ -95,11 +96,13 @@ export default function SignUp() {
 
   return (
     <div className={styles.page}>
+
       <h1 style={{marginTop:"170px"}} onClick={() => onClickTest()} className={styles.titleWrap}>
         이메일과 비밀번호를
         <br />
         입력해주세요
       </h1>
+
       <div>
         <div className={styles.inputTitle}>이메일 주소</div>
         <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
@@ -111,9 +114,11 @@ export default function SignUp() {
             onChange={handleEmail}
           />
         </div>
+
         <div className={styles.errorMessageWrap}>
           {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
         </div>
+
         <div className={styles.inputTitle}>
           비밀번호
         </div>
@@ -131,6 +136,7 @@ export default function SignUp() {
           {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
         </div>
       </div>
+
       <div className={styles.submitWrap}>
         <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
           확인

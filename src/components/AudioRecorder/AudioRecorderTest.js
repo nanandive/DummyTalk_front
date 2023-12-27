@@ -1,13 +1,13 @@
 import { useMicVAD, utils } from "@ricky0123/vad-react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
 import { useState } from "react";
-import { useUrlQuery } from "../hooks/use-url-query";
-import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
+import { useSocket } from "../providers/sock-provider";
+import { decodeJwt } from "src/lib/tokenUtils";
+import { useUrlQuery } from "../hooks/use-url-query";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",
@@ -17,13 +17,13 @@ ort.env.wasm.wasmPaths = {
 };
 
 const AudioRecorderTest = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = jwtDecode(accessToken);
-    const query = useUrlQuery();
-    const channelId = query.get("channel");
-    const { socket } = useSocket();
-
     const [audioList, setAudioList] = useState([]);
+    const { socket } = useSocket();
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = decodeJwt(accessToken)
+    const query = useUrlQuery()
+    const channelId = query.get("channel")
+
     const vad = useMicVAD({
         workletURL: "/vad.worklet.bundle.min.js",
         modelURL: "/silero_vad.onnx",
@@ -40,34 +40,29 @@ const AudioRecorderTest = () => {
             console.log(wavBuffer);
             const formData = new FormData();
             formData.append("file", new Blob([wavBuffer]), "audio.wav");
-            formData.append("sender", userInfo.sub);
-            formData.append("channelId", channelId);
-            axios
-                .post("http://localhost:9999/audio/upload", formData)
-                .then((result) => {
-                    console.log(result, channelId);
-                    socket.send(
-                        `/app/${channelId}/message`,
-                        JSON.stringify({
-                            ...result?.data.chat,
-                            sender: userInfo?.sub,
-                            nickname: userInfo?.nickname,
-                            channelId,
-                            type: "AUDIO",
-                        })
-                    );
-                });
+            axios.post(`${process.env.REACT_APP_API_URL}/audio/upload`, formData)
+            .then((result) => {
+                console.log(result, channelId);
+                socket.send(
+                    `/app/${channelId}/audio`,
+                    JSON.stringify({
+                        ...result?.data.chat,
+                        sender: userInfo?.sub,
+                        nickname: userInfo?.nickname,
+                    })
+                );
+            });
             // const base64 = utils.arrayBufferToBase64(wavBuffer);
             // const url = `data:audio/wav;base64,${base64}`;
             // setAudioList((old) => [url, ...old]);
         },
-        positiveSpeechThreshold: 0.35,
-        negativeSpeechThreshold: 0.25,
+        positiveSpeechThreshold: 0.55,
+        negativeSpeechThreshold: 0.4,
         startOnLoad: false,
     });
 
     return (
-        <ui>
+        <ul>
             {audioList.map((audio) => {
                 return (
                     <li>
@@ -81,7 +76,7 @@ const AudioRecorderTest = () => {
             <Button
                 variant="ghost"
                 className={`w-[70px] h-[70px] bg-transparent border-2 border-[#8e44ad] rounded-full hover:scale-105 transition-transform ${
-                    vad?.loading ? "hidden" : "block"
+                    vad?.loading || !!vad?.errored ? "hidden" : "block"
                 }`}
                 onClick={() => vad.toggle()}
             >
@@ -92,7 +87,7 @@ const AudioRecorderTest = () => {
                     <Activity className="text-[#8e44ad] w-full h-full font-bold" />
                 )}
             </Button>
-        </ui>
+        </ul>
     );
 };
 

@@ -22,14 +22,6 @@ const SettingsModal = () => {
     setImgFile(e.target.files[0]);
   };
 
-  const handleInviteUserChange = (e) => {
-    setInvitedUser(e.target.value);
-  };
-
-  const handleKickUserChange = (e) => {
-    setReSignUser(e.target.value);
-  };
-
 
   const handleSaveSettings = async () => {
     const formData = new FormData();
@@ -75,24 +67,12 @@ const SettingsModal = () => {
     display: isModalOpen ? 'block' : 'none',
   };
 
-
   return (
       <div className="modal" style={modalStyle}>
         <div className="modal-content">
-
           <label>
             새로운 서버 이름:
             <input type="text" value={newServerName} onChange={handleServerNameChange} />
-          </label>
-
-          <label>
-            초대할 사용자:<br />
-            <input type="text" value={invitedUser} onChange={handleInviteUserChange} />
-          </label>
-
-          <label>
-            강퇴할 사용자:<br />
-            <input type="text" value={resignUser} onChange={handleKickUserChange} />
           </label>
 
           <div className="button-container">
@@ -101,6 +81,7 @@ const SettingsModal = () => {
             <button onClick={onClose}>취소</button>
           </div>
         </div>
+
       </div>
   );
 };

@@ -2,20 +2,19 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Textarea } from "src/components/ui/textarea";
+import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
+import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../providers/sock-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { utils } from "@ricky0123/vad-react";
-import {useSocket} from "../providers/sock-provider";
-import { useChatData } from "../hooks/use-chat-data";
 
-
-const ChatInput = ({ channelId, userInfo, setData }) => {
+const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
+    const { updateData } = useChatData();
     const { onOpen } = useModal();
-    const { updateData } = useChatData()
 
     const sendMessageRef = useRef(null);
     /***
@@ -34,23 +33,34 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
         if (!channelId || !isConnected || !userInfo) return;
 
         const subscription = socket.subscribe(
-            `/topic/msg/${channelId}`,
+            `/topic/audio/${channelId}`,
             async (msg) => {
                 let result = JSON.parse(msg.body);
                 console.log("result   :", result);
 
-                if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
-                    const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
+                if (
+                    result.chat.type === "AUDIO" &&
+                    result.chat.sender !== parseInt(userInfo?.sub)
+                ) {
+                    console.log("AUDIO 시작");
+                    const apiUrl = `http://localhost:8000/api/v1/audio/audio/${userInfo?.national_language}`;
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",
+                        responseType: "blob",
                         data: { ...result.chat },
                     };
 
-                    const { data } = await axios(axiosConfig);
-                    result = data;
-                } 
-                
+                    axios(axiosConfig).then((response) => {
+                        const url = window.URL.createObjectURL(
+                            new Blob([response.data])
+                        );
+                        const audio = new Audio(url);
+                        audio.play();
+                    });
+
+                    return;
+                }
                 updateData(result.chat);
             }
         );
@@ -77,8 +87,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 nickname: userInfo?.nickname,
                 language: "en",
                 channelId,
-                type: "TEXT"
-
+                type: "TEXT",
             })
         );
         sendMessageRef.current.value = "";
@@ -92,7 +101,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                     htmlFor="airplane-mode"
                     className="font-bold text-2 self-center "
                 >
-                    채팅번역
+                    음성번역
                 </Label>
                 <Switch
                     id={"airplane-mode"}
@@ -113,6 +122,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                         } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                     />
                 </Switch>
+                <AudioRecorderTest />
             </div>
             {/* 메시지 입력란 */}
             <Textarea
@@ -141,4 +151,4 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
         </div>
     );
 };
-export default ChatInput;
+export default ChatVoiceInput;

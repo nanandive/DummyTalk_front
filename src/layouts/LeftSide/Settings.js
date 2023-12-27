@@ -8,8 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
-import AudioRecorderTest from "src/components/AudioRecorder/AudioRecorderTest";
-import "../../components/AudioRecorder/AudioRecorder.css"; // Update the path
+
 import { useModal } from "../../components/hooks/use-modal"; // Update the path
 import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
 import "../../components/modals/VideoModal.css";
@@ -19,7 +18,7 @@ import "./css/Settings.css";
 function Settings() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
-  const serverId = query.get("serverId");
+  const serverId = query.get("server");
   const [serverSettings, setServerSettings] = useState({});
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharingOn, setIsScreenSharingOn] = useState(false);
@@ -71,7 +70,7 @@ function Settings() {
     <div className="settings-container">
       <br />
       <div className="settings-container1">
-        <button
+        {/* <button
           className={`icon-btn ${isVideoOn ? "active" : ""} w-1/4`}
           onClick={handleVideoToggle}
         >
@@ -98,20 +97,19 @@ function Settings() {
         >
           <FontAwesomeIcon icon={faMicrophone} />
           <p>Mute Microphone</p>
-        </button>
+        </button> */}
       </div>
       {/* <AudioRecorder /> */}
-      <AudioRecorderTest />
-      <button
+      {/* <button
         className={`icon-btn ${isVideoOn ? "active" : ""}`}
         onClick={handleOpenVideoModal}
       >
         <FontAwesomeIcon icon={faVideo} />
         <p>Video</p>
-      </button>
-      {isVideoModalOpen && (
+      </button> */}
+      {/* {isVideoModalOpen && (
         <VideoModal onClose={handleCloseVideoModal} />
-      )}
+      )} */}
       <button
           className="open-settings-btn"
           onClick={() => onOpen("settings", { serverId })}

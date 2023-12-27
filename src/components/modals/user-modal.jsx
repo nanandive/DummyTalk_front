@@ -1,19 +1,19 @@
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "src/components/ui/dialog";
 import {useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {callPostChageUser} from "src/api/MainAPICalls";
 
 function UserModal() {
-    const { isOpen, onOpen, onClose, type, data } = useModal();
+  const { isOpen, onOpen, onClose, type, data } = useModal();
 
     const [ nickname, setNickname] = useState('');
     const [ password, setPassword] = useState('');
@@ -90,7 +90,7 @@ function UserModal() {
                                     value={ nickname }
                                     type={"text"}
                                     placeholder={"변경할 닉네임"}
-                                    
+
                                 />
                                 <input
                                     onChange={ onChangePassword }
