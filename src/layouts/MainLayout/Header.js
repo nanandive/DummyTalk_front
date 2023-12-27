@@ -79,7 +79,6 @@ function Header() {
 
     const onClickApproval = (friendId) =>{
         dispatch(callPostApproval(friendId))
-        dispatch( callGetFriendRequest() )
     }
 
     const onClick = () =>{
@@ -141,7 +140,7 @@ function Header() {
                 >
                     친구요청
                 </Button>
-                <div style={onRequest ? {width:"400px", height:"500px", top:"33%" ,left:"87%", border:"1px solid black", transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto"} : {display : "none"}}>
+                <div style={onRequest ? {width:"400px", height:"500px", top:"33%" ,left:"87%", border:"1px solid black", background:"whitesmoke", transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto", zIndex:"1"} : {display : "none"}}>
                     <div style={{width: "395px", height:"50px", alignItems:"center", display:"flex"}}>
                         {FriendData.length > 0 && FriendData.map(friend =>(
                             <>
