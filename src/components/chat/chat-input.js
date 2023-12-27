@@ -8,8 +8,8 @@ import { Label } from "../ui/label";
 import { Textarea } from "src/components/ui/textarea";
 import { utils } from "@ricky0123/vad-react";
 import {useSocket} from "../providers/sock-provider";
+import { useChatData } from "../hooks/use-chat-data";
 import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {useChatData} from "src/components/hooks/use-chat-data";
 
 
 const ChatInput = ({ userInfo }) => {
@@ -35,7 +35,7 @@ const ChatInput = ({ userInfo }) => {
      * send : /app/{channelId}/message
      */
     useEffect(() => {
-        if (!channelId || !isConnected || !userInfo) return;
+        if ( !channelId || !isConnected || !userInfo ) return;
 
         const subscription = socket.subscribe(
             `/topic/msg/${channelId}`,
@@ -53,29 +53,8 @@ const ChatInput = ({ userInfo }) => {
 
                     const { data } = await axios(axiosConfig);
                     result = data;
-                } else if (
-                    result.chat.type === "AUDIO" &&
-                    result.chat.sender !== parseInt(userInfo?.sub)
-                ) {
-                    console.log("AUDIO 시작");
-                    const apiUrl = `http://localhost:8000/api/v1/audio/audio/${userInfo?.national_language}`;
-                    const axiosConfig = {
-                        url: apiUrl,
-                        method: "POST",
-                        responseType: "blob",
-                        data: { ...result.chat },
-                    };
-
-                    axios(axiosConfig).then((response) => {
-                        const url = window.URL.createObjectURL(
-                            new Blob([response.data])
-                        );
-                        const audio = new Audio(url);
-                        audio.play();
-                    });
-
-                    return;
                 }
+
                 updateData(result.chat);
             }
         );

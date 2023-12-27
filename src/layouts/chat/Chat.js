@@ -11,7 +11,6 @@ import axios from 'axios'
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
-    const [data, setData] = useState([])
     const [channelType, setChannelType] = useState(null);
 
     const query = useUrlQuery();
@@ -51,7 +50,7 @@ function Chat() {
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInput channelId={channelId} setData={setData} userInfo={userInfo} />
+                        <ChatVoiceInput channelId={channelId} userInfo={userInfo} />
                     </>
                 )}
             </div>
