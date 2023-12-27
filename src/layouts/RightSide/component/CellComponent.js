@@ -32,8 +32,9 @@ const CellComponent = ({searchQuery}) => {
         imageListRequest(channelId);
     },[channelId, searchQuery]);
 
+    if(data?.length === 0) return null;
 
-  return channelId && (
+  return data && (
       <div className="grid grid-cols-3 gap-5">
           {data.length ===0 ? null : data.map((img, index) => (
               <div key={index} className="relative aspect-w-3 aspect-h-4">

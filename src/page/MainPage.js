@@ -8,7 +8,7 @@ function MainPage() {
 
     return (
         <>
-            <div className="flex h-[93.5%] bg-[#09182f]">
+            <div className="flex h-[93.5%] bg-[#0b1725]">
                 <LeftBar />
                 <Chat />
             </div>
