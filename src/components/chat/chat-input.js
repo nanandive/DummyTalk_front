@@ -9,13 +9,17 @@ import { Textarea } from "src/components/ui/textarea";
 import { utils } from "@ricky0123/vad-react";
 import {useSocket} from "../providers/sock-provider";
 import { useChatData } from "../hooks/use-chat-data";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
 
 
-const ChatInput = ({ channelId, userInfo, setData }) => {
+const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
     const { onOpen } = useModal();
-    const { updateData } = useChatData()
+  const query = useUrlQuery();
+  const channelId = query.get("channel");
+
+  const { updateData } = useChatData();
 
     const sendMessageRef = useRef(null);
     /***
@@ -31,7 +35,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
      * send : /app/{channelId}/message
      */
     useEffect(() => {
-        if (!channelId || !isConnected || !userInfo) return;
+        if ( !channelId || !isConnected || !userInfo ) return;
 
         const subscription = socket.subscribe(
             `/topic/msg/${channelId}`,
@@ -49,13 +53,13 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
 
                     const { data } = await axios(axiosConfig);
                     result = data;
-                } 
-                
+                }
+
                 updateData(result.chat);
             }
         );
         return () => subscription.unsubscribe();
-    }, [enabled, isConnected, channelId, socket, userInfo, setData]);
+    }, [enabled, isConnected, channelId, socket, userInfo]);
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -75,7 +79,6 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
                 nickname: userInfo?.nickname,
-                language: "en",
                 channelId,
                 type: "TEXT"
 
@@ -126,7 +129,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 {/* 사진 전송 버튼 */}
                 <Button
                     className="absolute right-[95%] bottom-[-20%] "
-                    onClick={() => onOpen("imageSend", { channelId })}
+                    onClick={() => onOpen("imageSend", { channelId, socket, isConnected })}
                 >
                     <ImagePlus />
                 </Button>

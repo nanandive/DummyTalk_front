@@ -40,11 +40,11 @@ function Chat() {
                     setOpen={setOpen}
                 />
                 {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages channelId={channelId} userInfo={userInfo} />
+                <ChatMessages userInfo={userInfo} />
                 {channelType === "TEXT" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatInput channelId={channelId} userInfo={userInfo} />
+                        <ChatInput userInfo={userInfo} />
                     </>
                 )}
                 {channelType === "VOICE" && (
