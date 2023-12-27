@@ -2,20 +2,22 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { Textarea } from "src/components/ui/textarea";
+import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { utils } from "@ricky0123/vad-react";
-import {useSocket} from "../providers/sock-provider";
-import { useChatData } from "../hooks/use-chat-data";
+import { useSocket } from "../hooks/use-socket";
 
-
-const ChatInput = ({ channelId, userInfo, setData }) => {
+const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
     const { onOpen } = useModal();
-    const { updateData } = useChatData()
+    const query = useUrlQuery();
+    const channelId = query.get("channel");
+
+    const { updateData } = useChatData();
 
     const sendMessageRef = useRef(null);
     /***
@@ -49,13 +51,13 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
 
                     const { data } = await axios(axiosConfig);
                     result = data;
-                } 
-                
+                }
+
                 updateData(result.chat);
             }
         );
         return () => subscription.unsubscribe();
-    }, [enabled, isConnected, channelId, socket, userInfo, setData]);
+    }, [enabled, isConnected, channelId, socket, userInfo]);
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -75,10 +77,8 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
                 nickname: userInfo?.nickname,
-                language: "en",
                 channelId,
-                type: "TEXT"
-
+                type: "TEXT",
             })
         );
         sendMessageRef.current.value = "";
@@ -116,7 +116,7 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             </div>
             {/* 메시지 입력란 */}
             <Textarea
-                className="w-full h-full resize-none top-3 outline outline-zinc-300"
+                className="w-full h-full resize-none top-3 outline outline-zinc-300 bg-[#f2f3f5] bg-opacity-10 text-[#DBDEE1] font-semibold"
                 maxLength="150"
                 onKeyDown={enter_event}
                 ref={sendMessageRef}
@@ -125,14 +125,16 @@ const ChatInput = ({ channelId, userInfo, setData }) => {
             <div className="absolute right-[5%] bottom-[10%] ">
                 {/* 사진 전송 버튼 */}
                 <Button
-                    className="absolute right-[95%] bottom-[-20%] "
-                    onClick={() => onOpen("imageSend", { channelId })}
+                    className="absolute right-[95%] bottom-[-20%] border-none"
+                    onClick={() =>
+                        onOpen("imageSend", { channelId, socket, isConnected })
+                    }
                 >
                     <ImagePlus />
                 </Button>
                 {/* 메시지 전송 버튼 */}
                 <Button
-                    className="h-8 bg-sky-600 text-white"
+                    className="h-8 bg-sky-600 text-white "
                     onClick={sendChatMessage}
                 >
                     Send

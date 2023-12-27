@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import {useMemo, useState} from 'react';
 import { useModal } from "src/components/hooks/use-modal";
 import "./css/SettingsModal.css";
+import {decodeJwt} from "src/lib/tokenUtils";
 
 const SettingsModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -10,6 +11,9 @@ const SettingsModal = () => {
   const [imgFile, setImgFile] = useState(null);
   const [invitedUser, setInvitedUser] = useState('');
   const [resignUser, setReSignUser] = useState('');
+  const accessToken = localStorage.getItem("accessToken");
+  const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+  const userId = userInfo.sub;
 
   const isModalOpen = isOpen && type === "settings";
 
@@ -20,14 +24,6 @@ const SettingsModal = () => {
 
   const handleImgChange = (e) => {
     setImgFile(e.target.files[0]);
-  };
-
-  const handleInviteUserChange = (e) => {
-    setInvitedUser(e.target.value);
-  };
-
-  const handleKickUserChange = (e) => {
-    setReSignUser(e.target.value);
   };
 
 
@@ -46,7 +42,6 @@ const SettingsModal = () => {
         },
         data: formData
       });
-      console.log('서버 수정 완료:', response.data);
     } catch (error) {
       console.error('서버 수정 실패:', error);
     }
@@ -56,8 +51,7 @@ const SettingsModal = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/server/delete?id=${serverId}`);
-      console.log('서버 삭제 완료:', response.data);
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/server/delete?id=${serverId}&userId=${userId}`);
       onClose();
     } catch (error) {
       console.error('서버 삭제 실패:', error);
@@ -75,24 +69,12 @@ const SettingsModal = () => {
     display: isModalOpen ? 'block' : 'none',
   };
 
-
   return (
       <div className="modal" style={modalStyle}>
         <div className="modal-content">
-
           <label>
             새로운 서버 이름:
             <input type="text" value={newServerName} onChange={handleServerNameChange} />
-          </label>
-
-          <label>
-            초대할 사용자:<br />
-            <input type="text" value={invitedUser} onChange={handleInviteUserChange} />
-          </label>
-
-          <label>
-            강퇴할 사용자:<br />
-            <input type="text" value={resignUser} onChange={handleKickUserChange} />
           </label>
 
           <div className="button-container">
@@ -101,6 +83,7 @@ const SettingsModal = () => {
             <button onClick={onClose}>취소</button>
           </div>
         </div>
+
       </div>
   );
 };

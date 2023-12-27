@@ -1,39 +1,39 @@
-import {useModal} from "../../components/hooks/use-modal";
+import { useModal } from "../../components/hooks/use-modal";
 import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "src/components/ui/dialog";
-import {Button} from "../../components/ui/button";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
-import {callPostFriend} from "../../api/MainAPICalls";
+import { Button } from "../../components/ui/button";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { callPostFriend } from "../../api/MainAPICalls";
 
-const AddFriendModal = () =>{
-
-
-    const [email, setEmail] = useState('');
+const AddFriendModal = () => {
+    const [email, setEmail] = useState("");
     const { isOpen, onOpen, onClose, type, data } = useModal();
     const dispatch = useDispatch();
 
     const isModalOpen = isOpen && type === "addFriend";
 
-    const handleEmailChange = (e) =>{
-        setEmail(e.target.value)
-        console.log(email)
-    }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        console.log(email);
+    };
 
-    const onClickAddFriend = () =>{
-        dispatch(callPostFriend({
-            email:email
-        }))
-        onClose()
-    }
+    const onClickAddFriend = () => {
+        dispatch(
+            callPostFriend({
+                email: email,
+            })
+        );
+        onClose();
+    };
 
-
-    return(
+    return (
         <Dialog
             open={isModalOpen}
             onOpenChange={onClose}
@@ -44,26 +44,32 @@ const AddFriendModal = () =>{
                         친구추가
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
-                        <div>
-                            {/* 정보 수정*/}
-                            <div>
-                                이메일을 입력하여 상대방을 친구 목록에 추가할 수 있습니다!
-                            </div>
-                            <input onChange={handleEmailChange} className='w-[100%] border-2 h-[30px] font-normal'/>
-                            <div>
-                                <Button onClick={onClickAddFriend} className='hover:bg-amber-500 bg-amber-400 font-semibold text-sm text-black'>
-                                    추가
-                                </Button>
-                                <Button className='bg-red-400 hover:bg-red-500 font-semibold text-sm text-black' onClick={onClose}>
-                                    취소
-                                </Button>
-                            </div>
-                        </div>
+                        이메일을 입력하여 상대방을 친구 목록에 추가할 수
+                        있습니다!
                     </DialogDescription>
                 </DialogHeader>
+                {/* 정보 수정*/}
+                <input
+                    onChange={handleEmailChange}
+                    className="w-[100%] border-2 h-[30px] font-normal"
+                />
+                <DialogFooter>
+                    <Button
+                        onClick={onClickAddFriend}
+                        className="hover:bg-amber-500 bg-amber-400 font-semibold text-sm text-black"
+                    >
+                        추가
+                    </Button>
+                    <Button
+                        className="bg-red-400 hover:bg-red-500 font-semibold text-sm text-black"
+                        onClick={onClose}
+                    >
+                        취소
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};
 
 export default AddFriendModal;

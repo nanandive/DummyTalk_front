@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
-import styles from './SignUp.module.css'; // Import your CSS module
+import styles from './SignUp.module.css';                 // Import your CSS module
 import GoogleLogin from "../page/GoogleLogin";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
+import { FindPasswordModal } from "src/components/modals/FindPassword-modal";
 import { jwtDecode } from 'jwt-decode';
 
 
 export default function SignUp() {
+
 
   const accessToken = window.localStorage.getItem('accessToken');
   // const decodedToken = accessToken ? jwtDecode(accessToken) : null;
@@ -24,7 +26,6 @@ export default function SignUp() {
   const dispatch = useDispatch();
 
   const { onOpen } = useModal();
-
 
   const user = {
     userEmail: email,
@@ -92,6 +93,7 @@ export default function SignUp() {
     }
   }
 
+
   return (
     <div className={styles.page}>
 
@@ -145,6 +147,7 @@ export default function SignUp() {
         <Button
             onClick={() => onOpen("findPassword")}
             className={styles.bottomButton}
+            type={"button"}
         >
           비밀번호 찾기
         </Button>
@@ -152,6 +155,8 @@ export default function SignUp() {
           <GoogleLogin />
         </div>
       </div>
+      <FindPasswordModal />
+
     </div>
   )
 }
