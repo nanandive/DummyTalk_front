@@ -1,4 +1,11 @@
-import {GET_USER, POST_ADD_FRIEND} from "../modules/MainModule";
+import {
+    GET_FRIEND,
+    GET_FRIEND_REQUEST,
+    GET_USER,
+    POST_ADD_FRIEND,
+    POST_APPROVAL,
+    POST_CHANGE_USER, POST_REFUSAL
+} from "../modules/MainModule";
 import {jwtDecode} from "jwt-decode";
 
 
@@ -20,6 +27,38 @@ export const callGetNickname = () => {
     }
 }
 
+export const callGetFriend = () => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/friend/${decodedToken.sub}`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+        }).then(response => response.json());
+        console.log(result.data)
+        dispatch({ type: GET_FRIEND, payload: result.data });
+    }
+}
+
+export const callGetFriendRequest = () => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/friendRequest/${decodedToken.sub}`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+        }).then(response => response.json());
+        console.log(result.data)
+        dispatch({ type: GET_FRIEND_REQUEST, payload: result.data });
+    }
+}
+
+
+
 export const callPostFriend = (email) => {
     const requestURL = `${process.env.REACT_APP_API_URL}/friend/${decodedToken.sub}`;
     return async (dispatch, getState) => {
@@ -34,3 +73,54 @@ export const callPostFriend = (email) => {
         dispatch({ type: POST_ADD_FRIEND, payload: result.data });
     }
 }
+
+export const callPostChageUser = (data) => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/change/${decodedToken.sub}`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Accept': '*/*'
+            },body: data
+        }).then(response => response.json());
+        alert(result.message)
+        window.location.reload();
+        if(result.status == 200){
+            dispatch({ type: POST_CHANGE_USER, payload: result.data });
+        }
+    }
+}
+
+export const callPostApproval = (friendId) => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/approval/${decodedToken.sub}`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },body: JSON.stringify(friendId)
+        }).then(response => response.json());
+        alert(result.message)
+        dispatch(callGetFriendRequest())
+        dispatch({ type: POST_APPROVAL, payload: result.data });
+    }
+}
+
+export const callPostRefusal = (friendId) => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/refusal/${decodedToken.sub}`;
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },body: JSON.stringify(friendId)
+        }).then(response => response.json());
+        alert(result.message)
+        dispatch(callGetFriendRequest())
+        dispatch({ type: POST_REFUSAL, payload: result.data });
+    }
+}
+
+

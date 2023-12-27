@@ -5,6 +5,8 @@ import './css/Friends.css';
 import { useModal } from "src/components/hooks/use-modal";
 import axios from "axios";
 import {useUrlQuery} from "src/components/hooks/use-url-query";
+import {callGetFriend} from "src/api/MainAPICalls";
+import {useDispatch, useSelector} from "react-redux";
 
 function Friends() {
   const [accessUser, setAccessUser] = useState([]);
@@ -13,6 +15,9 @@ function Friends() {
   const { onOpen, isOpen } = useModal()
   const query = useUrlQuery()
   const serverId = query.get("server")
+  const dispatch =  useDispatch()
+  const data = useSelector(state => state.friendReducer);
+
 
   // 서버 초대된 유저 리스트
   useEffect(() => {
@@ -22,6 +27,12 @@ function Friends() {
               console.log("(서버에 초대된 유저 리스트 불러오기 성공 >>>>>>>>>>>>>> ", response)
           })
   }, [serverId]);
+
+
+    useEffect(() => {
+        // Mock data
+        dispatch(callGetFriend());
+    }, []);
 
   const handleFriendClick = (friend) => {
     setSelectedFriend(friend);
@@ -50,6 +61,18 @@ function Friends() {
                 </li>
             ))}
         </ul>
+      <h2>친구 목록</h2>
+      <ul className="friends-list">
+        {data && data.length > 0 && data.map((friend) => (
+          <li
+            key={friend.userId}
+            className={friend === selectedFriend ? 'selected-friend' : ''}
+            onClick={() => handleFriendClick(friend)}
+          >
+            {friend.name}
+          </li>
+        ))}
+      </ul>
 
 
         <button
@@ -57,6 +80,7 @@ function Friends() {
           onClick={() => onOpen("invitedUser", { serverId })}
       >초대/강퇴
       </button>
+
       
     </div>
   );
