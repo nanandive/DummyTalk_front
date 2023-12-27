@@ -24,6 +24,7 @@ const CreateChannelModal = () => {
         formData.append("channelName", channelName);
         formData.append("serverId", serverId);
         formData.append("channelType", "TEXT");  // 채널 타입을 TEXT로 설정
+        formData.append("maxUserCnt", "SIX");  // TEXT 채널의 경우 MaxUserCnt는 6
 
         try {
             await axios.post(
@@ -33,7 +34,7 @@ const CreateChannelModal = () => {
             console.log("채널 생성 성공");
             onClose();
 
-            navigate(`/main?server=${serverId}&channel=${channelId}`, {
+            navigate(`/main?server=${serverId}`, {
                 replace: true,
                 state: uuid(),
             });
@@ -53,7 +54,7 @@ const CreateChannelModal = () => {
         formData.append("channelName", channelName);
         formData.append("serverId", serverId);
         formData.append("channelType", "VOICE");  // 채널 타입을 VOICE로 설정
-        // formData.append("channelId", channelId);
+        formData.append("maxUserCnt", "ONE");  // VOICE 채널의 경우 MaxUserCnt는 2
 
         try {
             await axios.post(
@@ -62,7 +63,7 @@ const CreateChannelModal = () => {
             );
             console.log("1:1 번역채팅방 생성 성공");
             onClose();
-            navigate(`/main?server=${serverId}&channel=${channelId}`, {
+            navigate(`/main?server=${serverId}`, {
                 replace: true,
                 state: uuid(),
             });
