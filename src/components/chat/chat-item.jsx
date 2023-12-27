@@ -1,59 +1,113 @@
 import {cn} from "src/lib/utils";
 import {UserAvatar} from "../user-avatar";
-import {format} from "date-fns";
 import moment from "moment";
+import {useMemo, useState} from "react";
+import {decodeJwt} from "src/lib/tokenUtils";
+import {Button} from "src/components/ui/button";
+import axios from "axios";
+import {Trash2} from "lucide-react"; // Import css
 
-const ChatItem = ({chat, name}) => {
-    // src={"http://localhost:9999/upload/01e778ab-5713-47f8-82c6-7b71a5979ce0_스크린샷 2023-12-20 224416.png"}
-    const SERVER_FILE_PATH = "http://localhost:9999/upload/"
 
-    // console.log(chat.type)
+const ChatItem = ({chat, channel, name}) => {
+
+    const accessToken = localStorage.getItem("accessToken");
+    const {sub} = useMemo(() => decodeJwt(accessToken), [accessToken]);
+
+    const [context, setContext] = useState(false);
+    const [xyPosition, setxyPosition] = useState({x: 0, y: 0});
+
+    const deleteRequest = (chosen) => {
+
+        console.log("들어왔다")
+        axios.post(
+            `${process.env.REACT_APP_API_URL}/chat/del/${channel}/${chat.chatId}`
+        ).then((res) => {
+            if (res.status === 200) {
+                setChosen(chosen);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+
+    }
+
+    const showNav = (e) => {
+        e.preventDefault();
+        setContext(false);
+
+
+        if (chat.sender.sender !== +sub) return;
+
+        const {clientX, clientY} = e;
+        setxyPosition({x: clientX, y: clientY});
+        setContext(true);
+    };
+
+    const hideContext = (event) => {
+        setContext(false);
+    };
+
+    const [chosen, setChosen] = useState();
+
     const timestamp = chat && moment(chat.timestamp).format("YYYY.MM.DD HH:mm:ss");
 
+    if (chat?.type === "DELETE") return null;
+
+
     return chat && (
-        <div className="relative group flex items-center hover:bg-black/5 p-2 transition w-full">
-            <div className="group flex gap-x-2 items-start w-full">
-                <div className="cursor-pointer hover:drop-shadow-md transition">
-                    <UserAvatar src={chat.sender.userImgPath}/>
-                </div>
-                <div className="flex flex-col w-full">
-                    <div className="flex items-center gap-x-2">
-                        <div className="flex items-center">
-                            <p className="font-semibold texet-sm hover:underline cursor-pointer">
-                                {chat.sender.nickname || name}
-                            </p>
-                            {/* <ActionTooltip label={member.role}>
+        <div
+            className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-50 rounded-[3px] text-white"
+            onContextMenu={showNav}
+            onClick={hideContext}
+        >
+            {context && (
+                <Button className={`absolute top-[${xyPosition.y}px] left-[${xyPosition.x}px] z-10`} onClick={() => deleteRequest(true)}>
+                    <Trash2/>
+                </Button>
+            )}
+            {chosen ? <h4>메시지가 삭제되었습니다.</h4> :
+                <div className="group flex gap-x-2 items-start w-full">
+
+                    <div className="cursor-pointer hover:drop-shadow-md transition">
+                        <UserAvatar src={chat.sender.userImgPath}/>
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <div className="flex items-center gap-x-2">
+                            <div className="flex items-center">
+                                <p className="font-semibold texet-sm hover:underline cursor-pointer">
+                                    {chat.sender.nickname || name}
+                                </p>
+                                {/* <ActionTooltip label={member.role}>
                                 {roleIconMap[member.role]}
                             </ActionTooltip> */}
-                        </div>
-                        <span className="text-xs text-zinc-500">
+                            </div>
+                            <span className="text-xs text-white">
                             {timestamp}
                         </span>
-                    </div>
-                    <p
-                        className={cn(
-                            "text-sm text-zinc-600 whitespace-pre-wrap"
-                        )}
-                    >
-                        {chat?.type === "TEXT" ? chat.message : null }
-                    </p>
-                    {chat.type === "IMAGE" && (
-                        <a
-                            // href={chat.message}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
+                        </div>
+                        <p
+                            className={cn(
+                                "text-sm text-white whitespace-pre-wrap"
+                            )}
                         >
-                            <img
-                                // src={chat.message}
-                                alt={chat.message}
-                                src={SERVER_FILE_PATH+chat.message}
-                                className="w-full h-full object-cover"
-                            />
-                        </a>
-                    )}
+                            {chat?.type === "TEXT" ? chat.message : null}
+                        </p>
+                        {chat.type === "IMAGE" && (
+                            <a
+                                // href={chat.message}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
+                            >
+                                <img
+                                    alt={chat.message}
+                                    src={chat.message}
+                                    className="w-full h-full object-cover"
+                                />
+                            </a>
+                        )}
 
-                    {/* {!fileUrl && isEditing && (
+                        {/* {!fileUrl && isEditing && (
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)}
                             className='flex items-center w-full gap-x-2 pt-2'
@@ -86,9 +140,10 @@ const ChatItem = ({chat, name}) => {
                             </form>
                         </Form>
                     )} */}
+                    </div>
                 </div>
-            </div>
-            {/* {canDeleteMessage && (
+            }
+            {/*{canDeleteMessage && (
                 <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
                     {canEditMessage && (
                         <ActionTooltip label="Edit">
@@ -107,8 +162,10 @@ const ChatItem = ({chat, name}) => {
                         className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 darkk:hover:text-zinc-300 transition" />
                     </ActionTooltip>
                 </div>
-            )} */}
+            )}*/}
+
         </div>
     );
-};
+}
+
 export default ChatItem;

@@ -3,25 +3,34 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useModal} from "src/components/hooks/use-modal";
 import {Label} from "src/components/ui/label";
 import {decodeJwt} from "src/lib/tokenUtils";
-import { useSocket } from "../hooks/use-socket";
+import {useSocket} from "../hooks/use-socket";
 
 const ImageSendModal = () => {
     const [enabled, setEnabled] = useState(false);
-    const {socket, isConnected} = useSocket();
     const {data, isOpen, onClose, type} = useModal();
+    const {channelId, socket, isConnected } = data
     const isModalOpen = isOpen && type === "imageSend";
     const accessToken = localStorage.getItem("accessToken");
     const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
+    const [response, setResponse] = useState([]);
 
 
-    const formData = new FormData();
+
+
+    const onCloseHandler = () => {
+        onClose();
+        fileInput.current.value = "";
+        setShowImages([]);
+    }
+
 
     const handleAddImage = (e) => {
 
         if (fileInput.current && fileInput.current.files) {
             let showImgList = [...showImages];
+
             // 10개 이상의 파일은 업로드 불가
             for (let i = 0; i < e.target.files.length; i++) {
                 showImgList.push(URL.createObjectURL(e.target.files[i]));   // 요것이 문제 !!
@@ -36,37 +45,47 @@ const ImageSendModal = () => {
 
     const onSubmit = async () => {
         try {
-
+            const formData = new FormData();
             formData.append("userId", sub);
             formData.append("nickname", nickname);
-            formData.append("channelId", data.channelId);
+            formData.append("channelId", channelId);
 
             if (fileInput.current && fileInput.current.files) {
                 const files = fileInput.current.files;
 
+
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
                 }
-
-                // for (const [key, value] of formData.entries()) {
-                //     console.log(`key: ${key}, value: ${value}`);
-                // }
-                // console.log("formData=======================", data.channelId)
 
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
                     formData,
                     {"Content-Type": "multipart/form-data"}
                 );
-                console.log("업로드 성공:", response);
-                setShowImages([]);
-                fileInput.current.value = "";
 
-                if (!response || response.data === null) return alert("이미지 전송에 실패했습니다.");
+                console.log("업로드 성공:", response);
 
                 if (response?.status === 200) {
-                    ImageViewUpdateRequest(response.data.chatList);
+                    if (!isConnected || !response) return;
+
+                    response.data.data.map((chat) => (
+                        socket.send(`/app/${channelId}/message`
+                            , JSON.stringify({
+                                chatId: chat.chatId,
+                                channelId: channelId,
+                                nickname: chat.nickname,
+                                message: chat.message,
+                                timestamp: chat.timestamp,
+                                type: chat.type,
+                                profileImage: chat.profileImage
+                            })
+                        )
+                    ));
                 }
+
+                setShowImages([]);
+                fileInput.current.value = "";
 
                 onClose();
             }
@@ -75,25 +94,30 @@ const ImageSendModal = () => {
         }
     };
 
-    const ImageViewUpdateRequest = useCallback((res) => {
-        if (!isConnected || !sub || !res) return;
+    // const ImageViewUpdateRequest = useCallback(() => {
+    //
+    //     console.log("response.data.data 나와라", isConnected);
+    //     console.log("response.data.data 나와라", sub);
+    //     console.log("response.data.data 나와라@@@@", response);
+    //     if (!isConnected || !response) return;
+    //
+    //     response.map((chat) => (
+    //         socket.send(`/app/${channelId}/message`
+    //             , JSON.stringify({
+    //                 chatId: chat.chatId,
+    //                 channelId: channelId,
+    //                 nickname: chat.nickname,
+    //                 message: chat.message,
+    //                 timestamp: chat.timestamp,
+    //                 type: chat.type,
+    //                 profileImage: chat.profileImage
+    //             })
+    //         )
+    //     ));
+    //
+    // }, [isConnected, isOpen, socket, response]);
 
-        res.map((chat) => (
-            socket.send( `/app/${data.channelId}/message`
-                ,JSON.stringify({
-                    chatId: chat.chatId,
-                    channelId: chat.channelId,
-                    nickname: chat.nickname,
-                    message: chat.message,
-                    timestamp: chat.timestamp,
-                    type: chat.type,
-                    profileImage: chat.profileImage
-                })
-            )
-        ));
-
-    }, [data.channelId, isConnected, socket]);
-
+    console.log(isConnected)
     return (
         <div
             className={`fixed top-0 left-0 w-full h-full ${
@@ -104,7 +128,7 @@ const ImageSendModal = () => {
                 className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
                 <span
                     className="text-gray-700 float-right text-2xl font-extrabold cursor-pointer"
-                    onClick={onClose}
+                    onClick={onCloseHandler}
                 >
                     &times;
                 </span>
@@ -125,13 +149,12 @@ const ImageSendModal = () => {
                 <Label className="">사진 전송 10개 이하</Label>
                 <div className="w-100 h-100 grid grid-cols-4 gap-4 ">
                     {showImages.map((image, id) => (
-                        // <div key={id} className="flex flex-col items-center">
                         <img
                             // 이미지 2x5로 나열 크기 고정
                             key={id}
-                            className="w-25"
                             src={image}
                             alt={`${image}-${id}`}
+                            className="w-full h-full object-cover object-center rounded-md"
                         />
                     ))}
                 </div>

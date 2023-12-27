@@ -5,10 +5,12 @@ import Navbar from "src/layouts/IndexLayout/Navbar"
 function IndexLayOut() {
 
     return (
+        <>
         <div className="h-full relative">
             <Navbar />
             <Outlet/>
         </div>
+        </>
     )
 }
 
