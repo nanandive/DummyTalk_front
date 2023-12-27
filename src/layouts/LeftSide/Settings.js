@@ -18,7 +18,7 @@ import "./css/Settings.css";
 function Settings() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
-  const serverId = query.get("serverId");
+  const serverId = query.get("server");
   const [serverSettings, setServerSettings] = useState({});
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharingOn, setIsScreenSharingOn] = useState(false);
