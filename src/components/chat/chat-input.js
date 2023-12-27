@@ -2,27 +2,22 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Textarea } from "src/components/ui/textarea";
 import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { utils } from "@ricky0123/vad-react";
-import {useSocket} from "../providers/sock-provider";
-import { useChatData } from "../hooks/use-chat-data";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
-
+import { useSocket } from "../hooks/use-socket";
 
 const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
     const { onOpen } = useModal();
-  const query = useUrlQuery();
-  const channelId = query.get("channel");
+    const query = useUrlQuery();
+    const channelId = query.get("channel");
 
-  const { updateData } = useChatData();
+    const { updateData } = useChatData();
 
     const sendMessageRef = useRef(null);
     /***
@@ -38,7 +33,7 @@ const ChatInput = ({ userInfo }) => {
      * send : /app/{channelId}/message
      */
     useEffect(() => {
-        if ( !channelId || !isConnected || !userInfo ) return;
+        if (!channelId || !isConnected || !userInfo) return;
 
         const subscription = socket.subscribe(
             `/topic/msg/${channelId}`,
@@ -83,8 +78,7 @@ const ChatInput = ({ userInfo }) => {
                 sender: userInfo?.sub,
                 nickname: userInfo?.nickname,
                 channelId,
-                type: "TEXT"
-
+                type: "TEXT",
             })
         );
         sendMessageRef.current.value = "";
@@ -132,7 +126,9 @@ const ChatInput = ({ userInfo }) => {
                 {/* 사진 전송 버튼 */}
                 <Button
                     className="absolute right-[95%] bottom-[-20%] "
-                    onClick={() => onOpen("imageSend", { channelId, socket, isConnected })}
+                    onClick={() =>
+                        onOpen("imageSend", { channelId, socket, isConnected })
+                    }
                 >
                     <ImagePlus />
                 </Button>

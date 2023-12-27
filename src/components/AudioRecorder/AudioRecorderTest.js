@@ -5,9 +5,9 @@ import * as ort from "onnxruntime-web";
 import { useState } from "react";
 import { decodeJwt } from "src/lib/tokenUtils";
 import { useUrlQuery } from "../hooks/use-url-query";
-import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
+import { useSocket } from "../hooks/use-socket";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",
@@ -23,6 +23,7 @@ const AudioRecorderTest = () => {
     const userInfo = decodeJwt(accessToken)
     const query = useUrlQuery()
     const channelId = query.get("channel")
+
 
     const vad = useMicVAD({
         workletURL: "/vad.worklet.bundle.min.js",

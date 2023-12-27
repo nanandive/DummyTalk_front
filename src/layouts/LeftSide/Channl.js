@@ -1,7 +1,7 @@
 // Channels.js
 
 import axios from "axios";
-import {createContext, useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
@@ -93,8 +93,8 @@ const Channels = () => {
             {/* 채널 리스트 */}
             {/* 채널 리스트 렌더링 */}
             <div className="channels-container">
-                <div className="channels-list">
-                    <div className="channels-title">채널 목록</div>
+                <div className="channels-list text-zinc-300">
+                    <h1 className="text-zinc-300 text-lg">채널 목록</h1>
                     <div className="flex flex-col">
                         {channels.map((channel, index) => (
                             <Link
