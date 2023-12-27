@@ -152,9 +152,9 @@ const ImageSendModal = () => {
                         <img
                             // 이미지 2x5로 나열 크기 고정
                             key={id}
-                            className="w-25"
                             src={image}
                             alt={`${image}-${id}`}
+                            className="w-full h-full object-cover object-center rounded-md"
                         />
                     ))}
                 </div>
