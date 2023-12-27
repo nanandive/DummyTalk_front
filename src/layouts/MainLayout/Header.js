@@ -6,7 +6,7 @@ import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
 import { useDispatch, useSelector } from "react-redux";
-import { callGetNickname } from "../../api/MainAPICalls";
+import { callGetNickname, callGetFriendRequest, callPostApproval, callPostRefusal } from "../../api/MainAPICalls";
 import AddFriendModal from "../../components/modals/Add-Friend-modal";
 import { decodeJwt } from "src/lib/tokenUtils";
 
@@ -18,8 +18,6 @@ function Header() {
     const { onOpen } = useModal();
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
-    const { state } = useLocation();
-    const dispatch = useDispatch();
     const [onRequest, setOnRequest] = useState(false);
     const [click, setClick] = useState(false);
     const { state } = useLocation()
