@@ -3,11 +3,11 @@ import axios from "axios";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import "./AudioRecorder.css";
-import { useSocket } from "../providers/sock-provider";
 import { decodeJwt } from "src/lib/tokenUtils";
 import { useUrlQuery } from "../hooks/use-url-query";
+import { Button } from "../ui/button";
+import "./AudioRecorder.css";
+import { useSocket } from "../hooks/use-socket";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",
@@ -23,6 +23,7 @@ const AudioRecorderTest = () => {
     const userInfo = decodeJwt(accessToken)
     const query = useUrlQuery()
     const channelId = query.get("channel")
+
 
     const vad = useMicVAD({
         workletURL: "/vad.worklet.bundle.min.js",

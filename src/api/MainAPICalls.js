@@ -103,6 +103,7 @@ export const callPostApproval = (friendId) => {
         }).then(response => response.json());
         alert(result.message)
         dispatch(callGetFriendRequest())
+        dispatch(callGetFriend())
         dispatch({ type: POST_APPROVAL, payload: result.data });
     }
 }

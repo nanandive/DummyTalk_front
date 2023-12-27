@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { UserAvatar } from "src/components/user-avatar";
-import { useDispatch, useSelector } from "react-redux";
-import { callGetNickname, callGetFriendRequest, callPostApproval, callPostRefusal } from "../../api/MainAPICalls";
-import AddFriendModal from "../../components/modals/Add-Friend-modal";
 import { decodeJwt } from "src/lib/tokenUtils";
+import { callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal } from "../../api/MainAPICalls";
+import AddFriendModal from "../../components/modals/Add-Friend-modal";
 
 function Header() {
   const accessToken = localStorage.getItem("accessToken");
@@ -79,7 +79,6 @@ function Header() {
 
     const onClickApproval = (friendId) =>{
         dispatch(callPostApproval(friendId))
-        dispatch( callGetFriendRequest() )
     }
 
     const onClick = () =>{
@@ -102,7 +101,7 @@ function Header() {
                 </div>
                 <div className="flex">
                     <div onClick={() => onOpen("createServer")}>
-                        <Button className="#52cbb6 border-2 border-[#52cbb6]" size="icon">
+                        <Button className="#52cbb6 border-2 border-teal-300 text-teal-300" size="icon">
                             <Plus />
                         </Button>
                     </div>
@@ -115,7 +114,7 @@ function Header() {
                     </button>
                     {slicedData.map((data, index) => (
                         <div key={index} style={{ marginLeft: "10px" }} onClick={() => handleServerClick(data.id)}>
-                            <Button className="overflow-hidden text-lg font-bold" size="serverIcon" variant="serverLink">
+                            <Button className="overflow-hidden text-lg font-bold" size="icon" variant="serverLink">
                                 {data.serverName ? data.serverName.slice(0, 2) : "???"}
                             </Button>
                         </div>
@@ -141,7 +140,7 @@ function Header() {
                 >
                     친구요청
                 </Button>
-                <div style={onRequest ? {width:"400px", height:"500px", top:"33%" ,left:"87%", border:"1px solid black", transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto"} : {display : "none"}}>
+                <div style={onRequest ? {width:"400px", height:"500px", top:"33%" ,left:"87%", border:"1px solid black", background:"whitesmoke", transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto", zIndex:"1"} : {display : "none"}}>
                     <div style={{width: "395px", height:"50px", alignItems:"center", display:"flex"}}>
                         {FriendData.length > 0 && FriendData.map(friend =>(
                             <>
@@ -166,9 +165,9 @@ function Header() {
                     className="h-8 w-8 md:h-8 md:w-8 mr-2"
                     onClick={() => onOpen("members")}
                 >
-                    {data.userImgPath ? <UserAvatar src={"../../../../server/17b124ce-45a4-4182-9626-87cb765175ff_KakaoTalk_20230917_201137478.jpg"} />  : <UserAvatar src={imageUrl} />}
+                    {data.userImgPath ? <UserAvatar src={data.userImgPath} />  : <UserAvatar src={imageUrl} />}
                 </div>
-                <div style={{ margin: "0px 20px 0px 10px" }}>{data.nickname}</div>
+                <div style={{ margin: "0px 20px 0px 10px" }} className="text-zinc-300">{data.nickname}</div>
                 <Button onClick={() => onOpen("logout")} className="w-[80px] h-[30px] bg-[#51CBB6] hover:bg-[#45B2A5] font-bold">
                     로그아웃
                 </Button>
