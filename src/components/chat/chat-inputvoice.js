@@ -6,7 +6,7 @@ import { Textarea } from "src/components/ui/textarea";
 import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
 import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/sock-provider";
+import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 

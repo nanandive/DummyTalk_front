@@ -3,11 +3,11 @@ import axios from "axios";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import "./AudioRecorder.css";
-import { useSocket } from "../providers/sock-provider";
 import { decodeJwt } from "src/lib/tokenUtils";
 import { useUrlQuery } from "../hooks/use-url-query";
+import { useSocket } from "../providers/socket-provider";
+import { Button } from "../ui/button";
+import "./AudioRecorder.css";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",

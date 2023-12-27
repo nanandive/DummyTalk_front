@@ -2,13 +2,12 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Textarea } from "src/components/ui/textarea";
+import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../providers/socket-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "src/components/ui/textarea";
-import { utils } from "@ricky0123/vad-react";
-import {useSocket} from "../providers/sock-provider";
-import { useChatData } from "../hooks/use-chat-data";
 
 
 const ChatInput = ({ channelId, userInfo, setData }) => {
