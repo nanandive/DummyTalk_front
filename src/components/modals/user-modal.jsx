@@ -19,7 +19,9 @@ function UserModal() {
     const [ password, setPassword] = useState('');
     const [ check, setCheck] = useState('');
     const [ language, setLanguage] = useState('');
-    const [equals, setEquals] = useState(false);
+    const [ equals, setEquals] = useState(true);
+    const [ pwValid, setPwValid] = useState(false);
+    const [ chValid, setChValid] = useState(false);
     const fileInputRef = useRef();
     const dispatch = useDispatch();
     const userData = useSelector(state => state.chageUserReducer);
@@ -31,18 +33,33 @@ function UserModal() {
     }
     const onChangePassword = (e) =>{
         setPassword(e.target.value)
+        const regex =
+            /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
         if(e.target.value == check){
             setEquals(true);
         } else{
             setEquals(false);
         }
+        if(regex.test(e.target.value)){
+            setPwValid(true);
+        } else{
+            setPwValid(false);
+
+        }
     }
     const onChangeCheck = (e) =>{
         setCheck(e.target.value)
+        const regex =
+            /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
         if(e.target.value == password){
             setEquals(true);
         } else{
             setEquals(false);
+        }
+        if(regex.test(e.target.value)){
+            setChValid(true);
+        } else{
+            setChValid(false)
         }
     }
 
@@ -51,7 +68,7 @@ function UserModal() {
     }
 
     const onClickChange = () =>{
-        if(equals == true){
+        if(equals == true && pwValid && chValid){
 
             const formData = new FormData();
             formData.append("nickname", nickname);
@@ -60,17 +77,12 @@ function UserModal() {
             if (fileInputRef.current && fileInputRef.current.files[0]) {
                 formData.append("file", fileInputRef.current.files[0]);
             }
-
             dispatch(callPostChageUser(formData))
-        } else if (equals == false && !password == ''){
+        } else if (equals == false && !password == '' || !pwValid && password.length >0 || !chValid && check.length >0){
             alert("비밀번호를 확인해주시길 바랍니다.")
         }
     }
 
-
-    const onClickTest = () =>{
-        // console.log("Test", formData.get("file"))
-    }
     return (
         <Dialog
             open={isModalOpen}
@@ -78,7 +90,7 @@ function UserModal() {
         >
             <DialogContent className="bg-white text-black overflow-hidden">
                 <DialogHeader className="px-6">
-                    <DialogTitle onClick={onClickTest} className="text-2xl text-center font-bold">
+                    <DialogTitle className="text-2xl text-center font-bold">
                         회원정보 수정
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
@@ -98,12 +110,14 @@ function UserModal() {
                                     type={"password"}
                                     placeholder={"변경할 비밀번호"}
                                 />
+                                {!pwValid && password.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
                                 <input
                                     onChange={ onChangeCheck }
                                     value={ check }
                                     type={"password"}
                                     placeholder={"변경할 비밀번호 확인"}
                                 />
+                                {!chValid && check.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
                                 <div style={ check == '' ? {display:"none"}  : {display:"block"}}>
                                     {check && check== password ?
                                         <div style={ {color:"green"} }>

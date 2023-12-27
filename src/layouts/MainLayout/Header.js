@@ -165,7 +165,7 @@ function Header() {
                     className="h-8 w-8 md:h-8 md:w-8 mr-2"
                     onClick={() => onOpen("members")}
                 >
-                    {data.userImgPath ? <UserAvatar src={"../../../../server/17b124ce-45a4-4182-9626-87cb765175ff_KakaoTalk_20230917_201137478.jpg"} />  : <UserAvatar src={imageUrl} />}
+                    {data.userImgPath ? <UserAvatar src={data.userImgPath} />  : <UserAvatar src={imageUrl} />}
                 </div>
                 <div style={{ margin: "0px 20px 0px 10px" }} className="text-zinc-300">{data.nickname}</div>
                 <Button onClick={() => onOpen("logout")} className="w-[80px] h-[30px] bg-[#51CBB6] hover:bg-[#45B2A5] font-bold">
