@@ -4,7 +4,6 @@ import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
 import { useSocket } from "../hooks/use-socket";
 import { useUrlQuery } from "../hooks/use-url-query";
 import { Label } from "../ui/label";
-import { Mic } from "lucide-react";
 
 const ChatVoiceInputTest = ({ userInfo }) => {
   const partnerAudio = useRef();
@@ -138,34 +137,41 @@ const ChatVoiceInputTest = ({ userInfo }) => {
   };
 
   useEffect(() => {
+    // 미디어 스트림 처리 함수
+    const handleMediaStream = (stream) => {
+      userStream.current = stream;
+      socket.send(
+        `/app/${channelId}/audio`,
+        JSON.stringify({
+          type: "join-room",
+          source: socket.id,
+          channelId,
+        })
+      );
+    };
+
+    // 에러 처리 함수
+    const handleError = (err) => {
+      console.error("미디어 스트림을 가져오는 데 실패했습니다:", err);
+    };
+
+    // 미디어 스트림 요청 함수
+    const requestMediaStream = () => {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then(handleMediaStream)
+        .catch(handleError);
+    };
+
     if (!isConnected) return;
 
-    navigator.mediaDevices.getUserMedia =
-      navigator.mediaDevices.getUserMedia ||
-      navigator.mediaDevices.webkitGetUserMedia ||
-      navigator.mediaDevices.mozGetUserMedia ||
-      navigator.mediaDevices.msGetUserMedia;
+    requestMediaStream();
 
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: {
-          sampleRate: 16000,
-        },
-      })
-      .then((stream) => {
-        console.log(stream)
-        userStream.current = stream;
-
-        socket.send(
-          `/app/${channelId}/audio`,
-          JSON.stringify({
-            type: "join-room",
-            source: socket.id,
-            channelId,
-          })
-        );
-      })
-      .catch((err) => console.error(err));
+    // 장치 변경 감지
+    navigator.mediaDevices.ondevicechange = () => {
+      console.log("오디오 장치가 변경되었습니다.");
+      requestMediaStream(); // 장치 변경 시 미디어 스트림을 다시 요청
+    };
 
     const subscription = socket.subscribe(
       `/topic/audio/${channelId}`,
@@ -203,11 +209,11 @@ const ChatVoiceInputTest = ({ userInfo }) => {
 
     return () => {
       subscription.unsubscribe();
-
       if (peerConnect) {
         peerConnect.close();
         setPeerConnect(null);
       }
+      navigator.mediaDevices.ondevicechange = null; // 장치 변경 감지 해제
     };
   }, [channelId, socket]);
 
@@ -241,9 +247,6 @@ const ChatVoiceInputTest = ({ userInfo }) => {
           />
         </Switch>
         {otherUserStream && <AudioRecorderTest stream={otherUserStream} />}
-        {otherUserStream?.getAudioTracks()[0].enabled && <Mic onClick={() => {
-          otherUserStream.getAudioTracks()[0].enabled = !otherUserStream.getAudioTracks()[0].enabled
-        }} />}
       </div>
       {/* 메시지 입력란 */}
       {/* <Textarea
