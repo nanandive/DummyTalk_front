@@ -51,9 +51,9 @@ function Friends() {
 
   return (
     <div className="friends-container">
-        <div style={{display:"flex"}}>
+        <div style={{display:"flex"}} className="text-zinc-300 gap-5">
             { enabled ?
-                <h2 style={{color:"teal"}}>서버 접속자</h2>:
+                <h2>서버 접속자</h2>:
                 <h2>친구 목록</h2>
             }
             <Switch

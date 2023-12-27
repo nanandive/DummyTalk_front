@@ -6,9 +6,9 @@ import { Textarea } from "src/components/ui/textarea";
 import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
 import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
-import { useSocket } from "../providers/sock-provider";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import { useSocket } from "../hooks/use-socket";
 
 const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
