@@ -2,12 +2,12 @@ import { useMicVAD, utils } from "@ricky0123/vad-react";
 import axios from "axios";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { decodeJwt } from "src/lib/tokenUtils";
+import { useSocket } from "../hooks/use-socket";
 import { useUrlQuery } from "../hooks/use-url-query";
 import { Button } from "../ui/button";
 import "./AudioRecorder.css";
-import { useSocket } from "../hooks/use-socket";
 
 ort.env.wasm.wasmPaths = {
     "ort-wasm-simd-threaded.wasm": "/ort-wasm-simd-threaded.wasm",
@@ -16,18 +16,21 @@ ort.env.wasm.wasmPaths = {
     "ort-wasm-threaded.wasm": "/ort-wasm-threaded.wasm",
 };
 
-const AudioRecorderTest = () => {
+const AudioRecorderTest = ({stream}) => {
     const [audioList, setAudioList] = useState([]);
     const { socket } = useSocket();
     const accessToken = localStorage.getItem("accessToken");
-    const userInfo = decodeJwt(accessToken)
-    const query = useUrlQuery()
-    const channelId = query.get("channel")
-
+    const userInfo = decodeJwt(accessToken);
+    const query = useUrlQuery();
+    const channelId = query.get("channel");
 
     const vad = useMicVAD({
         workletURL: "/vad.worklet.bundle.min.js",
         modelURL: "/silero_vad.onnx",
+        positiveSpeechThreshold: 0.55,
+        negativeSpeechThreshold: 0.4,
+        startOnLoad: false,
+        stream: stream,
         onVADMisfire: () => {
             console.log("Vad misfire");
         },
@@ -41,25 +44,23 @@ const AudioRecorderTest = () => {
             console.log(wavBuffer);
             const formData = new FormData();
             formData.append("file", new Blob([wavBuffer]), "audio.wav");
-            axios.post(`${process.env.REACT_APP_API_URL}/audio/upload`, formData)
-            .then((result) => {
-                console.log(result, channelId);
-                socket.send(
-                    `/app/${channelId}/audio`,
-                    JSON.stringify({
-                        ...result?.data.chat,
-                        sender: userInfo?.sub,
-                        nickname: userInfo?.nickname,
-                    })
-                );
-            });
+            axios
+                .post(`${process.env.REACT_APP_API_URL}/audio/upload`, formData)
+                .then((result) => {
+                    console.log(result, channelId);
+                    socket.send(
+                        `/app/${channelId}/audio`,
+                        JSON.stringify({
+                            ...result?.data.chat,
+                            sender: userInfo?.sub,
+                            nickname: userInfo?.nickname,
+                        })
+                    );
+                });
             // const base64 = utils.arrayBufferToBase64(wavBuffer);
             // const url = `data:audio/wav;base64,${base64}`;
             // setAudioList((old) => [url, ...old]);
         },
-        positiveSpeechThreshold: 0.55,
-        negativeSpeechThreshold: 0.4,
-        startOnLoad: false,
     });
 
     return (

@@ -8,6 +8,7 @@ import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { decodeJwt } from "src/lib/tokenUtils";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import axios from 'axios'
+import ChatVoiceInputTest from "src/components/chat/chat-inputvoiceTest";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
@@ -50,7 +51,7 @@ function Chat() {
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInput channelId={channelId} userInfo={userInfo} />
+                        <ChatVoiceInputTest userInfo={userInfo} />
                     </>
                 )}
             </div>

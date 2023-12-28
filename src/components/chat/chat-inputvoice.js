@@ -12,6 +12,7 @@ import { useSocket } from "../hooks/use-socket";
 
 const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
+    const [stream, setStream] = useState(null);
     const { socket, isConnected } = useSocket();
     const { updateData } = useChatData();
     const { onOpen } = useModal();
@@ -32,6 +33,16 @@ const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     useEffect(() => {
         if (!channelId || !isConnected || !userInfo) return;
 
+        navigator.mediaDevices.getUserMedia =
+            navigator.mediaDevices.getUserMedia ||
+            navigator.mediaDevices.webkitGetUserMedia ||
+            navigator.mediaDevices.mozGetUserMedia ||
+            navigator.mediaDevices.msGetUserMedia;
+
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            setStream(stream);
+        });
+        
         const subscription = socket.subscribe(
             `/topic/audio/${channelId}`,
             async (msg) => {
@@ -122,7 +133,7 @@ const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
                         } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                     />
                 </Switch>
-                <AudioRecorderTest />
+                {stream && <AudioRecorderTest stream={stream} />}
             </div>
             {/* 메시지 입력란 */}
             <Textarea
