@@ -68,7 +68,7 @@ const ChatInput = ({ userInfo }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if (!isConnected || !userInfo) return;
+        if ( !isConnected || sendMessageRef.current?.value === '' || !userInfo ) return;
 
         socket.send(
             `/app/${channelId}/message`,

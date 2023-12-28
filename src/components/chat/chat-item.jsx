@@ -28,7 +28,6 @@ const ChatItem = ({chat, channel, name}) => {
         }).catch((err) => {
             console.log(err);
         })
-
     }
 
     const showNav = (e) => {
