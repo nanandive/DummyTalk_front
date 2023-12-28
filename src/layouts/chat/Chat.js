@@ -1,14 +1,13 @@
+import axios from 'axios';
+import { useEffect, useMemo, useState } from "react";
+import ChatEmpty from "src/components/chat/ChatEmpty";
 import ChatHeader from "src/components/chat/chat-header";
 import ChatInput from "src/components/chat/chat-input";
-import ChatVoiceInput from "src/components/chat/chat-inputvoice";
+import ChatVoiceInputTest from "src/components/chat/chat-inputvoiceTest";
 import ChatMessages from "src/components/chat/chat-messages";
-import RightBar from "../MainLayout/RightBar";
-import { useEffect, useMemo, useState } from "react";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { decodeJwt } from "src/lib/tokenUtils";
-import ChatEmpty from "src/components/chat/ChatEmpty";
-import axios from 'axios'
-import ChatVoiceInputTest from "src/components/chat/chat-inputvoiceTest";
+import RightBar from "../MainLayout/RightBar";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
@@ -51,7 +50,7 @@ function Chat() {
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInputTest userInfo={userInfo} />
+                        <ChatVoiceInputTest />
                     </>
                 )}
             </div>
