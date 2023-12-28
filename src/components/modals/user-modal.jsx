@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "src/components/ui/dialog";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {callPostChageUser} from "src/api/MainAPICalls";
+import {callGetFriendRequest, callGetNickname, callPostChageUser} from "src/api/MainAPICalls";
 
 function UserModal() {
   const { isOpen, onOpen, onClose, type, data } = useModal();
@@ -24,7 +24,11 @@ function UserModal() {
     const [ chValid, setChValid] = useState(false);
     const fileInputRef = useRef();
     const dispatch = useDispatch();
-    const userData = useSelector(state => state.chageUserReducer);
+    const userData = useSelector(state => state.userReducer);
+
+    useEffect(() => {
+        dispatch( callGetNickname() )
+    }, []);
 
     const isModalOpen = isOpen && type === "members";
 
@@ -68,7 +72,7 @@ function UserModal() {
     }
 
     const onClickChange = () =>{
-        if(equals == true && pwValid && chValid){
+        if(equals == true && !password && !check){
 
             const formData = new FormData();
             formData.append("nickname", nickname);
@@ -83,6 +87,9 @@ function UserModal() {
         }
     }
 
+    const onClickTet = () =>{
+        console.log(userData)
+    }
     return (
         <Dialog
             open={isModalOpen}
@@ -90,7 +97,7 @@ function UserModal() {
         >
             <DialogContent className="bg-white text-black overflow-hidden">
                 <DialogHeader className="px-6">
-                    <DialogTitle className="text-2xl text-center font-bold">
+                    <DialogTitle onClick={onClickTet}  className="text-2xl text-center font-bold">
                         회원정보 수정
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
@@ -104,19 +111,25 @@ function UserModal() {
                                     placeholder={"변경할 닉네임"}
 
                                 />
-                                <input
-                                    onChange={ onChangePassword }
-                                    value={ password }
-                                    type={"password"}
-                                    placeholder={"변경할 비밀번호"}
-                                />
-                                {!pwValid && password.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
-                                <input
-                                    onChange={ onChangeCheck }
-                                    value={ check }
-                                    type={"password"}
-                                    placeholder={"변경할 비밀번호 확인"}
-                                />
+                                {userData.credential ?
+                                    <></>
+                                    :
+                                    <>
+                                        <input
+                                            onChange={ onChangePassword }
+                                            value={ password }
+                                            type={"password"}
+                                            placeholder={"변경할 비밀번호"}
+                                        />
+                                        {!pwValid && password.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
+                                        <input
+                                            onChange={ onChangeCheck }
+                                            value={ check }
+                                            type={"password"}
+                                            placeholder={"변경할 비밀번호 확인"}
+                                        />
+                                    </>
+                                }
                                 {!chValid && check.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
                                 <div style={ check == '' ? {display:"none"}  : {display:"block"}}>
                                     {check && check== password ?
