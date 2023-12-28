@@ -75,7 +75,7 @@ const RightBar = ({isOpen}) => {
     return (
         <div className="h-full w-[40%] flex flex-col">
             <div className="relative h-10">
-                <input /* <div className="absolute right-[5%] bottom-[10%] ">*/
+                <input
                     type="text"
                     value={searchQuery}
                     onKeyDown={enter_event}
