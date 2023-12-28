@@ -106,7 +106,7 @@ const ImageSendModal = () => {
             } bg-[rgba(0,0,0,0.4)] z-10`}
         >
             <div
-                className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
+                className="rounded-2xl bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
                 <span
                     className="text-gray-700 float-right text-2xl font-extrabold cursor-pointer"
                     onClick={onCloseHandler}
@@ -139,7 +139,7 @@ const ImageSendModal = () => {
                         />
                     ))}
                 </div>
-                {enabled ?
+                { !enabled ?
                     <button
                         type="submit"
                         onClick={() => onSubmit(true)}
