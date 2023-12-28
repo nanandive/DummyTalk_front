@@ -6,23 +6,27 @@ import { useUrlQuery } from "src/components/hooks/use-url-query";
 
 const ChatHeader = ({ isOpen, setOpen }) => {
     const [channelName, setChannelName] = useState("");
+    const [channelCount, setChannelCount] = useState(0); // 채널 참여자 수를 저장하기 위한 상태
     const [prevChannelId, setPrevChannelId] = useState(null);
     const query = useUrlQuery();
     const channelId = query.get("channel");
     const userId = localStorage.getItem('userId'); // 사용자 ID를 localStorage에서 가져옴
-    // decodedToken.sub// USERID
-    const getChannelName = async () => {
+
+    const getChannelInfo = async () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/channel/${channelId}`);
-            setChannelName(response.data.channelName);
+            const { channelName, channelCount } = response.data;
+            setChannelName(channelName || "");
+            setChannelCount(channelCount || 0);
         } catch (error) {
-            console.error(`Error fetching channel name: ${error}`);
+            console.error(`Error fetching channel info: ${error}`);
         }
     };
 
     const joinChannel = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/channel/${channelId}/join`, { userId });
+            await axios.post(`${process.env.REACT_APP_API_URL}/channelParti/join`, { userId, channelId });
+            getChannelInfo();
         } catch (error) {
             console.error(`Error joining channel: ${error}`);
         }
@@ -32,7 +36,8 @@ const ChatHeader = ({ isOpen, setOpen }) => {
         if (!prevChannelId) return;
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/channel/${prevChannelId}/leave`, { userId });
+            await axios.post(`${process.env.REACT_APP_API_URL}/channelParti/leave`, { userId, channelId: prevChannelId });
+            getChannelInfo();
         } catch (error) {
             console.error(`Error leaving channel: ${error}`);
         }
@@ -42,14 +47,13 @@ const ChatHeader = ({ isOpen, setOpen }) => {
         if (channelId) {
             leaveChannel();
             joinChannel();
-            getChannelName();
             setPrevChannelId(channelId);
         }
     }, [channelId]);
 
     return (
         <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
-            <div>{channelName}</div>
+            <div>{`${channelName} (${channelCount} participants)`}</div>
             <Button variant={"icon"} onClick={() => setOpen(prev => !prev)}>
                 {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
             </Button>
