@@ -68,7 +68,7 @@ const ChatInput = ({ userInfo }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if (!isConnected || !userInfo) return;
+        if ( !isConnected || sendMessageRef.current?.value === '' || !userInfo ) return;
 
         socket.send(
             `/app/${channelId}/message`,
@@ -116,7 +116,7 @@ const ChatInput = ({ userInfo }) => {
             </div>
             {/* 메시지 입력란 */}
             <Textarea
-                className="w-full h-full resize-none top-3 outline outline-zinc-300"
+                className="w-full h-full resize-none top-3 outline outline-zinc-300 bg-[#f2f3f5] bg-opacity-10 text-[#DBDEE1] font-semibold"
                 maxLength="150"
                 onKeyDown={enter_event}
                 ref={sendMessageRef}
@@ -125,7 +125,7 @@ const ChatInput = ({ userInfo }) => {
             <div className="absolute right-[5%] bottom-[10%] ">
                 {/* 사진 전송 버튼 */}
                 <Button
-                    className="absolute right-[95%] bottom-[-20%] "
+                    className="absolute right-[95%] bottom-[-20%] border-none"
                     onClick={() =>
                         onOpen("imageSend", { channelId, socket, isConnected })
                     }
@@ -134,7 +134,7 @@ const ChatInput = ({ userInfo }) => {
                 </Button>
                 {/* 메시지 전송 버튼 */}
                 <Button
-                    className="h-8 bg-sky-600 text-white"
+                    className="h-8 bg-sky-600 text-white "
                     onClick={sendChatMessage}
                 >
                     Send

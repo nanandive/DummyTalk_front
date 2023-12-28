@@ -8,6 +8,7 @@ import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { decodeJwt } from "src/lib/tokenUtils";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import axios from 'axios'
+import ChatVoiceInputTest from "src/components/chat/chat-inputvoiceTest";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
@@ -33,7 +34,7 @@ function Chat() {
 
     return (
         <>
-            <div className="flex w-full flex-col h-full" style={{ backgroundColor: '#141c26', borderTop: '1px solid #a9e5db' }}>
+            <div className="flex w-full flex-col h-full bg-[#122236]">
                 {/* 채널명 */}
                 <ChatHeader
                     isOpen={isOpen}
@@ -50,7 +51,7 @@ function Chat() {
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInput channelId={channelId} userInfo={userInfo} />
+                        <ChatVoiceInputTest userInfo={userInfo} />
                     </>
                 )}
             </div>

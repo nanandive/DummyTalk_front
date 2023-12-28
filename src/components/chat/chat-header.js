@@ -1,12 +1,12 @@
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Button } from "../ui/button";
+import {ChevronsLeft, ChevronsRight, UserPlus} from "lucide-react";
+import {Button} from "../ui/button";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {useUrlQuery} from "src/components/hooks/use-url-query";
 
-const ChatHeader = ({ isOpen, setOpen }) => {
+const ChatHeader = ({isOpen, setOpen}) => {
 
-    const [ channelName, setChannelName ] = useState("");
+    const [channelName, setChannelName] = useState("");
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
@@ -28,14 +28,15 @@ const ChatHeader = ({ isOpen, setOpen }) => {
     }, [channelId]);
 
     return channelName && (
-        <div className="h-[50px] font-bold text-xl flex pl-5 items-center bg-[#D9D9D9] border-y-[1px] border-black justify-between">
+        <div
+            className="h-[50px] font-bold text-xl flex pl-5 items-center bg- border-y-[1px] border-black justify-between text-[#B5BAC1]">
             <div>{channelName}</div>
             {/* 우측 사이드 닫힘 / 열림 */}
             <Button
                 variant={"icon"}
                 onClick={() => setOpen((prev) => !prev)}
             >
-                {isOpen ? <ChevronsRight /> : <ChevronsLeft />}
+                {isOpen ? <ChevronsRight/> : <ChevronsLeft/>}
             </Button>
         </div>
     );

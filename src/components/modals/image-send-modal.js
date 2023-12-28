@@ -4,19 +4,18 @@ import {useModal} from "src/components/hooks/use-modal";
 import {Label} from "src/components/ui/label";
 import {decodeJwt} from "src/lib/tokenUtils";
 import {useSocket} from "../hooks/use-socket";
+import {Loader, Loader2} from "lucide-react";
 
 const ImageSendModal = () => {
     const [enabled, setEnabled] = useState(false);
     const {data, isOpen, onClose, type} = useModal();
-    const {channelId, socket, isConnected } = data
+    const {channelId, socket, isConnected} = data
     const isModalOpen = isOpen && type === "imageSend";
     const accessToken = localStorage.getItem("accessToken");
     const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const fileInput = useRef();
     const [showImages, setShowImages] = useState([]);
     const [response, setResponse] = useState([]);
-
-
 
 
     const onCloseHandler = () => {
@@ -43,7 +42,7 @@ const ImageSendModal = () => {
         }
     };
 
-    const onSubmit = async () => {
+    const onSubmit = async (enabled) => {
         try {
             const formData = new FormData();
             formData.append("userId", sub);
@@ -57,6 +56,8 @@ const ImageSendModal = () => {
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
                 }
+
+                setEnabled(enabled);
 
                 const response = await axios.post(
                     `${process.env.REACT_APP_API_URL}/img/save`,
@@ -87,6 +88,8 @@ const ImageSendModal = () => {
                 setShowImages([]);
                 fileInput.current.value = "";
 
+                setEnabled(false);
+
                 onClose();
             }
         } catch (error) {
@@ -94,28 +97,6 @@ const ImageSendModal = () => {
         }
     };
 
-    // const ImageViewUpdateRequest = useCallback(() => {
-    //
-    //     console.log("response.data.data 나와라", isConnected);
-    //     console.log("response.data.data 나와라", sub);
-    //     console.log("response.data.data 나와라@@@@", response);
-    //     if (!isConnected || !response) return;
-    //
-    //     response.map((chat) => (
-    //         socket.send(`/app/${channelId}/message`
-    //             , JSON.stringify({
-    //                 chatId: chat.chatId,
-    //                 channelId: channelId,
-    //                 nickname: chat.nickname,
-    //                 message: chat.message,
-    //                 timestamp: chat.timestamp,
-    //                 type: chat.type,
-    //                 profileImage: chat.profileImage
-    //             })
-    //         )
-    //     ));
-    //
-    // }, [isConnected, isOpen, socket, response]);
 
     console.log(isConnected)
     return (
@@ -125,7 +106,7 @@ const ImageSendModal = () => {
             } bg-[rgba(0,0,0,0.4)] z-10`}
         >
             <div
-                className="bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
+                className="rounded-2xl bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-20 py-10 border-1 border-gray-800 w-1/2">
                 <span
                     className="text-gray-700 float-right text-2xl font-extrabold cursor-pointer"
                     onClick={onCloseHandler}
@@ -158,13 +139,19 @@ const ImageSendModal = () => {
                         />
                     ))}
                 </div>
-                <button
-                    type="submit"
-                    onClick={onSubmit}
-                    className="w-full h-auto p-1 my-2 bg-green-500 text-white border-none rounded-md cursor-pointer"
-                >
-                    전송
-                </button>
+                { !enabled ?
+                    <button
+                        type="submit"
+                        onClick={() => onSubmit(true)}
+                        className="w-full h-auto p-1 my-2 bg-green-500 text-white border-none rounded-md cursor-pointer"
+                    > 전송 </button>
+                    :
+                    <button type="button" className="flex fw-full h-5 bg-indigo-500 hover:" disabled>
+                        <svg className="animate-spin h-full w-5 mr-3 text-amber-50" viewBox="0 0 24 24">
+                            <Loader2 />
+                        </svg>
+                        <a>Processing...</a>
+                    </button>}
             </div>
         </div>
     );
