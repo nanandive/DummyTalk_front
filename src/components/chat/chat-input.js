@@ -9,6 +9,8 @@ import { useModal } from "../hooks/use-modal";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useSocket } from "../hooks/use-socket";
+import {callFetchChatData} from "src/api/MainAPICalls";
+import {useDispatch} from "react-redux";
 
 const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -16,6 +18,7 @@ const ChatInput = ({ userInfo }) => {
     const { onOpen } = useModal();
     const query = useUrlQuery();
     const channelId = query.get("channel");
+    const dispatch =  useDispatch()
 
     const { updateData } = useChatData();
 
@@ -52,7 +55,7 @@ const ChatInput = ({ userInfo }) => {
                     const { data } = await axios(axiosConfig);
                     result = data;
                 }
-
+                dispatch(callFetchChatData(channelId))
                 updateData(result.chat);
             }
         );
@@ -69,7 +72,6 @@ const ChatInput = ({ userInfo }) => {
 
     const sendChatMessage = useCallback(() => {
         if ( !isConnected || sendMessageRef.current?.value === '' || !userInfo ) return;
-
         socket.send(
             `/app/${channelId}/message`,
             // `/app/audioMessage` //오디오로 담는부분
