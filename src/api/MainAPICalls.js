@@ -1,4 +1,5 @@
 import {
+    GET_FETCH_CHAT,
     GET_FRIEND,
     GET_FRIEND_REQUEST,
     GET_USER,
@@ -7,6 +8,7 @@ import {
     POST_CHANGE_USER, POST_REFUSAL
 } from "../modules/MainModule";
 import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 
 
 const accessToken = window.localStorage.getItem('accessToken');
@@ -121,6 +123,21 @@ export const callPostRefusal = (friendId) => {
         alert(result.message)
         dispatch(callGetFriendRequest())
         dispatch({ type: POST_REFUSAL, payload: result.data });
+    }
+}
+
+export const callFetchChatData = (channelId) => {
+    const requestURL = `${process.env.REACT_APP_API_URL}/chat/${channelId}/${decodedToken.sub}`
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+        }).then(response => response.json());
+        console.log(result.data)
+        dispatch({ type: GET_FETCH_CHAT, payload: result.data });
     }
 }
 

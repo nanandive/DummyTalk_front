@@ -11,7 +11,7 @@ import {Trash2} from "lucide-react"; // Import css
 const ChatItem = ({chat, channel, name}) => {
 
     const accessToken = localStorage.getItem("accessToken");
-    const {sub} = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const {sub, nickname} = useMemo(() => decodeJwt(accessToken), [accessToken]);
 
     const [context, setContext] = useState(false);
     const [xyPosition, setxyPosition] = useState({x: 0, y: 0});
@@ -77,7 +77,7 @@ const ChatItem = ({chat, channel, name}) => {
                         <div className="flex items-center gap-x-2">
                             <div className="flex items-center">
                                 <p className="font-semibold texet-sm hover:underline cursor-pointer">
-                                    {chat.sender.nickname || name}
+                                    { chat.sender.nickname || name}
                                 </p>
                                 {/* <ActionTooltip label={member.role}>
                                 {roleIconMap[member.role]}
