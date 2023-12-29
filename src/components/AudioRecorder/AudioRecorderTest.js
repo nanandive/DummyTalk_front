@@ -33,6 +33,7 @@ const AudioRecorderTest = ({ stream }) => {
         const formData = new FormData();
         formData.append("file", new Blob([wavBuffer]), "audio.wav");
         const apiUrl = `${process.env.REACT_APP_FASTAPI_URL}/api/v1/audio/audio/${userInfo?.national_language}`;
+        console.log("apiUrl", apiUrl);
         const axiosConfig = {
             url: apiUrl,
             method: "POST",

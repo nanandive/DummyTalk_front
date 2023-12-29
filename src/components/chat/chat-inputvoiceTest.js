@@ -88,57 +88,50 @@ const ChatVoiceInputTest = () => {
         return peer;
     };
 
-    const handleNegotiationNeededEvent = (sessionId) => {
-        peerRef.current
-            .createOffer()
-            .then((offer) => {
-                return peerRef.current.setLocalDescription(offer);
-            })
-            .then(() => {
-                const payload = {
-                    type: "offer",
-                    dest: sessionId,
-                    source: socket.id,
-                    channelId,
-                    data: {
-                        sdp: peerRef.current.localDescription,
-                    },
-                };
-                sendMessage(payload);
-            })
-            .catch((e) => console.log(e));
+    const handleNegotiationNeededEvent = async (sessionId) => {
+        const offer = await peerRef.current.createOffer();
+        console.log("peerRef", peerRef)
+        console.log("offer", offer)
+        peerRef.current.setLocalDescription(offer);
+        const payload = {
+            type: "offer",
+            dest: sessionId,
+            source: socket.id,
+            channelId,
+            data: {
+                sdp: offer,
+            },
+        };
+        console.log("payload", payload);
+        sendMessage(payload);
     };
 
-    const handleReceiveCall = (incoming) => {
+    const handleReceiveCall = async (incoming) => {
         peerRef.current = createPeer(incoming.dest);
         const desc = new RTCSessionDescription(incoming.data.sdp);
-        peerRef.current
-            .setRemoteDescription(desc)
-            .then(() => {
-                userStream.current
-                    .getTracks()
-                    .forEach((track) =>
-                        peerRef.current.addTrack(track, userStream.current)
-                    );
-            })
-            .then(() => {
-                return peerRef.current.createAnswer();
-            })
-            .then((answer) => {
-                return peerRef.current.setLocalDescription(answer);
-            })
-            .then(() => {
-                const payload = {
-                    type: "answer",
-                    dest: incoming.source,
-                    source: socket.id,
-                    channelId,
-                    data: {
-                        sdp: peerRef.current.localDescription,
-                    },
-                };
-                sendMessage(payload);
-            });
+        peerRef.current.setRemoteDescription(desc);
+        userStream.current
+            .getTracks()
+            .forEach((track) =>
+                peerRef.current.addTrack(track, userStream.current)
+            );
+
+        try {
+            const answer = await peerRef.current.createAnswer();
+            peerRef.current.setLocalDescription(answer);
+            const payload = {
+                type: "answer",
+                dest: incoming.source,
+                source: socket.id,
+                channelId,
+                data: {
+                    sdp: answer,
+                },
+            };
+            sendMessage(payload);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const handleAnswer = (message) => {
