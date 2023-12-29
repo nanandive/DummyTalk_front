@@ -9,6 +9,7 @@ import { decodeJwt } from "src/lib/tokenUtils";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import axios from 'axios'
 import ChatVoiceInputTest from "src/components/chat/chat-inputvoiceTest";
+import {jwtDecode} from "jwt-decode";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
@@ -17,8 +18,8 @@ function Chat() {
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const accessToken = window.localStorage.getItem('accessToken');
+    const decodedToken = accessToken ? jwtDecode(accessToken) : null;
 
     useEffect(() => {
         axios.post(`${process.env.REACT_APP_API_URL}/channel/type?channelId=${channelId}`)
@@ -41,17 +42,17 @@ function Chat() {
                     setOpen={setOpen}
                 />
                 {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages userInfo={userInfo} />
+                <ChatMessages userInfo={decodedToken} />
                 {channelType === "TEXT" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatInput userInfo={userInfo} />
+                        <ChatInput userInfo={decodedToken}/>
                     </>
                 )}
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInputTest userInfo={userInfo} />
+                        <ChatVoiceInputTest userInfo={decodedToken} />
                     </>
                 )}
             </div>
