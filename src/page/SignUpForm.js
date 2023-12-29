@@ -83,8 +83,12 @@ const SignUpForm = () => {
 
 
     const onClickSignUp = () =>{
-        navigate("/")
-        dispatch(callPostSignUp(user))
+        if(userName && userPhone && userEmail && check && data.data && data.status == 200 && language){
+            navigate("/")
+            dispatch(callPostSignUp(user))
+        } else{
+            alert("입력하신 정보를 확인해주시길 바랍니다.")
+        }
     }
   const handleKeyDown = (event) => {
     const key = event.code;
@@ -106,7 +110,7 @@ const SignUpForm = () => {
   }
 
     const onClickTest = () =>{
-        console.log(userEmail)
+        console.log(data.data)
     }
 
 
@@ -201,7 +205,7 @@ const SignUpForm = () => {
             </select>
         </div>
       <div>
-        <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !check || data.status== 500} className={styles.bottomButton}>
+        <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !check || data.data < 1 || data.status == 500 || !language} className={styles.bottomButton}>
           가입하기
         </button>
       </div>
