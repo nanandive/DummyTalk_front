@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
-import CellComponent from "src/layouts/RightSide/component/CellComponent";
-import {Button} from "src/components/ui/button";
-import {Search} from "lucide-react";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
 import axios from "axios";
+import { Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { Button } from "src/components/ui/button";
+import CellComponent from "src/layouts/RightSide/component/CellComponent";
 
 
 const RightBar = ({isOpen}) => {
@@ -15,7 +15,7 @@ const RightBar = ({isOpen}) => {
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
-    const [data, setData] = useState([]);
+    const [updateData, setUpdateData] = useState([]);
 
     useEffect(() => {
         const topDiv = topRef?.current;
@@ -50,18 +50,20 @@ const RightBar = ({isOpen}) => {
     const imageSearchRequest = async () => {
         console.log("searchQuery", searchQuery);
 
-        await axios.get(
-            `${process.env.REACT_APP_API_URL}/img/search/${channelId}/${searchQuery}`
-        ).then((response) => {
-            console.log("이미지 검색 response ", response.data);
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_FASTAPI_URL}/textImageSearch/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+            );
+            console.log("Response from FastAPI: ", response);
             if (response.status === 200) {
-                setData(response.data.data);
+                setUpdateData(response.data.similar_images); // 데이터 설정
+                setSearchQuery(""); // 검색창 초기화
             }
-        }).catch((error) => {
-            console.error("이미지 검색 에러", error);
-        });
-
+        } catch (error) {
+            console.error("Error in fetching data", error);
+        }
     }
+
 
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -69,6 +71,8 @@ const RightBar = ({isOpen}) => {
             imageSearchRequest();
         }
     };
+
+    console.log("updateData", updateData)
 
 
 
@@ -92,7 +96,7 @@ const RightBar = ({isOpen}) => {
                 </ Button>
             </div>
             <div className="flex-grow mx-3 mt-10 overflow-y-auto scrollbar-hidden relative">
-                <CellComponent data={data}/>
+                <CellComponent updateData={ updateData || false }/>
             </div>
             <div ref={bottomRef}></div>
         </div>

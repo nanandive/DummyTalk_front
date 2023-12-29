@@ -6,9 +6,9 @@ import { Textarea } from "src/components/ui/textarea";
 import AudioRecorderTest from "../AudioRecorder/AudioRecorderTest";
 import { useChatData } from "../hooks/use-chat-data";
 import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../hooks/use-socket";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { useSocket } from "../hooks/use-socket";
 
 const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -54,7 +54,7 @@ const ChatVoiceInput = ({ channelId, userInfo, setData }) => {
                     result.chat.sender !== parseInt(userInfo?.sub)
                 ) {
                     console.log("AUDIO 시작");
-                    const apiUrl = `http://localhost:8000/api/v1/audio/audio/${userInfo?.national_language}`;
+                    const apiUrl = `${process.env.REACT_APP_FASTAPI_URL}/api/v1/audio/audio/${userInfo?.national_language}`;
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
 import { useChatData } from "../hooks/use-chat-data";
 import {useUrlQuery} from "src/components/hooks/use-url-query";
+import {useDispatch, useSelector} from "react-redux";
+import {callFetchChatData} from "src/api/MainAPICalls";
 
 const ChatMessages = ({ userInfo }) => {
 
@@ -14,6 +16,9 @@ const ChatMessages = ({ userInfo }) => {
 
   const [hasInitialized, setHasInitialized] = useState(false);
   const { data, setData } = useChatData();
+
+  const dispatch =  useDispatch()
+  const chatData = useSelector(state => state.chatReducer);
 
   useEffect(() => {
 
@@ -45,33 +50,41 @@ const ChatMessages = ({ userInfo }) => {
 
   useEffect(() => {
 
-    if (!channelId || channelId === '' ) return;
-    const fetchChatData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
-        );
 
-        setData(response.data.data);
-        console.log("response ", response.data);
-      } catch (error) {
-        console.error("채팅 리스트 뽑아보기 에러", error);
-      }
-    };
-    fetchChatData();
+    if (!channelId || channelId === '' ) return;
+    dispatch(callFetchChatData(channelId))
+    // const fetchChatData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
+    //     );
+    //
+    //     setData(response.data.data);
+    //     console.log("response ", response.data);
+    //   } catch (error) {
+    //     console.error("채팅 리스트 뽑아보기 에러", error);
+    //   }
+    // };
+    // fetchChatData();
+
+
   }, [channelId, userInfo, setData]);
 
-    return (
+
+    console.log("test ======>" ,  data)
+    console.log("Tes2t ===> " , chatData)
+
+    return  (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}
             >
-                {data.map((chat) => (
+                {chatData.length > 0 && chatData.map((chatData) => (
                     <ChatItem
-                        key={chat.chatId}
-                        chat={chat}
-                        name={chat.nickname}
+                        key={chatData.chatId}
+                        chat={chatData}
+                        name={chatData.nickname}
                         channel={channelId}
                     />
                 ))}

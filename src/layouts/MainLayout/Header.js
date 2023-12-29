@@ -93,6 +93,10 @@ function Header() {
         setOnRequest(prev => !prev);
     }
 
+    const onClickTest = () =>{
+        console.log(data)
+    }
+
     return (
         <>
             <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#0A192E]">
@@ -167,7 +171,7 @@ function Header() {
                 >
                     {data.userImgPath ? <UserAvatar src={data.userImgPath} />  : <UserAvatar src={imageUrl} />}
                 </div>
-                <div style={{ margin: "0px 20px 0px 10px" }} className="text-zinc-300">{data.nickname}</div>
+                <div onClick={onClickTest} style={{ margin: "0px 20px 0px 10px" }} className="text-zinc-300">{data.nickname}</div>
                 <Button onClick={() => onOpen("logout")} className="w-[80px] h-[30px] bg-[#51CBB6] hover:bg-[#45B2A5] font-bold">
                     로그아웃
                 </Button>

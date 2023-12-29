@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 
+
 //초기값
 const initialState = {
     data: [],
@@ -15,7 +16,7 @@ export const POST_CHANGE_USER = "main/POST_CHANGE_USER"
 export const POST_APPROVAL = "main/POST_APPROVAL"
 export const POST_REFUSAL = "main/POST_REFUSAL"
 
-
+export const GET_FETCH_CHAT = "chat/GET_FETCH_CHAT"
 export const userReducer = handleActions(
     {
         [GET_USER] : (state, { payload }) =>{
@@ -71,6 +72,15 @@ export const approvalReducer = handleActions(
 export const refusalReducer = handleActions(
     {
         [POST_REFUSAL] : (state, { payload }) =>{
+            return payload
+        },
+    },
+    initialState
+);
+
+export const chatReducer = handleActions(
+    {
+        [GET_FETCH_CHAT] : (state, { payload }) =>{
             return payload
         },
     },
