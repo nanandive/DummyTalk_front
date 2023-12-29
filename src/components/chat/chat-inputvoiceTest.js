@@ -60,7 +60,12 @@ const ChatVoiceInputTest = () => {
     const createPeer = (sessionId) => {
         const peer = new RTCPeerConnection({
             iceServers: [
-                { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
+                {
+                    urls: [
+                        "stun:stun1.l.google.com:19302",
+                        "stun:stun2.l.google.com:19302",
+                    ],
+                },
                 // {
                 //     urls: "turns:freeturn.net:5349",
                 //     credential: "free",

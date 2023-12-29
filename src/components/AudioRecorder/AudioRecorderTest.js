@@ -2,7 +2,7 @@ import { useMicVAD, utils } from "@ricky0123/vad-react";
 import axios from "axios";
 import { Activity, Mic } from "lucide-react";
 import * as ort from "onnxruntime-web";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueueState } from "rooks";
 import { decodeJwt } from "src/lib/tokenUtils";
 import { Button } from "../ui/button";
@@ -17,6 +17,7 @@ ort.env.wasm.wasmPaths = {
 
 const AudioRecorderTest = ({ stream }) => {
     const [list, { enqueue, dequeue }] = useQueueState([]);
+    const [isFirstEnqueue, setIsFirstEnqueue] = useState(false)
     const translatedAudioRef = useRef();
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
@@ -49,8 +50,8 @@ const AudioRecorderTest = ({ stream }) => {
     const vad = useMicVAD({
         workletURL: "/vad.worklet.bundle.min.js",
         modelURL: "/silero_vad.onnx",
-        positiveSpeechThreshold: 0.55,
-        negativeSpeechThreshold: 0.4,
+        positiveSpeechThreshold: 0.5,
+        negativeSpeechThreshold: 0.35,
         startOnLoad: false,
         stream: stream,
         onVADMisfire: () => {
@@ -63,6 +64,10 @@ const AudioRecorderTest = ({ stream }) => {
             console.log("Speech end");
             const wavBuffer = utils.encodeWAV(audio);
             enqueue(wavBuffer);
+
+            if (list.length === 0) {
+                setIsFirstEnqueue(true)
+            }
             // const base64 = utils.arrayBufferToBase64(wavBuffer);
             // const url = `data:audio/wav;base64,${base64}`;
             // setAudioList((old) => [url, ...old]);
@@ -70,9 +75,10 @@ const AudioRecorderTest = ({ stream }) => {
     });
 
     useEffect(() => {
-        if (list.length > 0) {
+        if (list.length > 0 && isFirstEnqueue) {
             const wavBuffer = dequeue();
             sendAudioToServer(wavBuffer);
+            setIsFirstEnqueue(false)
         }
     }, [list]); // 큐(list)의 변경을 감지합니다.
 
