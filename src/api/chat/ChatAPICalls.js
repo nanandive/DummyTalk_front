@@ -17,7 +17,7 @@ const fetchChatData = async () => {
 }
 
 const chatEmbedding = (friendId) => {
-    const requestURL = `${process.env.REACT_APP_API_URL}/refusal/${decodedToken.sub}`;
+    const requestURL = `${process.env.REACT_APP_FAST_API_URL}/chat/${decodedToken.sub}`;
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'POST',
@@ -31,6 +31,7 @@ const chatEmbedding = (friendId) => {
         dispatch({ type: POST_REFUSAL, payload: result.data });
     }
 }
+
 
 
 
