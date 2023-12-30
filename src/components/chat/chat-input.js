@@ -2,9 +2,7 @@ import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelect } from "rooks";
-import { callFetchChatData } from "src/api/MainAPICalls";
+import { useSelector } from "react-redux";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Textarea } from "src/components/ui/textarea";
 import { useChatData } from "../hooks/use-chat-data";
@@ -13,17 +11,16 @@ import { useSocket } from "../hooks/use-socket";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
-const ChatInput = ({userInfo}) => {
+const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
-    const {socket, isConnected} = useSocket();
-    const {onOpen} = useModal();
+    const { socket, isConnected } = useSocket();
+    const { onOpen } = useModal();
     const query = useUrlQuery();
     const channelId = query.get("channel");
-    const dispatch = useDispatch()
-    const [summary, setSummary] = useState(false) // 채팅 요약기능;
+    const [summary, setSummary] = useState(false); // 채팅 요약기능;
 
-    const user = useSelect(state => state.userReducer)
-    const {updateData} = useChatData();
+    const user = useSelector((state) => state.userReducer);
+    const { updateData } = useChatData();
 
     const sendMessageRef = useRef(null);
     /***
@@ -52,40 +49,37 @@ const ChatInput = ({userInfo}) => {
                     const axiosConfig = {
                         url: apiUrl,
                         method: "POST",
-                        data: {...result.chat},
+                        data: { ...result.chat },
                     };
 
-                    const {data} = await axios(axiosConfig);
+                    const { data } = await axios(axiosConfig);
                     result = data;
                 }
 
-                dispatch(callFetchChatData(channelId))
                 updateData(result.chat);
             }
         );
         return () => subscription.unsubscribe();
-
     }, [enabled, isConnected, channelId, socket, userInfo]);
 
-
     /* 채팅 요약 */
-    const summaryData = async () =>{
+    const summaryData = async () => {
         try {
-            const response = await axios.post(`http://localhost:8000/chatdata/summary`,{
-                channelId: channelId
-            })
-            console.log("summary 요청 성공 : ", channelId)
-
-        }catch (error) {
-            console.log("summary 요청 실패 : ", error,channelId)
+            const response = await axios.post(
+                `http://localhost:8000/chatdata/summary`,
+                {
+                    channelId: channelId,
+                }
+            );
+            console.log("summary 요청 성공 : ", channelId);
+        } catch (error) {
+            console.log("summary 요청 실패 : ", error, channelId);
         }
-    }
+    };
     useEffect(() => {
-        if(!summary) return;
-            summaryData()
+        if (!summary) return;
+        summaryData();
     }, [summary]);
-
-
 
     // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
@@ -96,7 +90,8 @@ const ChatInput = ({userInfo}) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if ( !isConnected || sendMessageRef.current?.value === '' || !userInfo ) return;
+        if (!isConnected || sendMessageRef.current?.value === "" || !userInfo)
+            return;
 
         socket.send(
             `/app/${channelId}/message`,
@@ -143,7 +138,6 @@ const ChatInput = ({userInfo}) => {
                 </Switch>
             </div>
 
-
             {/* 채팅 번역 스위치 */}
             <div className="flex flex-row-reverse pb-2">
                 <Label
@@ -185,10 +179,10 @@ const ChatInput = ({userInfo}) => {
                 <Button
                     className="absolute right-[95%] bottom-[-20%] border-none"
                     onClick={() =>
-                        onOpen("imageSend", {channelId, socket, isConnected})
+                        onOpen("imageSend", { channelId, socket, isConnected })
                     }
                 >
-                    <ImagePlus/>
+                    <ImagePlus />
                 </Button>
                 {/* 메시지 전송 버튼 */}
                 <Button

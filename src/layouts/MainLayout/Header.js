@@ -98,6 +98,7 @@ function Header() {
     }
 
     return (
+    
         <>
             <header className="text-md font-semibold px-3 flex items-center h-[60px] bg-[#0A192E]">
                 <div onClick={() => onOpen("settings")} className="w-[200px]">
