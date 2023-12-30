@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
-import CellComponent from "src/layouts/RightSide/component/CellComponent";
-import {Button} from "src/components/ui/button";
-import {Search} from "lucide-react";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
 import axios from "axios";
+import { Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { Button } from "src/components/ui/button";
+import CellComponent from "src/layouts/RightSide/component/CellComponent";
 
 
 const RightBar = ({isOpen}) => {
@@ -52,7 +52,7 @@ const RightBar = ({isOpen}) => {
 
         try {
             const response = await axios.get(
-                `http://localhost:8000/textImageSearch/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+                `${process.env.REACT_APP_FASTAPI_URL}/textImageSearch/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {

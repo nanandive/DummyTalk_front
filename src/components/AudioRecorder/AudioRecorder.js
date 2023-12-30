@@ -73,7 +73,7 @@ const AudioRecorder = () => {
 
       const formData = new FormData();
       formData.append("file", e.data)
-      axios.post('http://localhost:9999/audio/upload', formData)
+      axios.post(`${process.env.REACT_APP_API_URL}/audio/upload`, formData)
     };
 
     stream.getAudioTracks().forEach(function (track) {
