@@ -141,4 +141,18 @@ export const callFetchChatData = (channelId) => {
     }
 }
 
+export const callSearchData = () =>{
+    const requestURL = `${process.env.REACT_APP_FAST_API_URL}/search}`
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+        }).then(response => response.json());
+        console.log(result.data)
+        dispatch({ type: " 임시테스트 ", payload: result.data });
+    }
+}
 

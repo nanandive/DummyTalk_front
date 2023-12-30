@@ -13,7 +13,7 @@ import {
     approvalReducer,
     chageUserReducer, chatReducer,
     friendReducer, refusalReducer,
-    requestReducer,
+    requestReducer, searchReducer,
     userReducer
 } from "./MainModule";
 
@@ -33,7 +33,8 @@ const rootReducer = combineReducers({
     requestReducer,
     approvalReducer,
     refusalReducer,
-    chatReducer
+    chatReducer,
+    searchReducer
 })
 
 export default rootReducer;
