@@ -1,5 +1,5 @@
 import React from 'react';
-import './ChatEmpty.css'; // Ensure this CSS file is correctly linked
+import './ChatEmpty.css'; // Make sure to import the CSS file
 
 const ChatEmpty = () => {
     const ChatEmptyImg = "./dum.png";
@@ -8,7 +8,7 @@ const ChatEmpty = () => {
         <div className="chat-empty-container">
             <img className="chat-empty-img" src={ChatEmptyImg} alt="채팅이 없습니다." />
             <h1 className="chat-start-text">
-                {Array.from("click plus").map((char, index) => (
+                {Array.from("click  channel").map((char, index) => (
                     <span key={index}>{char}</span>
                 ))}
             </h1>
