@@ -8,6 +8,7 @@ import LogOutModal from "src/components/modals/logout-modal";
 import SettingsModal from "src/components/modals/settings-modal";
 import UserModal from "src/components/modals/user-modal";
 import InvitedUserModal from "src/components/modals/invited-user-modal";
+import ChannelSetting from "src/components/modals/channel-setting";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -31,6 +32,7 @@ export const ModalProvider = () => {
       <ImageSendModal />
       <AddFriendModal />
       <InvitedUserModal />
+        <ChannelSetting />
     </>
   );
 };

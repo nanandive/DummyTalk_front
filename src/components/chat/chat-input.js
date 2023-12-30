@@ -19,6 +19,7 @@ const ChatInput = ({userInfo}) => {
     const query = useUrlQuery();
     const channelId = query.get("channel");
     const dispatch = useDispatch()
+    const [summary, setSummary] = useState(false) // 채팅 요약기능;
 
     const {updateData} = useChatData();
 
@@ -65,6 +66,26 @@ const ChatInput = ({userInfo}) => {
     }, [enabled, isConnected, channelId, socket, userInfo]);
 
 
+    /* 채팅 요약 */
+    const summaryData = async () =>{
+        try {
+            const response = await axios.post(`http://localhost:8000/chatdata/summary`,{
+                channelId: channelId
+            })
+            console.log("summary 요청 성공 : ", channelId)
+
+        }catch (error) {
+            console.log("summary 요청 실패 : ", error,channelId)
+        }
+    }
+    useEffect(() => {
+        if(!summary) return;
+            summaryData()
+    }, [summary]);
+
+
+
+    // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -73,11 +94,11 @@ const ChatInput = ({userInfo}) => {
     };
 
     const sendChatMessage = useCallback(() => {
-
         if ( !isConnected || sendMessageRef.current?.value === '' || !userInfo ) return;
 
         socket.send(
             `/app/${channelId}/message`,
+            // `/app/audioMessage` //오디오로 담는부분
             JSON.stringify({
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
@@ -87,11 +108,40 @@ const ChatInput = ({userInfo}) => {
             })
         );
         sendMessageRef.current.value = "";
-
     }, [channelId, isConnected, socket, userInfo]);
 
     return (
         <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
+            {/* 채팅 요약 스위치 */}
+            <div className="flex flex-row-reverse pb-2">
+                <Label
+                    htmlFor="airplane-mode"
+                    className="font-bold text-2 self-center "
+                >
+                    채팅요약
+                </Label>
+                <Switch
+                    id={"airplane-mode"}
+                    checked={summary}
+                    onClick={() => {
+                        console.log(!summary);
+                        setSummary((prev) => !prev);
+                    }}
+                    className={`${
+                        summary ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
+                    } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
+                >
+                    <span className="sr-only">Use setting</span>
+                    <span
+                        aria-hidden="true"
+                        className={`${
+                            summary ? "translate-x-6" : "translate-x-0"
+                        } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                    />
+                </Switch>
+            </div>
+
+
             {/* 채팅 번역 스위치 */}
             <div className="flex flex-row-reverse pb-2">
                 <Label
