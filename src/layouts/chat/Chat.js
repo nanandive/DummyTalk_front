@@ -18,8 +18,8 @@ function Chat() {
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
-    const accessToken = window.localStorage.getItem('accessToken');
-    const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
 
     useEffect(() => {
         axios.post(`${process.env.REACT_APP_API_URL}/channel/type?channelId=${channelId}`)
@@ -42,17 +42,17 @@ function Chat() {
                     setOpen={setOpen}
                 />
                 {/* 채팅방 스크롤 바 구역 */}
-                <ChatMessages userInfo={decodedToken} />
+                <ChatMessages userInfo={userInfo} />
                 {channelType === "TEXT" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatInput userInfo={decodedToken}/>
+                        <ChatInput userInfo={userInfo}/>
                     </>
                 )}
                 {channelType === "VOICE" && (
                     <>
                         {/* 메시지 입력 */}
-                        <ChatVoiceInputTest userInfo={decodedToken} />
+                        <ChatVoiceInputTest userInfo={userInfo} />
                     </>
                 )}
             </div>

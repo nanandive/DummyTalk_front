@@ -55,7 +55,7 @@ const CellComponent = ({updateData}) => {
     }
 
     const handleDownload = (img) => {
-        if (!img) return null;
+gh        if (img === null || !img) return null;
         FileDownload(convertBase64(img.fileBlob), img.originalFileName, img.contentType);
     };
 
@@ -63,12 +63,12 @@ const CellComponent = ({updateData}) => {
         if(updateData) {
             setData(updateData);
         }
-    }, [updateData]);
+    }, [updateData, setData]);
 
     return data && (
         <div className="grid grid-cols-3 gap-5" >
             {data.map((img, index) => (
-                    <div key={index} className="relative aspect-w-3 aspect-h-4" onClick={(e)=> handleDownload(img)}>
+                    <div key={index} className="relative aspect-w-3 aspect-h-4" onClick={(e)=> handleDownload(!img.imagePath ? img : null )}>
 
                         <img
                             src={img.imagePath || displayImage(img) }
