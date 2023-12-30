@@ -17,8 +17,8 @@ const ChatMessages = ({ userInfo }) => {
   const [hasInitialized, setHasInitialized] = useState(false);
   const { data, setData } = useChatData();
 
-  const dispatch =  useDispatch()
-  const chatData = useSelector(state => state.chatReducer);
+  // const dispatch =  useDispatch()
+  // const chatData = useSelector(state => state.chatReducer);
 
   useEffect(() => {
 
@@ -52,27 +52,27 @@ const ChatMessages = ({ userInfo }) => {
 
 
     if (!channelId || channelId === '' ) return;
-    dispatch(callFetchChatData(channelId))
-    // const fetchChatData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
-    //     );
-    //
-    //     setData(response.data.data);
-    //     console.log("response ", response.data);
-    //   } catch (error) {
-    //     console.error("채팅 리스트 뽑아보기 에러", error);
-    //   }
-    // };
-    // fetchChatData();
+    // dispatch(callFetchChatData(channelId))
+    const fetchChatData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
+        );
+    
+        setData(response.data.data);
+        console.log("response ", response.data);
+      } catch (error) {
+        console.error("채팅 리스트 뽑아보기 에러", error);
+      }
+    };
+    fetchChatData();
 
 
   }, [channelId, userInfo, setData]);
 
 
     console.log("test ======>" ,  data)
-    console.log("Tes2t ===> " , chatData)
+    // console.log("Tes2t ===> " , chatData)
 
     return  (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
@@ -80,11 +80,11 @@ const ChatMessages = ({ userInfo }) => {
                 className="mt-auto w-full"
                 ref={chatRef}
             >
-                {chatData.length > 0 && chatData.map((chatData) => (
+                {data.length > 0 && data.map((data) => (
                     <ChatItem
-                        key={chatData.chatId}
-                        chat={chatData}
-                        name={chatData.nickname}
+                        key={data.chatId}
+                        chat={data}
+                        name={data.nickname}
                         channel={channelId}
                     />
                 ))}

@@ -1,16 +1,17 @@
-import {Switch} from "@headlessui/react";
+import { Switch } from "@headlessui/react";
 import axios from "axios";
-import {ImagePlus} from "lucide-react";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {Textarea} from "src/components/ui/textarea";
-import {useChatData} from "../hooks/use-chat-data";
-import {useModal} from "../hooks/use-modal";
-import {Button} from "../ui/button";
-import {Label} from "../ui/label";
-import {useSocket} from "../hooks/use-socket";
-import {callFetchChatData} from "src/api/MainAPICalls";
-import {useDispatch} from "react-redux";
+import { ImagePlus } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelect } from "rooks";
+import { callFetchChatData } from "src/api/MainAPICalls";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { Textarea } from "src/components/ui/textarea";
+import { useChatData } from "../hooks/use-chat-data";
+import { useModal } from "../hooks/use-modal";
+import { useSocket } from "../hooks/use-socket";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 
 const ChatInput = ({userInfo}) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
@@ -21,6 +22,7 @@ const ChatInput = ({userInfo}) => {
     const dispatch = useDispatch()
     const [summary, setSummary] = useState(false) // 채팅 요약기능;
 
+    const user = useSelect(state => state.userReducer)
     const {updateData} = useChatData();
 
     const sendMessageRef = useRef(null);
@@ -102,7 +104,7 @@ const ChatInput = ({userInfo}) => {
             JSON.stringify({
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
-                nickname: userInfo?.nickname,
+                nickname: user?.nickname,
                 channelId,
                 type: "TEXT",
             })
