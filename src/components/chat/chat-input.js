@@ -108,7 +108,7 @@ const ChatInput = ({ userInfo }) => {
     }, [channelId, isConnected, socket, userInfo]);
 
     return (
-        <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
+        <div className="flex flex-col mt-auto relative overflow-hidden px-5 pb-2 rounded-lg">
             {/* 채팅 요약 스위치 */}
             <div className="flex flex-row-reverse pb-2">
                 <Label

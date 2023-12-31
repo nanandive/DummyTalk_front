@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { useChatData } from "../hooks/use-chat-data";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {useDispatch, useSelector} from "react-redux";
-import {callFetchChatData} from "src/api/MainAPICalls";
 
 const ChatMessages = ({ userInfo }) => {
 
@@ -75,7 +73,7 @@ const ChatMessages = ({ userInfo }) => {
     // console.log("Tes2t ===> " , chatData)
 
     return  (
-        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
+        <div className="h-[680px] flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}

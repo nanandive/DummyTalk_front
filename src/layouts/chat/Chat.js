@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ChatEmpty from "src/components/chat/ChatEmpty";
 import ChatHeader from "src/components/chat/chat-header";
 import ChatInput from "src/components/chat/chat-input";
@@ -33,7 +33,7 @@ function Chat() {
 
     return (
         <>
-            <div className="flex w-full flex-col h-full bg-[#122236]">
+            <div className="flex w-full flex-col h-full bg-[#172A46]">
                 {/* 채널명 */}
                 <ChatHeader
                     isOpen={isOpen}
