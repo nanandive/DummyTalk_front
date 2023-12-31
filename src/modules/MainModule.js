@@ -15,8 +15,8 @@ export const POST_ADD_FRIEND = "main/POST_ADD_FRIEND";
 export const POST_CHANGE_USER = "main/POST_CHANGE_USER"
 export const POST_APPROVAL = "main/POST_APPROVAL"
 export const POST_REFUSAL = "main/POST_REFUSAL"
-
 export const GET_FETCH_CHAT = "chat/GET_FETCH_CHAT"
+export const POST_SEARCH = "main/POST_SEARCH"
 export const userReducer = handleActions(
     {
         [GET_USER] : (state, { payload }) =>{
@@ -86,6 +86,17 @@ export const chatReducer = handleActions(
     },
     initialState
 );
+
+
+export const searchReducer = handleActions(
+    {
+        [POST_SEARCH] : (state, { payload }) =>{
+            return payload
+        },
+    },
+    initialState
+);
+
 
 
 

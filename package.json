@@ -45,6 +45,7 @@
         "redux": "^5.0.0",
         "redux-actions": "^3.0.0",
         "redux-thunk": "^3.1.0",
+        "rooks": "^7.14.1",
         "socket.io-client": "^4.7.2",
         "sockjs-client": "^1.6.1",
         "stompjs": "^2.3.3",

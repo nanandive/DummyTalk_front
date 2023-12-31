@@ -55,7 +55,7 @@ const CellComponent = ({updateData}) => {
     }
 
     const handleDownload = (img) => {
-gh        if (img === null || !img) return null;
+        if (img === null || !img) return null;
         FileDownload(convertBase64(img.fileBlob), img.originalFileName, img.contentType);
     };
 
