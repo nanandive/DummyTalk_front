@@ -1,9 +1,10 @@
 import axios from "axios";
-import { Bell, ChevronLeft, LogOut, UserPlus } from "lucide-react";
+import {Bell, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, LogOut, Plus, UserPlus} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "src/components/ui/button";
 import { decodeJwt } from "src/lib/tokenUtils";
+import {useModal} from "src/components/hooks/use-modal";
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -11,6 +12,7 @@ const LeftSideBar = () => {
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const userId = userInfo.sub;
+    const { onOpen } = useModal();
 
     const { state } = useLocation();
     const navigate = useNavigate();
@@ -57,13 +59,9 @@ const LeftSideBar = () => {
                 <button
                     onClick={() => setPage((pre) => (pre > 0 ? pre - 1 : pre))}
                     className="border-2 border-[#52cbb6]" // Updated border color
-                    style={
-                        serverList.length > 6
-                            ? { display: "block", margin: "0px 5px 0px 20px" }
-                            : { display: "none" }
-                    }
+                    style={serverList.length > 6 ? { display: "block"} : { display: "none" }}
                 >
-                    <ChevronLeft className={"text-yellow-600"} />
+                    <ChevronUp className={"text-teal-300"} />
                 </button>
                 {slicedData.map((data, index) => (
                     <div
@@ -77,6 +75,19 @@ const LeftSideBar = () => {
                         </Button>
                     </div>
                 ))}
+                <button
+                    onClick={() => setPage((prev) => prev + 1)}
+                    className="border-2 border-[#52cbb6]" // Updated border color
+                    style={serverList.length > 6 && page + 6 !== serverList.length ? { display: "block"} : { display: "none" }}
+                >
+                    <ChevronDown className={"text-teal-300"} />
+                </button>
+                <div onClick={() => onOpen("createServer")}>
+                    <Button className="#52cbb6 border-2 border-teal-300 text-teal-300" size="icon">
+                        <Plus />
+                    </Button>
+                </div>
+
             </div>
 
             <div className="flex flex-col mt-auto mb-3 text-teal-300 gap-4">
