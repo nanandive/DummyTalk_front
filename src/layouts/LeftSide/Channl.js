@@ -1,19 +1,26 @@
 // Channels.js
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "src/components/ui/dropdown-menu";
 import "./css/Channels.css";
-import {Settings2} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const Channels = () => {
-
     const [channels, setChannels] = useState([]);
     const [connectedUsers, setConnectedUsers] = useState([]);
     const { onOpen, onClose, data } = useModal();
     const query = useUrlQuery();
-    const { state } = useLocation()
+    const { state } = useLocation();
     const serverId = query.get("server");
     const channelId = query.get("channel");
 
@@ -53,44 +60,42 @@ const Channels = () => {
         });
     };
 
-
-
     return (
         <>
             {/* 채널 리스트 */}
             {/* 채널 리스트 렌더링 */}
-            <div className="channels-container">
-                <div className="channels-list text-zinc-300">
-                    <h1 className="text-zinc-300 text-lg">채널 목록</h1>
-
-                    {/* 채널 설정*/}
-                    <button
-                        className="color-teal-300 "
-                        onClick={() => onOpen("channelSettingModal", { channelId })}
-                    ><Settings2 />
+            {/* <div className="h-[80px] font-bold text-xl border-b-[1px] border-black text-teal-300 flex items-center p-4">
+            </div> */}
+            <DropdownMenu>
+                <DropdownMenuTrigger
+                    asChild
+                    className="focus:outline-none"
+                >
+                    <button className="w-full h-[80px] text-md text-teal-300 font-semibold px-3 flex items-center border-b-[1px] border-black hover:bg-zinc-700/10 transition">
+                        서버 이름
+                        <ChevronDown className="h-5 w-5 ml-auto" />
                     </button>
+                </DropdownMenuTrigger>
 
-                    <div className="flex flex-col">
-                        {channels.map((channel, index) => (
-                            <Link
-                                to={`/main?server=${serverId}&channel=${channel.channelId}`}
-                                key={channel.channelId}
-                                onClick={handleChannelClick}
-                            >
-                                {channel.channelName}
-                            </Link>
-                        ))}
-                    </div>
-
-                    <button
-                        className="create-channel-btn"
-                        onClick={() => onOpen("createChannel", { serverId })}
-                        disabled={channels.length >= 10}
+                <DropdownMenuContent className="w-56 text-teal-300 bg-[#112033]">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="flex flex-col text-teal-300 font-thin p-4 overflow-y-scroll">
+                {channels.map((channel, index) => (
+                    <Link
+                        to={`/main?server=${serverId}&channel=${channel.channelId}`}
+                        key={channel.channelId}
+                        onClick={handleChannelClick}
                     >
-                        채널 생성
-                    </button>
-                </div>
-
+                        {channel.channelName}
+                    </Link>
+                ))}
             </div>
         </>
     );

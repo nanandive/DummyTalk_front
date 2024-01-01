@@ -108,7 +108,7 @@ const ChatInput = ({ userInfo }) => {
     }, [channelId, isConnected, socket, userInfo]);
 
     return (
-        <div className="flex flex-col h-1/4 relative overflow-hidden px-5 py-2 rounded-lg">
+        <div className="flex flex-col mt-auto relative overflow-hidden px-5 pb-2 rounded-lg">
             {/* 채팅 요약 스위치 */}
             <div className="flex flex-row-reverse pb-2">
                 <Label
@@ -168,7 +168,7 @@ const ChatInput = ({ userInfo }) => {
             </div>
             {/* 메시지 입력란 */}
             <Textarea
-                className="w-full h-full resize-none top-3 outline outline-zinc-300 bg-[#f2f3f5] bg-opacity-10 text-[#DBDEE1] font-semibold"
+                className="w-full h-full resize-y top-3 outline outline-zinc-300 bg-[#f2f3f5] bg-opacity-10 text-[#DBDEE1] font-semibold"
                 maxLength="150"
                 onKeyDown={enter_event}
                 ref={sendMessageRef}

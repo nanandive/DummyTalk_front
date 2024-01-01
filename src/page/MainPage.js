@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import LeftSideBar from "src/layouts/LeftSide/left-side-bar";
 import LeftBar from "../layouts/MainLayout/LeftBar";
 import Chat from "../layouts/chat/Chat";
-import axios from 'axios'; // Assuming you're using axios for HTTP requests
 
 function MainPage() {
-    
-
     return (
         <>
-            <div className="flex h-[93.5%] bg-[#0b1725]">
+            <div className="flex h-full bg-[#0b1725]">
+                <LeftSideBar />
+
                 <LeftBar />
                 <Chat />
             </div>
