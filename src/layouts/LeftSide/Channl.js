@@ -1,8 +1,7 @@
 // Channels.js
 import axios from "axios";
-import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import {useEffect, useMemo, useState} from "react";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import {
@@ -14,6 +13,8 @@ import {
     DropdownMenuTrigger,
 } from "src/components/ui/dropdown-menu";
 import "./css/Channels.css";
+import { ChevronDown } from "lucide-react";
+import {decodeJwt} from "src/lib/tokenUtils";
 
 const Channels = () => {
     const [channels, setChannels] = useState([]);
@@ -24,17 +25,25 @@ const Channels = () => {
     const serverId = query.get("server");
     const channelId = query.get("channel");
 
+    const navigate = useNavigate();
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userId = userInfo.sub;
+
     /* 채널 리스트 함수 */
     useEffect(() => {
         const channelList = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list`
+                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list/${userId}`
                 );
                 setChannels(response.data);
                 console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
             } catch (error) {
-                console.log("채널 리스트 실패 >>>>>>>> : ", error);
+                console.log("채널 리스트 실패 >>>>>>>> : ", error.message);
+                if(error.message == "Request failed with status code 404"){
+                    navigate(-1);
+                }
             }
         };
         channelList();
