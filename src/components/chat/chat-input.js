@@ -22,7 +22,11 @@ const ChatInput = ({ userInfo }) => {
     const user = useSelector((state) => state.userReducer);
     const { updateData } = useChatData();
     const sendMessageRef = useRef(null);
-    const userLanguage = userInfo.nationalLanguage;
+    const userLanguage = userInfo.national_language;
+
+
+
+
 
     /***
      * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
@@ -63,21 +67,26 @@ const ChatInput = ({ userInfo }) => {
         return () => subscription.unsubscribe();
     }, [enabled, isConnected, channelId, socket, userInfo]);
 
-    /* 채팅 요약 */
+    /* 채팅 요약 요청 */
     const summaryData = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:8000/chatdata/summary`,
+                `http://localhost:8000/${channelId}/summary`,
                 {
-                    channelId: channelId,
-                    userLanguage: userLanguage,
+                    nation_language: userLanguage,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
-            console.log("summary 요청 성공 : ", channelId);
+            console.log("summary 요청 성공 : ", response.data);
         } catch (error) {
-            console.log("summary 요청 실패 : ", error, channelId);
+            console.error("summary 요청 실패:", error.response || error.message, ">>>>>>",userLanguage);
         }
     };
+
     useEffect(() => {
         if (!summary) return;
         summaryData();
