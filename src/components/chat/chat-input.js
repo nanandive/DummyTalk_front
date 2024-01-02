@@ -1,7 +1,7 @@
 import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import { useSelector } from "react-redux";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Textarea } from "src/components/ui/textarea";
@@ -10,57 +10,32 @@ import { useModal } from "../hooks/use-modal";
 import { useSocket } from "../hooks/use-socket";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import ToggleSwitch from "./ToggleSwitch";
+
 
 const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
-    const [summary, setSummary] = useState(false); // 채팅 요약기능
     const { socket, isConnected } = useSocket();
     const { onOpen } = useModal();
     const query = useUrlQuery();
     const channelId = query.get("channel");
+    const [summary, setSummary] = useState(false); // 채팅 요약기능;
     const user = useSelector((state) => state.userReducer);
     const { updateData } = useChatData();
     const sendMessageRef = useRef(null);
+    const userLanguage = userInfo.nationalLanguage;
 
-    const getLastMessageId = () => {
-        // Retrieve and return the last message's ID
-        // Placeholder implementation - replace with your actual logic
-    };
-
-    const handleChatSummarySwitch = async () => {
-        console.log(!summary);
-        setSummary(prev => !prev);
-
-        const chat_id = getLastMessageId(); // Replace with your actual method to get chat_id
-
-        if (chat_id && channelId) {
-            try {
-                await axios.post(`http://yourserver.com/api/endpoint`, {
-                    channelId,
-                    chat_id
-                });
-                console.log("Chat summary request sent successfully");
-            } catch (error) {
-                console.error("Chat summary request failed: ", error);
-            }
-        }
-    };
-
-    const summaryData = async () => {
-        // Logic for handling summary data
-        try {
-            const response = await axios.post(`http://localhost:8000.com/api/summary`, {
-                channelId: channelId,
-                // Add other necessary data here
-            });
-            console.log("Summary data fetched successfully:", response.data);
-            // Handle the response data
-        } catch (error) {
-            console.error("Failed to fetch summary data:", error);
-        }
-    };
-
+    /***
+     * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
+     * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
+     * - userId, channelId, message, language, timestamp, page
+     * -- @RequestBody : { SendChatDto : sender, message, language, channelId }
+     * -- @DestinationVariable : channelId
+     * -- @Header : UserId
+     * -- @RequestParam : page
+     * endpoint : /websocket
+     * subscribe : /topic/msg/{channelId}
+     * send : /app/{channelId}/message
+     */
     useEffect(() => {
         if (!channelId || !isConnected || !userInfo) return;
 
@@ -68,7 +43,7 @@ const ChatInput = ({ userInfo }) => {
             `/topic/msg/${channelId}`,
             async (msg) => {
                 let result = JSON.parse(msg.body);
-                console.log("result:", result);
+                console.log("result   :", result);
 
                 if (enabled && result.chat.sender !== parseInt(userInfo?.sub)) {
                     const apiUrl = `${process.env.REACT_APP_API_URL}/chat/trans/${userInfo?.national_language}`;
@@ -88,11 +63,27 @@ const ChatInput = ({ userInfo }) => {
         return () => subscription.unsubscribe();
     }, [enabled, isConnected, channelId, socket, userInfo]);
 
+    /* 채팅 요약 */
+    const summaryData = async () => {
+        try {
+            const response = await axios.post(
+                `http://localhost:8000/chatdata/summary`,
+                {
+                    channelId: channelId,
+                    userLanguage: userLanguage,
+                }
+            );
+            console.log("summary 요청 성공 : ", channelId);
+        } catch (error) {
+            console.log("summary 요청 실패 : ", error, channelId);
+        }
+    };
     useEffect(() => {
         if (!summary) return;
         summaryData();
     }, [summary]);
 
+    // 엔터키 눌렀을 때 메시지 전송
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -106,6 +97,7 @@ const ChatInput = ({ userInfo }) => {
 
         socket.send(
             `/app/${channelId}/message`,
+            // `/app/audioMessage` //오디오로 담는부분
             JSON.stringify({
                 message: sendMessageRef.current?.value,
                 sender: userInfo?.sub,
@@ -121,46 +113,61 @@ const ChatInput = ({ userInfo }) => {
         <div className="flex flex-col mt-auto relative overflow-hidden px-5 pb-2 rounded-lg">
             {/* 채팅 요약 스위치 */}
             <div className="flex flex-row-reverse pb-2">
-                <Label htmlFor="summary-switch" className="font-bold text-2 self-center ">
+                <Label
+                    htmlFor="airplane-mode"
+                    className="font-bold text-2 self-center "
+                >
                     채팅요약
                 </Label>
                 <Switch
-                    id="summary-switch"
+                    id={"airplane-mode"}
                     checked={summary}
-                    onClick={handleChatSummarySwitch}
-                    className={`${summary ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"} relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75`}
+                    onClick={() => {
+                        console.log(!summary);
+                        setSummary((prev) => !prev);
+                    }}
+                    className={`${
+                        summary ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
+                    } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
                 >
                     <span className="sr-only">Use setting</span>
-                    <span aria-hidden="true" className={`${summary ? "translate-x-6" : "translate-x-0"} pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`} />
+                    <span
+                        aria-hidden="true"
+                        className={`${
+                            summary ? "translate-x-6" : "translate-x-0"
+                        } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                    />
                 </Switch>
-                <ToggleSwitch />
             </div>
 
             {/* 채팅 번역 스위치 */}
             <div className="flex flex-row-reverse pb-2">
                 <Label
-                    htmlFor="translation-switch"
+                    htmlFor="airplane-mode"
                     className="font-bold text-2 self-center "
                 >
                     채팅번역
                 </Label>
                 <Switch
-                    id="translation-switch"
+                    id={"airplane-mode"}
                     checked={enabled}
                     onClick={() => {
                         console.log(!enabled);
                         setEnabled((prev) => !prev);
                     }}
-                    className={`${enabled ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"} relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75`}
+                    className={`${
+                        enabled ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
+                    } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
                 >
                     <span className="sr-only">Use setting</span>
                     <span
                         aria-hidden="true"
-                        className={`${enabled ? "translate-x-6" : "translate-x-0"} pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                        className={`${
+                            enabled ? "translate-x-6" : "translate-x-0"
+                        } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                     />
                 </Switch>
             </div>
-
             {/* 메시지 입력란 */}
             <Textarea
                 className="w-full h-full resize-y top-3 outline outline-zinc-300 bg-[#f2f3f5] bg-opacity-10 text-[#DBDEE1] font-semibold"
@@ -190,5 +197,4 @@ const ChatInput = ({ userInfo }) => {
         </div>
     );
 };
-
 export default ChatInput;

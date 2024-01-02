@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ChatItem from "src/components/chat/chat-item";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { useChatData } from "../hooks/use-chat-data";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
 
 const ChatMessages = ({ userInfo }) => {
 
@@ -14,6 +14,9 @@ const ChatMessages = ({ userInfo }) => {
 
   const [hasInitialized, setHasInitialized] = useState(false);
   const { data, setData } = useChatData();
+
+  // const dispatch =  useDispatch()
+  // const chatData = useSelector(state => state.chatReducer);
 
   useEffect(() => {
 
@@ -45,13 +48,15 @@ const ChatMessages = ({ userInfo }) => {
 
   useEffect(() => {
 
+
     if (!channelId || channelId === '' ) return;
+    // dispatch(callFetchChatData(channelId))
     const fetchChatData = async () => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
         );
-
+    
         setData(response.data.data);
         console.log("response ", response.data);
       } catch (error) {
@@ -59,20 +64,26 @@ const ChatMessages = ({ userInfo }) => {
       }
     };
     fetchChatData();
+
+
   }, [channelId, userInfo, setData]);
 
-    return (
+
+    console.log("test ======>" ,  data)
+    // console.log("Tes2t ===> " , chatData)
+
+    return  (
         <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}
             >
-                {data.map((chat) => (
+                {data.length > 0 && data.map((data) => (
                     <ChatItem
-                        key={chat.chatId}
-                        chat={chat}
-                        name={chat.nickname}                        channel={channelId}
-
+                        key={data.chatId}
+                        chat={data}
+                        name={data.nickname}
+                        channel={channelId}
                     />
                 ))}
                 <div ref={bottomRef}></div>
