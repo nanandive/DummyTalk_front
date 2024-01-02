@@ -1,21 +1,13 @@
 // src/layouts/LeftSide/Settings.js
-import {
-  faDesktop,
-  faMicrophone,
-  faVideo,
-  faVolumeMute
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
 
-import { useModal } from "../../components/hooks/use-modal"; // Update the path
-import { useUrlQuery } from "../../components/hooks/use-url-query"; // Update the path
 import "../../components/modals/VideoModal.css";
-import VideoModal from "../../components/modals/VideoModal.js"; // Import the VideoModal component
+import { useModal } from "../hooks/use-modal"; // Update the path
+import { useUrlQuery } from "../hooks/use-url-query"; // Update the path
 import "./css/Settings.css";
 
-function Settings() {
+function UserSetting() {
   const { onOpen, onClose } = useModal();
   const query = useUrlQuery();
   const serverId = query.get("server");
@@ -67,9 +59,9 @@ function Settings() {
   console.log('setting');
 
   return (
-    <div className="settings-container">
+    <div className="mt-auto ml-auto">
       <br />
-      <div className="settings-container1">
+      <div>
         {/* <button
           className={`icon-btn ${isVideoOn ? "active" : ""} w-1/4`}
           onClick={handleVideoToggle}
@@ -119,4 +111,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default UserSetting;

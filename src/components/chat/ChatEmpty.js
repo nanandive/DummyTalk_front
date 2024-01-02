@@ -1,13 +1,17 @@
-const ChatEmpty = () => {
+import React from 'react';
+import './ChatEmpty.css'; // Make sure to import the CSS file
 
+const ChatEmpty = () => {
     const ChatEmptyImg = "./dum.png";
 
     return (
-        <div className="h-full w-full">
-                <img className="w-3/4 h-auto"  src={ChatEmptyImg} alt="채팅이 없습니다." />
-            <div className="flex flex-col">
-                <p>채팅을 시작해보세요!</p>
-            </div>
+        <div className="chat-empty-container">
+            <img className="chat-empty-img" src={ChatEmptyImg} alt="채팅이 없습니다." />
+            <h1 className="chat-start-text">
+                {Array.from("click  channel").map((char, index) => (
+                    <span key={index}>{char}</span>
+                ))}
+            </h1>
         </div>
     );
 }

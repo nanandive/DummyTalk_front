@@ -1,8 +1,9 @@
+import Channels from "src/components/channel/Channel";
+import Friends from "src/components/channel/Friends";
+import ChannelHeader from "src/components/channel/channel-header";
+import UserSetting from "src/components/channel/user-settings";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Separator } from "src/components/ui/separator";
-import Channels from "./Channl";
-import Friends from "./Friends";
-import Settings from "./Settings";
 
 function LeftSide() {
     const query = useUrlQuery();
@@ -10,13 +11,14 @@ function LeftSide() {
     if (!serverId) return null;
 
     return (
-        <>
+        <section className="w-[200px] min-w-[200px] h-full bg-[#112033] flex flex-col">
+            <ChannelHeader />
             <Channels />
             <Separator className="my-4 bg-black" />
             <Friends className=" overflow-y-scroll" />
             <Separator className="my-4 bg-black" />
-            <Settings className=" overflow-y-scroll" />
-        </>
+            <UserSetting />
+        </section>
     );
 }
 
