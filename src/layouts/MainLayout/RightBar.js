@@ -55,7 +55,7 @@ const RightBar = ({isOpen}) => {
 
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_FASTAPI_URL}/textImageSearch/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+                `${process.env.REACT_APP_FASTAPI_URL}/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {
