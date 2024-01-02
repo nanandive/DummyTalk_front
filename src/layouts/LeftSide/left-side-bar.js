@@ -6,7 +6,7 @@ import { Button } from "src/components/ui/button";
 import { decodeJwt } from "src/lib/tokenUtils";
 import {useModal} from "src/components/hooks/use-modal";
 import {useDispatch, useSelector} from "react-redux";
-import {callPostApproval, callPostRefusal} from "src/api/MainAPICalls";
+import {callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal} from "src/api/MainAPICalls";
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -50,6 +50,11 @@ const LeftSideBar = () => {
         };
         fetchServers();
     }, [state]);
+
+    useEffect(() => {
+        dispatch( callGetNickname() )
+        dispatch( callGetFriendRequest() )
+    }, []);
 
     const onClickRequest = () =>{
         setOnRequest(prev => !prev);
@@ -124,13 +129,13 @@ const LeftSideBar = () => {
             </div>
             <div style={
                 onRequest ?
-                    { width:"400px", height:"500px", top:"67%" ,left:"15%", border:"1px solid black", background:"whitesmoke",
+                    { width:"400px", height:"500px", top:"69%" ,left:"12%", border:"1px solid black", background:"whitesmoke",
                         transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto", zIndex:"1"}
                     :
                     {display : "none"} }>
-                <div className="w-395 h-50 flex items-center">
+                <div style={{width:"395px", height:"50px"}}>
                     {FriendData.length > 0 && FriendData.map(friend =>(
-                        <>
+                        <div style={{display:"flex"}}>
                             <div className="mr-20">
                                 {friend.name}
                             </div>
@@ -143,7 +148,7 @@ const LeftSideBar = () => {
                             <button onClick={() => onClickRefusal({friendId: friend.userId})} style={{margin:"0px 20px"}}>
                                 삭제
                             </button>
-                        </>
+                        </div>
                     ))}
                 </div>
             </div>
