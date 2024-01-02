@@ -35,13 +35,13 @@ const ChatItem = ({ chat, channel, name }) => {
 
     const showNav = (e) => {
         e.preventDefault();
-        setContext(false);
+        setContext(true);
 
         if (chat.sender.sender !== +sub) return;
 
         const { clientX, clientY } = e;
         setxyPosition({ x: clientX, y: clientY });
-        setContext(true);
+        setContext(false);
     };
 
     const hideContext = (event) => {
@@ -69,7 +69,7 @@ const ChatItem = ({ chat, channel, name }) => {
                 onContextMenu={showNav}
                 onClick={hideContext}
             >
-                {context && (
+                {context && !chosen && (
                     <Button
                         onClick={() => deleteRequest(true)}
                         className="border-none"
