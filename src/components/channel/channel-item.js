@@ -1,12 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useModal } from "../hooks/use-modal";
-import { ChannelType } from "./Channel";
-import ActionTooltip from "../action-tooltip";
 import { Edit, Hash, Lock, Mic, Trash } from "lucide-react";
-import { useUrlQuery } from "../hooks/use-url-query";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "src/lib/utils";
+import ActionTooltip from "../action-tooltip";
+import { useModal } from "../hooks/use-modal";
+import { useUrlQuery } from "../hooks/use-url-query";
+import { ChannelType } from "./Channel";
 
 const ChannelItem = ({ channel, serverId }) => {
+    const generalList = ["일반", "1:1 음성 번역"];
     const iconMap = {
         [ChannelType.TEXT]: Hash,
         [ChannelType.VOICE]: Mic,
@@ -16,14 +17,20 @@ const ChannelItem = ({ channel, serverId }) => {
     const Icon = iconMap[channel.channelType];
     const query = useUrlQuery();
     const channelId = query.get("channel");
+    const navigate = useNavigate()
+
+    const onClick = () => {
+        navigate(`/main?server=${serverId}&channel=${channel.channelId}`)
+    }
 
     const onAction = (action) => (e) => {
         e.stopPropagation();
         onOpen(action, { channel, serverId });
     };
+
     return (
-        <Link
-            to={`/main?server=${serverId}&channel=${channel.channelId}`}
+        <button
+            onClick={onClick}
             className={cn(
                 "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
                 channelId === channel.channelId.toString() &&
@@ -41,24 +48,26 @@ const ChannelItem = ({ channel, serverId }) => {
                 {channel.channelName}
             </p>
 
-            <div className="ml-auto flex items-center gap-x-2">
-                <ActionTooltip label="Edit">
-                    <Edit
-                        onClick={onAction("editChannel")}
-                        className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-                    />
-                </ActionTooltip>
-                <ActionTooltip label="Delete">
-                    <Trash
-                        onClick={onAction("deleteChannel")}
-                        className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-                    />
-                </ActionTooltip>
-            </div>
-            {channel.channelName === "일반" && (
+            {!generalList.includes(channel.channelName) && (
+                <div className="ml-auto flex items-center gap-x-2">
+                    <ActionTooltip label="Edit">
+                        <Edit
+                            onClick={onAction("editChannel")}
+                            className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
+                        />
+                    </ActionTooltip>
+                    <ActionTooltip label="Delete">
+                        <Trash
+                            onClick={onAction("deleteChannel")}
+                            className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
+                        />
+                    </ActionTooltip>
+                </div>
+            )}
+            {generalList.includes(channel.channelName) && (
                 <Lock className="w-4 h-4 ml-auto text-zinc-500 dark:text-zinc-400" />
             )}
-        </Link>
+        </button>
     );
 };
 export default ChannelItem;
