@@ -125,6 +125,9 @@ const RightBar = ({isOpen}) => {
 
     return (
         <div className="h-full w-[40%] flex flex-col">
+            <div class="h-[60px] min-h-[60px] w-[your-width] font-bold text-md flex pl-5 items-center border-b-[1px] border-black justify-between text-zinc-400 " style={{color: '#51CBB6'}}>
+                <div>검색</div>
+            </div>
             <div style={{display:"flex"}}>
                 <label style={{color : "white"}} htmlFor="radioImage">
                     <input onClick={onClickImage} type="radio" id="radioImage" name="search" value="이미지"/> 이미지
