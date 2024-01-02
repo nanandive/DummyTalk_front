@@ -1,20 +1,19 @@
 // Channels.js
 import axios from "axios";
-import {useEffect, useMemo, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "src/components/ui/dropdown-menu";
+import { decodeJwt } from "src/lib/tokenUtils";
 import "./css/Channels.css";
-import { ChevronDown } from "lucide-react";
-import {decodeJwt} from "src/lib/tokenUtils";
+import { ScrollArea } from "../ui/scroll-area";
+import ChannelSection from "./channel-section";
+import ChannelItem from "./channel-item";
+
+export const ChannelType = {
+    VOICE: "VOICE",
+    TEXT: "TEXT",
+};
 
 const Channels = () => {
     const [channels, setChannels] = useState([]);
@@ -41,13 +40,13 @@ const Channels = () => {
                 console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
             } catch (error) {
                 console.log("채널 리스트 실패 >>>>>>>> : ", error.message);
-                if(error.message == "Request failed with status code 404"){
+                if (error.message == "Request failed with status code 404") {
                     navigate(-1);
                 }
             }
         };
         channelList();
-    }, [serverId, state]);
+    }, [serverId]);
 
     const handleChannelClick = () => {
         const selectedChannel = channels;
@@ -69,42 +68,66 @@ const Channels = () => {
         });
     };
 
+    const textChannels = channels.filter(
+        (channel) => channel.channelType === ChannelType.TEXT
+    );
+    const audioChannels = channels.filter(
+        (channel) => channel.channelType === ChannelType.VOICE
+    );
+
+    console.log("channel 렌더링");
     return (
         <>
             {/* 채널 리스트 */}
             {/* 채널 리스트 렌더링 */}
             {/* <div className="h-[80px] font-bold text-xl border-b-[1px] border-black text-teal-300 flex items-center p-4">
             </div> */}
-            <DropdownMenu>
-                <DropdownMenuTrigger
-                    asChild
-                    className="focus:outline-none"
-                >
-                    <button className="w-full h-[80px] text-md text-teal-300 font-semibold px-3 flex items-center border-b-[1px] border-black hover:bg-zinc-700/10 transition">
-                        서버 이름
-                        <ChevronDown className="h-5 w-5 ml-auto" />
-                    </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent className="w-56 text-teal-300 bg-[#112033]">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Billing</DropdownMenuItem>
-                    <DropdownMenuItem>Team</DropdownMenuItem>
-                    <DropdownMenuItem>Subscription</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <div className="flex flex-col text-teal-300 font-thin p-4 overflow-y-scroll">
-                {channels.map((channel, index) => (
+            <div className="flex flex-col text-zinc-300 font-thin overflow-y-scroll scrollbar-hidden">
+                <ScrollArea className="flex-1 px-3">
+                    {!!textChannels?.length && (
+                        <div className="mb-2">
+                            <ChannelSection
+                                channelType={ChannelType.TEXT}
+                                label="텍스트 채널"
+                            />
+                            <div className="space-y-[2px]"></div>
+                            {textChannels.map((channel) => (
+                                <ChannelItem
+                                    key={channel.channelId}
+                                    serverId={serverId}
+                                    channel={channel}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    {!!audioChannels?.length && (
+                        <div className="mb-2">
+                            <ChannelSection
+                                channelType={ChannelType.TEXT}
+                                label="음성 채널"
+                            />
+                            <div className="space-y-[2px]"></div>
+                            {audioChannels.map((channel) => (
+                                <ChannelItem
+                                    key={channel.channelId}
+                                    serverId={serverId}
+                                    channel={channel}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    
+                </ScrollArea>
+                {/* {channels.map((channel, index) => (
                     <Link
                         to={`/main?server=${serverId}&channel=${channel.channelId}`}
                         key={channel.channelId}
                         onClick={handleChannelClick}
+                        className="hover:text-zinc-400"
                     >
                         {channel.channelName}
                     </Link>
-                ))}
+                ))} */}
             </div>
         </>
     );

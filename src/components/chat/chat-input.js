@@ -1,7 +1,7 @@
 import { Switch } from "@headlessui/react";
 import axios from "axios";
 import { ImagePlus } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import { useSelector } from "react-redux";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import { Textarea } from "src/components/ui/textarea";
@@ -11,6 +11,7 @@ import { useSocket } from "../hooks/use-socket";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
+
 const ChatInput = ({ userInfo }) => {
     const [enabled, setEnabled] = useState(false); // 채팅번역 기능
     const { socket, isConnected } = useSocket();
@@ -18,11 +19,11 @@ const ChatInput = ({ userInfo }) => {
     const query = useUrlQuery();
     const channelId = query.get("channel");
     const [summary, setSummary] = useState(false); // 채팅 요약기능;
-
     const user = useSelector((state) => state.userReducer);
     const { updateData } = useChatData();
-
     const sendMessageRef = useRef(null);
+    const userLanguage = userInfo.nationalLanguage;
+
     /***
      * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
      * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
@@ -69,6 +70,7 @@ const ChatInput = ({ userInfo }) => {
                 `http://localhost:8000/chatdata/summary`,
                 {
                     channelId: channelId,
+                    userLanguage: userLanguage,
                 }
             );
             console.log("summary 요청 성공 : ", channelId);

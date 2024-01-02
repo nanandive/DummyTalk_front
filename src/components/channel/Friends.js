@@ -1,13 +1,12 @@
 // Friends.js
-import { useEffect, useState } from 'react';
-import FriendsModal from '../../components/modals/FriendsModal';
-import './css/Friends.css';
-import { useModal } from "src/components/hooks/use-modal";
+import { Switch } from "@headlessui/react";
 import axios from "axios";
-import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {callGetFriend} from "src/api/MainAPICalls";
-import {useDispatch, useSelector} from "react-redux";
-import {Switch} from "@headlessui/react";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { callGetFriend } from "src/api/MainAPICalls";
+import { useModal } from "src/components/hooks/use-modal";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import './css/Friends.css';
 
 function Friends() {
   const [accessUser, setAccessUser] = useState([]);
@@ -50,7 +49,7 @@ function Friends() {
 
 
   return (
-    <div className="friends-container">
+    <div className="friends-container scrollbar-hidden">
         <div style={{display:"flex"}} className="text-zinc-300 gap-5">
             { enabled ?
                 <h2>서버 접속자</h2>:
@@ -99,13 +98,6 @@ function Friends() {
             ))}
         </ul>
         }
-
-
-        <button
-          className="open-settings-btn"
-          onClick={() => onOpen("invitedUser", { serverId })}
-      >초대/강퇴
-      </button>
 
       
     </div>
