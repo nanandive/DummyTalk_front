@@ -1,10 +1,10 @@
 import axios from "axios";
-import {Bell, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, LogOut, Plus, UserPlus} from "lucide-react";
+import { Bell, ChevronDown, ChevronUp, LogOut, Plus, UserPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { decodeJwt } from "src/lib/tokenUtils";
-import {useModal} from "src/components/hooks/use-modal";
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -47,18 +47,18 @@ const LeftSideBar = () => {
     }, [state]);
 
     return (
-        <div className="w-[100px] bg-[#141C26] flex flex-col gap-3 items-center">
-            <div className="w-[100px] h-[80px] flex items-center justify-center border-b-[1px] border-black">
+        <div className="w-[60px] min-w-[60px] bg-[#141C26] flex flex-col gap-3 items-center">
+            <div className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black">
                 <img
                     src="image 61.svg"
                     alt=""
                 />
             </div>
 
-            <div className="flex flex-col gap-3 items-center justify-center mt-3">
+            <div className="flex flex-col gap-3 items-center justify-center">
                 <button
                     onClick={() => setPage((pre) => (pre > 0 ? pre - 1 : pre))}
-                    className="border-2 border-[#52cbb6]" // Updated border color
+                    className="border-2 border-teal-300" // Updated border color
                     style={serverList.length > 6 ? { display: "block"} : { display: "none" }}
                 >
                     <ChevronUp className={"text-teal-300"} />
@@ -68,7 +68,7 @@ const LeftSideBar = () => {
                         key={index}
                         onClick={() => handleServerClick(data.id)}
                     >
-                        <Button className="overflow-hidden text-lg font-bold border-2 border-teal-300  w-[60px] h-[60px] bg-transparent text-teal-300">
+                        <Button className="overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-inherit/60" size="icon">
                             {data.serverName
                                 ? data.serverName.slice(0, 2)
                                 : "???"}

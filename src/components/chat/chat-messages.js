@@ -73,7 +73,7 @@ const ChatMessages = ({ userInfo }) => {
     // console.log("Tes2t ===> " , chatData)
 
     return  (
-        <div className="h-[680px] flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
+        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}
