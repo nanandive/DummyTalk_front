@@ -29,6 +29,9 @@ const Channels = () => {
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const userId = userInfo.sub;
+    const [textChannels, setTextChannels] = useState([]); // 텍스트 채널 상태 추가
+    const [voiceChannels, setVoiceChannels] = useState([]); // 보이스 채널 상태 추가
+
 
     /* 채널 리스트 함수 */
     useEffect(() => {
@@ -38,10 +41,16 @@ const Channels = () => {
                     `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list/${userId}`
                 );
                 setChannels(response.data);
+                // 텍스트 및 보이스 채널 분리
+                const filteredTextChannels = response.data.filter(channel => channel.channelType === 'TEXT');
+                const filteredVoiceChannels = response.data.filter(channel => channel.channelType === 'VOICE');
+                setTextChannels(filteredTextChannels);
+                setVoiceChannels(filteredVoiceChannels);
+
                 console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
             } catch (error) {
                 console.log("채널 리스트 실패 >>>>>>>> : ", error.message);
-                if(error.message == "Request failed with status code 404"){
+                if(error.message === "Request failed with status code 404"){
                     navigate(-1);
                 }
             }
@@ -95,17 +104,49 @@ const Channels = () => {
                     <DropdownMenuItem>Subscription</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <div className="flex flex-col text-zinc-300 font-thin p-4 overflow-y-scroll">
-                {channels.map((channel, index) => (
-                    <Link
-                        to={`/main?server=${serverId}&channel=${channel.channelId}`}
-                        key={channel.channelId}
-                        onClick={handleChannelClick}
-                        className="hover:text-zinc-400"
-                    >
-                        {channel.channelName}
-                    </Link>
-                ))}
+                <div className="flex flex-col text-zinc-300 font-thin p-4 overflow-y-scroll">
+                    <div className="channel-section">
+                        <h3 className="font-bold">텍스트 채널</h3>
+                        <div>
+                            {textChannels.map(channel => (
+                                <Link
+                                    key={channel.channelId}
+                                    to={`/main?server=${serverId}&channel=${channel.channelId}`}
+                                    onClick={handleChannelClick}
+                                >
+                                    {channel.channelName}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+
+
+                    {/*{channels.map((channel, index) => (*/}
+                {/*    <Link*/}
+                {/*        to={`/main?server=${serverId}&channel=${channel.channelId}`}*/}
+                {/*        key={channel.channelId}*/}
+                {/*        onClick={handleChannelClick}*/}
+                {/*        className="hover:text-zinc-400"*/}
+                {/*    >*/}
+                {/*        {channel.channelName}*/}
+                {/*    </Link>*/}
+                {/*))}*/}
+
+                    <div className="channel-section">
+                        <h3 className="font-bold">음성 채널</h3>
+                        <div>
+                            {voiceChannels.map(channel => (
+                                <Link
+                                    key={channel.channelId}
+                                    to={`/main?server=${serverId}&channel=${channel.channelId}`}
+                                    onClick={handleChannelClick}
+                                >
+                                    {channel.channelName}
+                                </Link>
+                            ))}
+                    </div>
+                </div>
             </div>
         </>
     );
