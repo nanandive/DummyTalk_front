@@ -121,6 +121,7 @@ const ImageSendModal = () => {
                 >
                     <input
                         type="file"
+                        id="image_files"
                         name="image_files"
                         ref={fileInput}
                         className="my-2"

@@ -56,7 +56,7 @@ const ChatItem = ({ chat, channel, name }) => {
     if (chat?.type === "DELETE") return null;
 
     // FIXME: 같은 국가의 사용자라도 서로 다른 채팅이 보이도록 수정해야함 
-    if (chat?.translatedTextList.length) {
+    if (chat?.translatedTextList?.length) {
         const translated_list = [...chat.translatedTextList].filter(item => item.national_language_code === national_language)
 
         translated_list.length && (chat.message = translated_list[0].translated_text)
