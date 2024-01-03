@@ -1,19 +1,29 @@
-import { ChevronDown, LogOut, PlusCircle, Settings, TrashIcon, UserPlus, Users } from "lucide-react";
+import {
+    ChevronDown,
+    LogOut,
+    PlusCircle,
+    Settings,
+    TrashIcon,
+    UserPlus,
+    Users,
+} from "lucide-react";
+import { decodeJwt } from "src/lib/tokenUtils";
 import { useModal } from "../hooks/use-modal";
-import { useUrlQuery } from "../hooks/use-url-query";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-const ChannelHeader = () => {
+const ChannelHeader = ({ server }) => {
     const { onOpen } = useModal();
-    const qeury = useUrlQuery();
-    const serverId = qeury.get("server")
-    
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = decodeJwt(accessToken);
+    const ADMIN = server.userId.toString()
+
+    console.log(server);
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -49,27 +59,33 @@ const ChannelHeader = () => {
                     <Users className="h-4 w-4 ml-auto" />
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => onOpen("createChannel", { serverId })}
+                    onClick={() =>
+                        onOpen("createChannel", { serverId: server.id })
+                    }
                     className="px-3 py-2 text-sm cursor-pointer"
                 >
                     채널 생성
                     <PlusCircle className="h-4 w-4 ml-auto" />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                    onClick={() => onOpen("deleteServer")}
-                    className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
-                >
-                    서버 삭제
-                    <TrashIcon className="h-4 w-4 ml-auto" />
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={() => onOpen("leaveServer")}
-                    className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
-                >
-                    서버 나가기
-                    <LogOut className="h-4 w-4 ml-auto" />
-                </DropdownMenuItem>
+                {userInfo.sub === ADMIN && (
+                    <DropdownMenuItem
+                        onClick={() => onOpen("deleteServer")}
+                        className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                    >
+                        서버 삭제
+                        <TrashIcon className="h-4 w-4 ml-auto" />
+                    </DropdownMenuItem>
+                )}
+                {userInfo.sub !== ADMIN && (
+                    <DropdownMenuItem
+                        onClick={() => onOpen("leaveServer")}
+                        className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                    >
+                        서버 나가기
+                        <LogOut className="h-4 w-4 ml-auto" />
+                    </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );
