@@ -1,6 +1,5 @@
-import { Client } from "webstomp-client";
-import { createWithEqualityFn } from "zustand/traditional";
 import { devtools } from "zustand/middleware";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export const useChatData = createWithEqualityFn(
   devtools((set) => ({
