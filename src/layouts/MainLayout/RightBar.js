@@ -29,6 +29,7 @@ const RightBar = ({isOpen}) => {
         const bottomDiv = bottomRef?.current;
 
         const shouldAutoScroll = () => {
+
             if (!hasInitialized && bottomDiv) {
                 setHasInitialized(true);
                 return true;
@@ -53,12 +54,31 @@ const RightBar = ({isOpen}) => {
     }, [topRef, hasInitialized]);
 
 
-    const imageSearchRequest = async () => {
-        console.log("searchQuery", searchQuery);
+    const textSearchRequest = async () => {
+        try {
 
+            const response = await axios.get(
+                ` ${process.env.REACT_APP_FASTAPI_URL}/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+            );
+
+            console.log("Response from FastAPI: ", response);
+
+            if (response.status === 200) {
+                setUpdateData(response.data.similar_images);
+                setSearchQuery("");
+            }
+
+        } catch (error) {
+            console.error("Error in fetching data", error);
+        }
+    }
+
+
+
+    const imageSearchRequest = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8000/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+                ` ${process.env.REACT_APP_FASTAPI_URL}/uploadImage/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {
@@ -70,11 +90,21 @@ const RightBar = ({isOpen}) => {
         }
     }
 
+    const searchRequest = async () => {
+        console.log("searchQuery", searchQuery);
+
+        if (searchQuery === "" || chose === "summary" ) return;
+
+        if (chose === "image") imageSearchRequest();
+
+        if (chose === "text") textSearchRequest();
+    }
+
 
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            imageSearchRequest();
+            searchRequest();
         }
     };
 
@@ -123,7 +153,7 @@ const RightBar = ({isOpen}) => {
                     />
                     <Button
                         className="border-none absolute right-[5%] bottom-[10%] top-[5%]"
-                        onClick={imageSearchRequest}
+                        onClick={searchRequest}
                     >
                         <Search/>
                     </ Button>
