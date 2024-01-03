@@ -6,7 +6,7 @@ import { useSocket } from "../hooks/use-socket";
 export const SocketProvider = ({ children }) => {
     // const [socket, setSocket] = useState(null);
     // const [isConnected, setIsConnected] = useState(false);
-    const { setSocket } = useSocket();
+    const { socket, setSocket } = useSocket();
     const accessToken = localStorage.getItem("accessToken");
 
     useEffect(() => {
@@ -18,18 +18,17 @@ export const SocketProvider = ({ children }) => {
         stomp.connect({}, function (frame) {
             console.log("Connected: " + frame);
             let url = stomp.ws._transport.url;
-            url = url.replace(
-                "ws://localhost:9999",
-                ""
-            );
+            url = url.replace("ws://localhost:9999", "");
             url = url.replaceAll("/websocket", "");
             url = url.replace(/^\/[0-9]+\//, "");
             stomp.id = url;
-            
+
             setSocket(stomp);
         });
 
-        return () => stomp.disconnect(() => {});
+        return () => {
+            if (socket) stomp.disconnect(() => {});
+        };
     }, [accessToken]);
 
     return <>{children}</>;
