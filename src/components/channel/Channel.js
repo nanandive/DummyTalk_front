@@ -1,76 +1,68 @@
 // Channels.js
-import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useModal } from "src/components/hooks/use-modal";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
-import { decodeJwt } from "src/lib/tokenUtils";
-import "./css/Channels.css";
 import { ScrollArea } from "../ui/scroll-area";
-import ChannelSection from "./channel-section";
 import ChannelItem from "./channel-item";
+import ChannelSection from "./channel-section";
+import "./css/Channels.css";
 
 export const ChannelType = {
     VOICE: "VOICE",
     TEXT: "TEXT",
 };
 
-const Channels = () => {
-    const [channels, setChannels] = useState([]);
+const Channels = ({server}) => {
     const [connectedUsers, setConnectedUsers] = useState([]);
-    const { onOpen, onClose, data } = useModal();
     const query = useUrlQuery();
     const { state } = useLocation();
-    const serverId = query.get("server");
     const channelId = query.get("channel");
 
+    
     const navigate = useNavigate();
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
-    const userId = userInfo.sub;
 
     /* 채널 리스트 함수 */
-    useEffect(() => {
-        const channelList = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list/${userId}`
-                );
-                console.log("channel list: ", response);
-                setChannels(response.data);
-            } catch (error) {
-                if (error.message == "Request failed with status code 404") {
-                    navigate(-1);
-                }
-            }
-        };
-        channelList();
-    }, [serverId, state]);
+    // useEffect(() => {
+    //     const channelList = async () => {
+    //         try {
+    //             const response = await axios.get(
+    //                 `${process.env.REACT_APP_API_URL}/server/${server.id}/channel/list/${userId}`
+    //             );
+    //             console.log("channel list: ", response);
+    //             setChannels(response.data);
+    //         } catch (error) {
+    //             if (error.message == "Request failed with status code 404") {
+    //                 navigate(-1);
+    //             }
+    //         }
+    //     };
+    //     channelList();
+    // }, [server.id, state]);
 
-    const handleChannelClick = () => {
-        const selectedChannel = channels;
-        // setChannelId(selectedChannel);
-    };
+    // const handleChannelClick = () => {
+    //     const selectedChannel = channels;
+    //     // setChannelId(selectedChannel);
+    // };
 
-    const handleJoinChannel = () => {
-        setChannels((prevChannels) => {
-            const updatedChannels = prevChannels.map((channel) => ({
-                ...channel,
-                connectedUsers:
-                    channel === channelId
-                        ? connectedUsers
-                        : channel.connectedUsers,
-            }));
-            console.log(`Joining Channel: ${channelId.name}`);
-            console.log(`Connected Users: ${connectedUsers.length}`);
-            return updatedChannels;
-        });
-    };
+    // const handleJoinChannel = () => {
+    //     setChannels((prevChannels) => {
+    //         const updatedChannels = prevChannels.map((channel) => ({
+    //             ...channel,
+    //             connectedUsers:
+    //                 channel === channelId
+    //                     ? connectedUsers
+    //                     : channel.connectedUsers,
+    //         }));
+    //         console.log(`Joining Channel: ${channelId.name}`);
+    //         console.log(`Connected Users: ${connectedUsers.length}`);
+    //         return updatedChannels;
+    //     });
+    // };
 
-    const textChannels = channels.filter(
+    const textChannels = server.channelDtoList.filter(
         (channel) => channel.channelType === ChannelType.TEXT
     );
-    const audioChannels = channels.filter(
+    const audioChannels = server.channelDtoList.filter(
         (channel) => channel.channelType === ChannelType.VOICE
     );
 
@@ -81,7 +73,7 @@ const Channels = () => {
             {/* <div className="h-[80px] font-bold text-xl border-b-[1px] border-black text-teal-300 flex items-center p-4">
             </div> */}
             <div className="flex flex-col text-zinc-300 font-thin overflow-y-scroll scrollbar-hidden">
-                <ScrollArea className="flex-1 px-3">
+                <ScrollArea className="flex-1 px-3 pt-1">
                     {!!textChannels?.length && (
                         <div className="mb-2">
                             <ChannelSection
@@ -92,7 +84,8 @@ const Channels = () => {
                             {textChannels.map((channel) => (
                                 <ChannelItem
                                     key={channel.channelId}
-                                    serverId={serverId}
+                                    server={server}
+                                    serverId={server.id}
                                     channel={channel}
                                 />
                             ))}
@@ -108,7 +101,8 @@ const Channels = () => {
                             {audioChannels.map((channel) => (
                                 <ChannelItem
                                     key={channel.channelId}
-                                    serverId={serverId}
+                                    server={server}
+                                    serverId={server.id}
                                     channel={channel}
                                 />
                             ))}
@@ -116,16 +110,6 @@ const Channels = () => {
                     )}
                     
                 </ScrollArea>
-                {/* {channels.map((channel, index) => (
-                    <Link
-                        to={`/main?server=${serverId}&channel=${channel.channelId}`}
-                        key={channel.channelId}
-                        onClick={handleChannelClick}
-                        className="hover:text-zinc-400"
-                    >
-                        {channel.channelName}
-                    </Link>
-                ))} */}
             </div>
         </>
     );
