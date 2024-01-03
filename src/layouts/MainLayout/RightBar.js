@@ -139,7 +139,7 @@ const RightBar = ({isOpen}) => {
                 </label>
             </div>
             <div className="relative h-10">
-                {search == "Image" ?
+                { search == "Image" ?
                     <input
                         type="text"
                         value={searchQuery}

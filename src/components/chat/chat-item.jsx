@@ -65,7 +65,7 @@ const ChatItem = ({ chat, channel, name }) => {
     return (
         chat && (
             <div
-                className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-10 rounded-[3px] text-[#B5BAC1]"
+                className={"group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-10 rounded-[3px] text-[#B5BAC1]"}
                 onContextMenu={showNav}
                 onClick={hideContext}
             >
