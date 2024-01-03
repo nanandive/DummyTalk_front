@@ -20,6 +20,8 @@ function Chat() {
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
 
     useEffect(() => {
+        if (!channelId) return
+        
         axios.post(`${process.env.REACT_APP_API_URL}/channel/type?channelId=${channelId}`)
         .then(response => {
                 setChannelType(response.data.channelType);
