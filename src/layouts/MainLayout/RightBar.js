@@ -18,6 +18,8 @@ const RightBar = ({isOpen}) => {
     const query = useUrlQuery();
     const channelId = query.get("channel");
     const [summary, setSummary] = useState('')
+    const [summaryFiles, setSummaryFiles] = useState([]);
+
 
     const [updateData, setUpdateData] = useState([]);
 
@@ -76,22 +78,21 @@ const RightBar = ({isOpen}) => {
         }
     };
 
-    /* 요약 */
-    const fetchSummary = async () => {
+    /* 요약 파일 불러오기 */
+    const fetchSummaryFiles = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summary`, {
-                params: { text: searchText }
-            });
-            setSummary(response.data.summary);
+            console.log(`요청: http://localhost:8000/${channelId}/summaryFiles`);
+            const response = await axios.get(` ${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summaryFiles`);
+            console.log("서버 응답: ", response.data);
+            setSummaryFiles(response.data.files);
         } catch (error) {
-            console.error("요약 실패 >>>>> : ", error);
+            console.error("요약 파일 목록 불러오기 실패: ", error);
         }
     };
 
     const onClickSummary = async () => {
-        await fetchSummary();
-    }
-
+        await fetchSummaryFiles();
+    };
 
     const [downloadUrl, setDownloadUrl] = useState(null);
 
@@ -124,6 +125,9 @@ const RightBar = ({isOpen}) => {
 
     return (
         <div className="h-full w-[40%] flex flex-col">
+            <div class="h-[60px] min-h-[60px] w-[your-width] font-bold text-md flex pl-5 items-center border-b-[1px] border-black justify-between text-zinc-400 " style={{color: '#51CBB6'}}>
+                <div>검색</div>
+            </div>
             <div style={{display:"flex"}}>
                 <label style={{color : "white"}} htmlFor="radioImage">
                     <input onClick={onClickImage} type="radio" id="radioImage" name="search" value="이미지"/> 이미지
@@ -176,12 +180,15 @@ const RightBar = ({isOpen}) => {
             {/*<div className= "border border-white w-full h-full p-3 text-white bg-[#6E6E6E] ">*/}
             {/*    */}
             {/*</div>*/}
-            {summary === "Summary" && (
-                <div className="border border-white w-full h-full p-3 text-white bg-[#6E6E6E]">
-                    {summary || "요약 내용이 여기에 표시됩니다."}
-                    {downloadUrl && (
-                        <a href={downloadUrl} download="summary.txt">요약 텍스트 다운로드</a>
-                    )}
+            {search === "summary" && (
+                <div className="overflow-y-auto">
+                    {summaryFiles.map((file, index) => (
+                        <div key={index}>
+                            <a href={`${process.env.REACT_APP_FASTAPI_URL}/static/${file}`} target="_blank" rel="noopener noreferrer">
+                                {file}
+                            </a>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
