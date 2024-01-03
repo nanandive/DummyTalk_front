@@ -20,9 +20,9 @@ const RightBar = ({isOpen}) => {
     const [ searchText , setSearchText ] = useState('')
     const [ summary, setSummary ] = useState('')
     const [ summaryFiles, setSummaryFiles ] = useState([]);
-
-
-    const [updateData, setUpdateData] = useState([]);
+    const [ searchQuery, setSearchQuery ] = useState("");
+    const [ updateData, setUpdateData ] = useState([]);
+    const [ chose, setChose ] = useState(['']);
 
     useEffect(() => {
         const topDiv = topRef?.current;
@@ -52,7 +52,6 @@ const RightBar = ({isOpen}) => {
         }
     }, [topRef, hasInitialized]);
 
-    const [searchQuery, setSearchQuery] = useState("");
 
     const imageSearchRequest = async () => {
         console.log("searchQuery", searchQuery);
@@ -116,13 +115,9 @@ const RightBar = ({isOpen}) => {
 
     console.log("updateData", updateData)
 
-    const onClickImage = () =>{
-        setSearch("Image")
-    }
-    const onClickText = () =>{
-        setSearch("Text")
-    }
+    useEffect(() => {
 
+    },[])
 
     return (
         <div className="h-full w-[40%] flex flex-col">
@@ -131,13 +126,13 @@ const RightBar = ({isOpen}) => {
             </div>
             <div style={{display:"flex"}}>
                 <label style={{color : "white"}} htmlFor="radioImage">
-                    <input onClick={onClickImage} type="radio" id="radioImage" name="search" value="이미지"/> 이미지
+                    <input onClick={() => setChose("image")} type="radio" id="radioImage" name="search" value="이미지"/> 이미지
                 </label>
                 <label style={{color : "white"}} htmlFor="radioText">
-                    <input onClick={onClickText} type="radio" id="radioText" name="search" value="텍스트" /> 텍스트
+                    <input onClick={() =>setChose("text")} type="radio" id="radioText" name="search" value="텍스트" /> 텍스트
                 </label>
                 <label style={{color : "white"}} htmlFor="radioSummary">
-                    <input onClick={onClickSummary} type="radio" id="radioSummary" name="search" value="요약"/> 요약
+                    <input onClick={() =>setChose("summary")} type="radio" id="radioSummary" name="search" value="요약"/> 요약
                 </label>
             </div>
             <div className="relative h-10">
