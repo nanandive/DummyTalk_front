@@ -10,10 +10,10 @@ const CellComponent = () => {
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
+
     const [searchQuery, setSearchQuery] = useState("");
     const [updateData, setUpdateData] = useState([]);
     const [data, setData] = useState('');
-    const [renderImage, setRenderImage] = useState(null);
     const topRef = useRef()
     // console.log("updateData", updateData)
 
@@ -34,6 +34,7 @@ const CellComponent = () => {
     useEffect(() => {
 
         if (!channelId) return null;
+
         imageListRequest(channelId);
 
     }, [channelId]);
@@ -72,7 +73,7 @@ const CellComponent = () => {
         console.log("searchQuery", searchQuery);
         try {
             const response = await axios.get(
-                `http://localhost:8000/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+                `http://localhost:8000/api/image/searcb/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {

@@ -1,8 +1,5 @@
-import axios from "axios";
-import {Search} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
 import {useUrlQuery} from "src/components/hooks/use-url-query";
-import {Button} from "src/components/ui/button";
 import CellComponent from "src/layouts/RightSide/component/CellComponent";
 import TextSearchComponent from "src/layouts/RightSide/component/text-search-component";
 import SummaryComponent from "src/layouts/RightSide/component/summary-component";
@@ -11,22 +8,13 @@ import {useSocket} from "src/components/hooks/use-socket";
 
 const RightBar = ({isOpen}) => {
 
-    const topRef = useRef(null);
     const bottomRef = useRef(null);
-    const [searchText, setSearchText] = useState("");
-    const [searchQuery, setSearchQuery] = useState("");
     const [summaries, setSummaries] = useState([]); // 요약 데이터 상태
 
-    const query = useUrlQuery();
-    const channelId = query.get("channel");
-
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const [search, setSearch] = useState('Image');
-
-    const [updateData, setUpdateData] = useState([]);
     const [chose, setChose] = useState('image');
 
     const { socket } = useSocket()
+
     const components = {
         image: <CellComponent />,
         text: <TextSearchComponent />,
@@ -87,34 +75,6 @@ const RightBar = ({isOpen}) => {
     //     }
     // };
 
-    console.log("updateData", updateData)
-
-
-    // 요약 파일 목록을 가져오는 함수
-    // const fetchSummaryFiles = async () => {
-    //     try {
-    //         const response = await axios.get(
-    //             `${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summaryFile`
-    //         );
-    //         const summaryData = response.data;
-    //         console.error("요약 파일 목록 불러오기 성공: ", summaryData);
-    //         setSummaries(summaryData); // 요약 데이터 상태 업데이트
-    //     } catch (error) {
-    //         console.error("요약 파일 목록 불러오기 실패: ", error);
-    //     }
-    // };
-    //
-    // useEffect(() => {
-    //     fetchSummaryFiles(); // 컴포넌트가 마운트될 때 요약 데이터 가져오기
-    // }, [channelId]);
-    //
-    // const onClickSummary = () => {
-    //     setSearch("Summary");
-    // };
-
-    if (!socket) return;
-
-
     return (
         <div className="h-full w-[45%] flex flex-col">
             <div
@@ -143,7 +103,7 @@ const RightBar = ({isOpen}) => {
                     요약
                 </label>
             </div>
-            <div className="w-full flex-grow mx-3 mt-10 overflow-y-auto scrollbar-hidden relative">
+            <div className="border-2 border-amber-200 w-full flex-grow mt-5 overflow-y-auto scrollbar-hidden relative">
                 {components[chose]}
             </div>
             <div ref={bottomRef}></div>

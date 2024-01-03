@@ -12,7 +12,9 @@ const TextSearchComponent = () => {
     const query = useUrlQuery()
     const channelId = query.get("channel")
     const topRef = useRef()
-    const imageSearchRequest = async () => {
+
+
+    const textSearchRequest = async () => {
         console.log("searchQuery", searchQuery);
         try {
             const response = await axios.get(
@@ -20,7 +22,7 @@ const TextSearchComponent = () => {
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {
-                setUpdateData(response.data.similar_images); // 데이터 설정
+                setUpdateData(response.data.chat); // 데이터 설정
                 setSearchQuery(""); // 검색창 초기화
             }
         } catch (error) {
@@ -30,7 +32,7 @@ const TextSearchComponent = () => {
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            imageSearchRequest();
+            textSearchRequest();
         }
     };
 
@@ -48,12 +50,19 @@ const TextSearchComponent = () => {
                 />
                 <Button
                     className="border-none absolute right-[5%] bottom-[10%] top-[5%]"
-                    onClick={imageSearchRequest}
+                    onClick={textSearchRequest}
                 >
                     <Search/>
                 </ Button>
             </div>
-            <div className="text-search-component">
+            <div className="text-amber-400 border-amber-200 border-2  flex flex-col items-end w-full ">
+                { updateData && updateData.map((chat) => (
+                    <div className="text-amber-400 border-amber-200 border-2  flex flex-col items-end w-full ">
+                        <div className="border-amber-200 text-amber-50 w-full">
+                            {chat.message}
+                        </div>
+                    </div>
+                ))}
             </div>
         </>
     )
