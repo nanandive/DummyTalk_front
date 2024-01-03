@@ -36,17 +36,16 @@ const Channels = () => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_URL}/server/${serverId}/channel/list/${userId}`
                 );
+                console.log("channel list: ", response);
                 setChannels(response.data);
-                console.log("채널 리스트 성공 >>>>>>>> : ", response.data);
             } catch (error) {
-                console.log("채널 리스트 실패 >>>>>>>> : ", error.message);
                 if (error.message == "Request failed with status code 404") {
                     navigate(-1);
                 }
             }
         };
         channelList();
-    }, [serverId]);
+    }, [serverId, state]);
 
     const handleChannelClick = () => {
         const selectedChannel = channels;
@@ -75,7 +74,6 @@ const Channels = () => {
         (channel) => channel.channelType === ChannelType.VOICE
     );
 
-    console.log("channel 렌더링");
     return (
         <>
             {/* 채널 리스트 */}
