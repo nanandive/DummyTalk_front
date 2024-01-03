@@ -16,13 +16,11 @@ const RightBar = ({isOpen}) => {
     const query = useUrlQuery();
     const channelId = query.get("channel");
 
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const [search, setSearch] = useState('Image');
-    const [searchText, setSearchText] = useState('')
-
-    const [searchQuery, setSearchQuery] = useState("");
-    const [updateData, setUpdateData] = useState([]);
-    const [chose, setChose] = useState(['']);
+    const [ hasInitialized, setHasInitialized ] = useState(false);
+    const [ searchQuery, setSearchQuery ] = useState("");
+    const [ updateData, setUpdateData ] = useState([]);
+    const [ textResponse, setTextResponse ] = useState([]);
+    const [ chose, setChose ] = useState(['']);
 
     useEffect(() => {
         const topDiv = topRef?.current;
@@ -53,28 +51,6 @@ const RightBar = ({isOpen}) => {
         }
     }, [topRef, hasInitialized]);
 
-
-    const textSearchRequest = async () => {
-        try {
-
-            const response = await axios.get(
-                ` ${process.env.REACT_APP_FASTAPI_URL}/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
-            );
-
-            console.log("Response from FastAPI: ", response);
-
-            if (response.status === 200) {
-                setUpdateData(response.data.similar_images);
-                setSearchQuery("");
-            }
-
-        } catch (error) {
-            console.error("Error in fetching data", error);
-        }
-    }
-
-
-
     const imageSearchRequest = async () => {
         try {
             const response = await axios.get(
@@ -90,6 +66,25 @@ const RightBar = ({isOpen}) => {
         }
     }
 
+    const textSearchRequest = async () => {
+        try {
+
+            const response = await axios.get(
+                ` ${process.env.REACT_APP_FASTAPI_URL}/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+            );
+
+            console.log("Response from FastAPI: ", response);
+
+            if (response.status === 200) {
+                setTextResponse(response.data.chat);
+                setSearchQuery("");
+            }
+
+        } catch (error) {
+            console.error("Error in fetching data", error);
+        }
+    }
+
     const searchRequest = async () => {
         console.log("searchQuery", searchQuery);
 
@@ -100,7 +95,6 @@ const RightBar = ({isOpen}) => {
         if (chose === "text") textSearchRequest();
     }
 
-
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -108,11 +102,10 @@ const RightBar = ({isOpen}) => {
         }
     };
 
-    console.log("updateData", updateData)
-
+    console.log("chose: ", chose);
 
     return (
-        <div className="h-full w-[45%] flex flex-col">
+        <div className="h-full w-[40%] flex flex-col">
             <div
                 className="h-[60px] min-h-[60px] w-full font-bold text-md flex pl-5 items-center border-b-[1px] border-black justify-between text-zinc-400 bg-[your-color]">
                 <div>보관함</div>
@@ -160,11 +153,11 @@ const RightBar = ({isOpen}) => {
                 </div>
                 : null
             }
-            <div className="w-full flex-grow mx-3 mt-10 overflow-y-auto scrollbar-hidden relative">
+            <div className="border-amber-600 border-4 w-full flex-grow mt-10 px-3 overflow-y-auto scrollbar-hidden relative">
                 {chose === "image" ? (
-                    <CellComponent updateData={updateData || false}/>
+                    <CellComponent updateData={ updateData || false}/>
                 ) : chose === "text" ? (
-                    <TextSearchComponent updateData={updateData || false}/>
+                    <TextSearchComponent text={ textResponse }/>
                 ) : chose === "summary" ? (
                     <SummaryComponent channelId={channelId || false}/>
                 ) : null
