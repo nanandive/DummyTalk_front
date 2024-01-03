@@ -9,16 +9,17 @@ import colors from "tailwindcss/colors";
 
 const RightBar = ({isOpen}) => {
 
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const [search, setSearch] = useState('Image');
     const topRef = useRef(null);
     const bottomRef = useRef(null);
-    const [ searchText , setSearchText ] = useState('')
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
-    const [summary, setSummary] = useState('')
-    const [summaryFiles, setSummaryFiles] = useState([]);
+
+    const [ hasInitialized, setHasInitialized ] = useState(false);
+    const [ search, setSearch ] = useState('Image');
+    const [ searchText , setSearchText ] = useState('')
+    const [ summary, setSummary ] = useState('')
+    const [ summaryFiles, setSummaryFiles ] = useState([]);
 
 
     const [updateData, setUpdateData] = useState([]);
@@ -58,7 +59,7 @@ const RightBar = ({isOpen}) => {
 
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_FASTAPI_URL}/textImageSearch/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
+                `http://localhost:8000/api/search/text/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
             console.log("Response from FastAPI: ", response);
             if (response.status === 200) {
@@ -140,7 +141,7 @@ const RightBar = ({isOpen}) => {
                 </label>
             </div>
             <div className="relative h-10">
-                {search == "Image" ?
+                { search == "Image" ?
                     <input
                         type="text"
                         value={searchQuery}

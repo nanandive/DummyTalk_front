@@ -35,18 +35,21 @@ const ChatItem = ({ chat, channel, name }) => {
 
     const showNav = (e) => {
         e.preventDefault();
-        setContext(false);
+        setContext(true);
 
         if (chat.sender.sender !== +sub) return;
 
         const { clientX, clientY } = e;
         setxyPosition({ x: clientX, y: clientY });
-        setContext(true);
+        setContext(false);
     };
 
     const hideContext = (event) => {
         setContext(false);
     };
+
+    console.log(chat)
+    console.log(parseInt(sub, 10) === chat?.sender)
 
     const [chosen, setChosen] = useState();
 
@@ -59,17 +62,19 @@ const ChatItem = ({ chat, channel, name }) => {
     if (chat?.translatedTextList?.length) {
         const translated_list = [...chat.translatedTextList].filter(item => item.national_language_code === national_language)
 
-        translated_list.length && (chat.message = translated_list[0].translated_text)
+        translated_list.length && ( chat.message = translated_list[0].translated_text )
     }
 
     return (
         chat && (
             <div
-                className="group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-10 rounded-[3px] text-[#B5BAC1]"
+                className={`${ parseInt(sub, 10) === ( chat?.sender?.userId || chat?.sender ) ? "border-2 border-[#B5BAC1] border-opacity-40" : null } 
+                            group flex items-center bg-black/5 p-2 mt-1 transition w-full hover:bg-gray-200 hover:bg-opacity-10 rounded-[3px] text-[#B5BAC1]`}
                 onContextMenu={showNav}
                 onClick={hideContext}
             >
-                {context && (
+
+                {context && !chosen && (
                     <Button
                         onClick={() => deleteRequest(true)}
                         className="border-none"
@@ -95,7 +100,7 @@ const ChatItem = ({ chat, channel, name }) => {
                             </ActionTooltip> */}
                             </div>
                             <span className="text-xs text-[#B5BAC1]">
-                                {chat.createdAt}
+                                {chat?.createdAt}
                             </span>
                         </div>
                         {chat?.type === "TEXT" && (
