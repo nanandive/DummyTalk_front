@@ -66,9 +66,12 @@ const LeftSideBar = () => {
         dispatch(callPostRefusal(friendId))
     }
 
+
     return (
         <div className="w-[60px] min-w-[60px] bg-[#141C26] flex flex-col gap-3 items-center">
-            <div className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black">
+            <div
+                onClick={ () => { navigate('/')}}
+                className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black cursor-pointer">
                 <img
                     src="image 61.svg"
                     alt=""
