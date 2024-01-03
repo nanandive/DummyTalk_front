@@ -7,6 +7,7 @@ import { decodeJwt } from "src/lib/tokenUtils";
 import {useModal} from "src/components/hooks/use-modal";
 import {useDispatch, useSelector} from "react-redux";
 import {callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal} from "src/api/MainAPICalls";
+import styles from "src/layouts/LeftSide/left-side-bar.module.css"
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -15,6 +16,8 @@ const LeftSideBar = () => {
     const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
     const userId = userInfo.sub;
     const { onOpen } = useModal();
+
+    let [btnActive, setBtnActive] = useState('');
 
     const [onRequest, setOnRequest] = useState(false);
     const FriendData = useSelector(state => state.requestReducer);
@@ -66,7 +69,6 @@ const LeftSideBar = () => {
         dispatch(callPostRefusal(friendId))
     }
 
-
     return (
         <div className="w-[60px] min-w-[60px] bg-[#141C26] flex flex-col gap-3 items-center">
             <div
@@ -91,7 +93,12 @@ const LeftSideBar = () => {
                         key={index}
                         onClick={() => handleServerClick(data.id)}
                     >
-                        <Button className="overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-inherit/60" size="icon">
+                        <Button
+                            onClick
+                            className="overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-teal-300 hover:text-[#0B1725]
+                            active:bg-teal-300 active:text-[#0B1725]
+                            focus:bg-teal-300 focus:text-[#0B1725]"
+                            size="icon">
                             {data.serverName
                                 ? data.serverName.slice(0, 2)
                                 : "???"}
@@ -132,11 +139,11 @@ const LeftSideBar = () => {
             </div>
             <div style={
                 onRequest ?
-                    { width:"400px", height:"500px", top:"69%" ,left:"12%", border:"1px solid black", background:"whitesmoke",
+                    { width:"400px", height:"500px", top:"65%" ,left:"13%", border:"1px solid black", background:"whitesmoke",
                         transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto", zIndex:"1"}
                     :
                     {display : "none"} }>
-                <div style={{width:"395px", height:"50px"}}>
+                <div className={styles.request}>
                     {FriendData.length > 0 && FriendData.map(friend =>(
                         <div style={{display:"flex"}}>
                             <div className="mr-20">
@@ -145,10 +152,10 @@ const LeftSideBar = () => {
                             <div>
                                 {friend.userEmail}
                             </div>
-                            <button onClick={() => onClickApproval({friendId: friend.userId})} style={{margin:"0px 0px 0px auto"}}>
+                            <button onClick={() => onClickApproval({friendId: friend.userId})} className={ styles.approval}>
                                 수락
                             </button>
-                            <button onClick={() => onClickRefusal({friendId: friend.userId})} style={{margin:"0px 20px"}}>
+                            <button onClick={() => onClickRefusal({friendId: friend.userId})} className={ styles.refusal}>
                                 삭제
                             </button>
                         </div>
