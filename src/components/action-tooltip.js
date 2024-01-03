@@ -5,7 +5,7 @@ import {
     TooltipTrigger,
 } from "./ui/tooltip";
 
-const ActionTooltip = ({ children, side, align, label }) => {
+const ActionTooltip = ({ children, side, align, label, className }) => {
     return (
         <TooltipProvider>
             <Tooltip delayDuration={50}>
@@ -14,7 +14,7 @@ const ActionTooltip = ({ children, side, align, label }) => {
                     side={side}
                     align={align}
                 >
-                    <p className="font-semibold text-sm capitalize">
+                    <p className={"font-semibold text-sm capitalize"}>
                         {label.toLowerCase()}
                     </p>
                 </TooltipContent>

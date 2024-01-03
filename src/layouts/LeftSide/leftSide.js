@@ -11,7 +11,7 @@ function LeftSide() {
     if (!serverId) return null;
 
     return (
-        <section className="w-[200px] min-w-[200px] h-full bg-[#112033] flex flex-col">
+        <section className="w-60 h-full bg-[#112033] flex flex-col">
             <ChannelHeader />
             <Channels />
             <Separator className="my-4 bg-black" />

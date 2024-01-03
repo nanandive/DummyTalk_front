@@ -56,8 +56,6 @@ function UserSetting() {
     setIsVideoModalOpen(false);
   };
 
-  console.log('setting');
-
   return (
     <div className="mt-auto ml-auto">
       <br />
