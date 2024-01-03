@@ -9,16 +9,17 @@ import colors from "tailwindcss/colors";
 
 const RightBar = ({isOpen}) => {
 
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const [search, setSearch] = useState('Image');
     const topRef = useRef(null);
     const bottomRef = useRef(null);
-    const [ searchText , setSearchText ] = useState('')
 
     const query = useUrlQuery();
     const channelId = query.get("channel");
-    const [summary, setSummary] = useState('')
-    const [summaryFiles, setSummaryFiles] = useState([]);
+
+    const [ hasInitialized, setHasInitialized ] = useState(false);
+    const [ search, setSearch ] = useState('Image');
+    const [ searchText , setSearchText ] = useState('')
+    const [ summary, setSummary ] = useState('')
+    const [ summaryFiles, setSummaryFiles ] = useState([]);
 
 
     const [updateData, setUpdateData] = useState([]);
