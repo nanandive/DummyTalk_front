@@ -51,10 +51,9 @@ const ChatEmpty = () => {
             {/* Your JSX for the component */}
             <div className="my-custom-card" ref={cardsRef}>
                 <div className="my-custom-card__bg" ref={backgroundsRef}></div>
-                <img className="my-custom-card__img" src="./dumcat.png" alt="Princess Mononoke" ref={imagesRef} />
-
+                <img className="my-custom-card__img my-custom-card__img-centered" src="./dumcat.png" alt="dumcat" ref={imagesRef} />
                 <div className="my-custom-card__text">
-                    <p className="my-custom-card__title">채팅을 시작해보세요</p>
+                    <p className="my-custom-card__title">start chat</p>
                 </div>
             </div>
             {/*<span className="my-custom-notice">view on desktop for mousemove</span>*/}
