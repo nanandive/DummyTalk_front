@@ -25,9 +25,6 @@ const ChatInput = ({ userInfo }) => {
     const userLanguage = userInfo.national_language;
 
 
-
-
-
     /***
      * 1. 채팅방 입장시 채팅방의 채팅 리스트를 불러온다.
      * - 채팅 리스트는 채팅방 입장시 한번만 불러온다.
