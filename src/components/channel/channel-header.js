@@ -1,14 +1,19 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LogOut, PlusCircle, Settings, TrashIcon, UserPlus, Users } from "lucide-react";
+import { useModal } from "../hooks/use-modal";
+import { useUrlQuery } from "../hooks/use-url-query";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger,
+    DropdownMenuTrigger
 } from "../ui/dropdown-menu";
 
 const ChannelHeader = () => {
+    const { onOpen } = useModal();
+    const qeury = useUrlQuery();
+    const serverId = qeury.get("server")
+    
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -21,13 +26,50 @@ const ChannelHeader = () => {
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-56 text-zinc-400 bg-[#112033]">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-black" />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+            <DropdownMenuContent className="w-56 text-xs font-medium text-neutral-400 space-y-[2px] bg-[#112033]">
+                <DropdownMenuItem
+                    onClick={() => onOpen("invite")}
+                    className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
+                >
+                    유저 초대
+                    <UserPlus className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onOpen("editServer")}
+                    className="px-3 py-2 text-sm cursor-pointer"
+                >
+                    서버 설정
+                    <Settings className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onOpen("members")}
+                    className="px-3 py-2 text-sm cursor-pointer"
+                >
+                    유저 관리
+                    <Users className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onOpen("createChannel", { serverId })}
+                    className="px-3 py-2 text-sm cursor-pointer"
+                >
+                    채널 생성
+                    <PlusCircle className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                    onClick={() => onOpen("deleteServer")}
+                    className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                >
+                    서버 삭제
+                    <TrashIcon className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onOpen("leaveServer")}
+                    className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+                >
+                    서버 나가기
+                    <LogOut className="h-4 w-4 ml-auto" />
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );
