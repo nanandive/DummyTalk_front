@@ -13,10 +13,12 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import "./css/ChannelModal.css";
+import { useServerData } from "../hooks/use-server-data";
 
 const CreateChannelModal = () => {
     const navigate = useNavigate();
     const { data, isOpen, onClose, type } = useModal();
+    const { updateChannelListData } = useServerData()
     const { serverId } = data;
     const isModalOpen = isOpen && type === "createChannel";
     const [channelName, setChannelName] = useState("");
@@ -30,17 +32,16 @@ const CreateChannelModal = () => {
         const formData = new FormData(e.target);
 
         try {
-            await axios.post(
+            const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/channel/writePro1`,
                 formData
             );
+
+            updateChannelListData(response.data)
             setChannelName('')
             onClose();
 
-            navigate(`/main?server=${serverId}`, {
-                replace: true,
-                state: uuid(),
-            });
+            navigate(`/main?server=${serverId}`);
         } catch (error) {
             console.log("채널 생성 실패");
         } finally {

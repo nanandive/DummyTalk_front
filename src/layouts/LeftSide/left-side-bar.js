@@ -2,9 +2,13 @@ import axios from "axios";
 import { Bell, ChevronDown, ChevronUp, LogOut, Plus, UserPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { decodeJwt } from "src/lib/tokenUtils";
+import {useModal} from "src/components/hooks/use-modal";
+import {useDispatch, useSelector} from "react-redux";
+import {callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal} from "src/api/MainAPICalls";
+import styles from "src/layouts/LeftSide/left-side-bar.module.css"
+import {cn} from "src/lib/utils";
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -14,6 +18,11 @@ const LeftSideBar = () => {
     const userId = userInfo.sub;
     const { onOpen } = useModal();
 
+    let [btnActive, setBtnActive] = useState('');
+
+    const [onRequest, setOnRequest] = useState(false);
+    const FriendData = useSelector(state => state.requestReducer);
+    const dispatch =  useDispatch()
     const { state } = useLocation();
     const navigate = useNavigate();
     const validServerList = Array.isArray(serverList) ? serverList : [];
@@ -46,9 +55,26 @@ const LeftSideBar = () => {
         fetchServers();
     }, [state]);
 
+    useEffect(() => {
+        dispatch( callGetNickname() )
+        dispatch( callGetFriendRequest() )
+    }, []);
+
+    const onClickRequest = () =>{
+        setOnRequest(prev => !prev);
+    }
+    const onClickApproval = (friendId) =>{
+        dispatch(callPostApproval(friendId))
+    }
+    const onClickRefusal = (friendId) =>{
+        dispatch(callPostRefusal(friendId))
+    }
+
     return (
         <div className="w-[60px] min-w-[60px] bg-[#141C26] flex flex-col gap-3 items-center">
-            <div className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black">
+            <div
+                onClick={ () => { window.location.href = '/' }}
+                className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black cursor-pointer">
                 <img
                     src="image 61.svg"
                     alt=""
@@ -68,7 +94,9 @@ const LeftSideBar = () => {
                         key={index}
                         onClick={() => handleServerClick(data.id)}
                     >
-                        <Button className="overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-inherit/60" size="icon">
+                        <Button
+                            className={cn("overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-teal-300 hover:text-[#0B1725] active:bg-teal-300 active:text-[#0B1725] focus:bg-teal-300 focus:text-[#0B1725]")}
+                            size="icon">
                             {data.serverName
                                 ? data.serverName.slice(0, 2)
                                 : "???"}
@@ -91,15 +119,46 @@ const LeftSideBar = () => {
             </div>
 
             <div className="flex flex-col mt-auto mb-3 text-teal-300 gap-4">
-                <Button size={"icon"} className="border-none">
+                <Button size={"icon"}
+                        onClick={() => onOpen("addFriend")}
+                        className="border-none">
                     <UserPlus />
                 </Button>
-                <Button size={"icon"} className="border-none">
+                <Button
+                    onClick={ onClickRequest }
+                    size={"icon"} className="border-none">
                     <Bell />
                 </Button>
-                <Button size={"icon"} className="border-none">
+                <Button size={"icon"}
+                        onClick={() => onOpen("logout")}
+                        className="border-none" >
                     <LogOut />
                 </Button>
+            </div>
+            <div style={
+                onRequest ?
+                    { width:"400px", height:"500px", top:"65%" ,left:"13%", border:"1px solid black", background:"whitesmoke",
+                        transform: "translate(-50%, -50%)", position: "absolute", overflow: "auto", zIndex:"1"}
+                    :
+                    {display : "none"} }>
+                <div className={styles.request}>
+                    {FriendData.length > 0 && FriendData.map(friend =>(
+                        <div style={{display:"flex"}}>
+                            <div className="mr-20">
+                                {friend.name}
+                            </div>
+                            <div>
+                                {friend.userEmail}
+                            </div>
+                            <button onClick={() => onClickApproval({friendId: friend.userId})} className={ styles.approval}>
+                                수락
+                            </button>
+                            <button onClick={() => onClickRefusal({friendId: friend.userId})} className={ styles.refusal}>
+                                삭제
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
