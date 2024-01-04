@@ -76,7 +76,7 @@ const ChatInput = ({ userInfo }) => {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             console.log("summary 요청 성공:", response.data);
-            setSummary(currentSummaryState => !currentSummaryState); // Toggle the summary state after successful response
+            setSummary(currentSummaryState => !currentSummaryState);
         } catch (error) {
             console.error("summary 요청 실패:", error.response || error.message, ">>>>>>", userLanguage);
         } finally {
@@ -84,11 +84,12 @@ const ChatInput = ({ userInfo }) => {
         }
     };
 
-
     useEffect(() => {
-        if (!summary || isSummaryLoading) return;
-        summaryData();
-    }, [summary, isSummaryLoading]);
+        if (summary) {
+            summaryData();
+        }
+    }, [summary]);
+
 
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
