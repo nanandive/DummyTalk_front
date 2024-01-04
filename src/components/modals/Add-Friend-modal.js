@@ -8,16 +8,40 @@ import {
     DialogTitle,
 } from "src/components/ui/dialog";
 import { Button } from "../../components/ui/button";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useDispatch } from "react-redux";
-import { callPostFriend } from "../../api/MainAPICalls";
+import {callGetFriendRequest, callPostFriend} from "../../api/MainAPICalls";
+import {useSocket} from "src/components/hooks/use-socket";
+import {jwtDecode} from "jwt-decode";
+
+import axios from "axios";
+
 
 const AddFriendModal = () => {
+
     const [email, setEmail] = useState("");
     const { isOpen, onOpen, onClose, type, data } = useModal();
     const dispatch = useDispatch();
 
+    const { socket, isConnected } = useSocket();
     const isModalOpen = isOpen && type === "addFriend";
+
+    const accessToken = window.localStorage.getItem('accessToken');
+    const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+
+
+    useEffect(() => {
+        if (!isConnected ) return;
+        socket.subscribe(`/topic/friend`, (msg) => {
+            dispatch(callGetFriendRequest())
+            }
+        );
+        socket.subscribe(`/topic/friend/${decodedToken.sub}`, (msg) => {
+            alert(msg.body)
+            }
+        );
+
+    }, [isConnected]);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -25,11 +49,12 @@ const AddFriendModal = () => {
     };
 
     const onClickAddFriend = () => {
-        dispatch(
-            callPostFriend({
-                email: email,
-            })
-        );
+        // dispatch(
+        //     callPostFriend({
+        //         email: email,
+        //     })
+        // );
+        socket.send(`/app/friend/${decodedToken.sub}`, JSON.stringify({email : email}), {})
         onClose();
     };
 

@@ -165,7 +165,7 @@ const LeftSideBar = () => {
                                         onClick={() => onOpen("invite")}
                                         className="text-zinc-400 dark:text-indigo-400 px-3 py-2 text-sm justify-between"
                                     >
-                                        {friend.name}
+                                        {friend.nickname}
                                         <div className={"flex gap-2"}>
                                             <div className="text-indigo-600" onClick={ () => onClickApproval({friendId: friend.userId} ) }>
                                                 수락
