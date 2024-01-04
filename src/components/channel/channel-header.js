@@ -31,7 +31,7 @@ const ChannelHeader = ({ server }) => {
                 className="focus:outline-none"
             >
                 <button className="w-full h-[60px] text-md text-zinc-400 font-semibold px-3 flex items-center border-b-[1px] border-black hover:bg-zinc-700/10 transition">
-                    서버 이름
+                    {server.serverName}
                     <ChevronDown className="h-5 w-5 ml-auto" />
                 </button>
             </DropdownMenuTrigger>
@@ -58,6 +58,7 @@ const ChannelHeader = ({ server }) => {
                     유저 관리
                     <Users className="h-4 w-4 ml-auto" />
                 </DropdownMenuItem>
+                {userInfo.sub === ADMIN && (
                 <DropdownMenuItem
                     onClick={() =>
                         onOpen("createChannel", { serverId: server.id })
@@ -67,6 +68,7 @@ const ChannelHeader = ({ server }) => {
                     채널 생성
                     <PlusCircle className="h-4 w-4 ml-auto" />
                 </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 {userInfo.sub === ADMIN && (
                     <DropdownMenuItem
