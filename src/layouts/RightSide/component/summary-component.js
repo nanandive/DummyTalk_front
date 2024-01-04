@@ -1,53 +1,44 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {useUrlQuery} from "src/components/hooks/use-url-query";
 
 
-const SummaryComponent = ({channelId}) => {
-    const [summary, setSummary] = useState(false)
-    const [summaryFiles, setSummaryFiles] = useState([]);
+const SummaryComponent = () => {
+    const [summaries, setSummaries] = useState([]); // 요약 데이터 상태
+    const query = useUrlQuery()
+    const channelId = query.get("channel")
 
-    /* 요약 파일 불러오기 */
+    // 요약 파일 목록을 가져오는 함수
     const fetchSummaryFiles = async () => {
         try {
-            console.log(`요청: http://localhost:8000/${channelId}/summaryFiles`);
-            const response = await axios.get(` ${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summaryFiles`);
-            console.log("서버 응답: ", response.data);
-            setSummaryFiles(response.data.files);
+            const response = await axios.get(
+                `${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summaryFile`
+            );
+            const summaryData = response.data;
+            console.error("요약 파일 목록 불러오기 성공: ", summaryData);
+            setSummaries(summaryData); // 요약 데이터 상태 업데이트
         } catch (error) {
             console.error("요약 파일 목록 불러오기 실패: ", error);
         }
     };
 
-
-    const [downloadUrl, setDownloadUrl] = useState(null);
-
-    const downloadSummary = () => {
-        if (!summary) return;
-
-        //Blob 객체 생성
-        const blob = new Blob([summary], {type: 'text/plain'});
-
-        if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-
-        const url = URL.createObjectURL(blob);
-        setDownloadUrl(url);
-    }
-
     useEffect(() => {
-        if(!channelId) return;
-        downloadSummary();
-    }, [channelId]);
+        if (!channelId) return null;
+        fetchSummaryFiles();
+    }, [channelId])
+
 
     return (
         <div className="w-full">
-            {summaryFiles.map((file, index) => (
-                <div key={index}>
-                    <a href={`${process.env.REACT_APP_FASTAPI_URL}/static/${file}`} target="_blank"
-                       rel="noopener noreferrer">
-                        {file}
-                    </a>
-                </div>
-            ))}
+            {/* 요약  */}
+            <div id="summary-display">
+                <h2 className="text-white text-center">요약 목록</h2>
+                <ul>
+                    {summaries.map((summary) => (
+                        <li className="text-white bg-gray-500" key={summary.summary_id}>{summary.summary_text}</li>
+                    ))}
+                </ul>
+            </div>
         </div>
     )
 }
