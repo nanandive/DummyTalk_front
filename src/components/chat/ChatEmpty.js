@@ -22,17 +22,17 @@ const ChatEmpty = () => {
                     const yValue = calcValue(y, window.innerHeight);
                     const xValue = calcValue(x, window.innerWidth);
 
-                    cardsRef.current.style.transform = `rotateX(${yValue}deg) rotateY(${xValue}deg)`;
+               /*     cardsRef.current.style.transform = `rotateX(${yValue}deg) rotateY(${xValue}deg)`;*/
 
                     [].forEach.call(imagesRef.current, (image) => {
                         if (image) {
-                            image.style.transform = `translateX(${-xValue}px) translateY(${yValue}px)`;
+                     /*       image.style.transform = `translateX(${-xValue}px) translateY(${yValue}px)`;*/
                         }
                     });
 
                     [].forEach.call(backgroundsRef.current, (background) => {
                         if (background) {
-                            background.style.backgroundPosition = `${xValue * 0.45}px ${-yValue * 0.45}px`;
+                        /*    background.style.backgroundPosition = `${xValue * 0.45}px ${-yValue * 0.45}px`;*/
                         }
                     });
                 });

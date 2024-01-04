@@ -23,6 +23,8 @@ const ChatInput = ({ userInfo }) => {
     const { updateData } = useChatData();
     const sendMessageRef = useRef(null);
     const userLanguage = userInfo.national_language;
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [isSummaryLoading, setIsSummaryLoading] = useState(false); // State for tracking summary API loading
 
 
     /***
@@ -66,30 +68,28 @@ const ChatInput = ({ userInfo }) => {
 
     /* 채팅 요약 요청 */
     const summaryData = async () => {
+        setIsSummaryLoading(true);
         try {
             const response = await axios.post(
                 `http://localhost:8000/${channelId}/summary`,
-                {
-                    nation_language: userLanguage,
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
+                { nation_language: userLanguage },
+                { headers: { 'Content-Type': 'application/json' } }
             );
-            console.log("summary 요청 성공 : ", response.data);
+            console.log("summary 요청 성공:", response.data);
+            setSummary(currentSummaryState => !currentSummaryState); // Toggle the summary state after successful response
         } catch (error) {
-            console.error("summary 요청 실패:", error.response || error.message, ">>>>>>",userLanguage);
+            console.error("summary 요청 실패:", error.response || error.message, ">>>>>>", userLanguage);
+        } finally {
+            setIsSummaryLoading(false);
         }
     };
 
-    useEffect(() => {
-        if (!summary) return;
-        summaryData();
-    }, [summary]);
 
-    // 엔터키 눌렀을 때 메시지 전송
+    useEffect(() => {
+        if (!summary || isSummaryLoading) return;
+        summaryData();
+    }, [summary, isSummaryLoading]);
+
     const enter_event = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -98,81 +98,72 @@ const ChatInput = ({ userInfo }) => {
     };
 
     const sendChatMessage = useCallback(() => {
-        if (!isConnected || sendMessageRef.current?.value === "" || !userInfo)
-            return;
+        if (!isConnected || sendMessageRef.current?.value === "" || !userInfo) return;
 
-        socket.send(
-            `/app/${channelId}/message`,
-            // `/app/audioMessage` //오디오로 담는부분
-            JSON.stringify({
-                message: sendMessageRef.current?.value,
-                sender: userInfo?.sub,
-                nickname: user?.nickname,
-                channelId,
-                type: "TEXT",
-            })
-        );
+        socket.send(`/app/${channelId}/message`, JSON.stringify({
+            message: sendMessageRef.current?.value,
+            sender: userInfo?.sub,
+            nickname: user?.nickname,
+            channelId,
+            type: "TEXT",
+        }));
         sendMessageRef.current.value = "";
     }, [channelId, isConnected, socket, userInfo]);
 
+
     return (
         <div className="flex flex-col mt-auto relative overflow-hidden px-5 pb-2 rounded-lg">
-            {/* 채팅 요약 스위치 */}
             <div className="flex flex-row-reverse pb-2">
-                <Label
-                    htmlFor="airplane-mode"
-                    className="font-bold text-2 self-center "
-                >
-                    채팅요약
-                </Label>
-                <Switch
-                    id={"airplane-mode"}
-                    checked={summary}
-                    onClick={() => {
-                        console.log(!summary);
-                        setSummary((prev) => !prev);
-                    }}
-                    className={`${
-                        summary ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
-                    } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
-                >
-                    <span className="sr-only">Use setting</span>
-                    <span
-                        aria-hidden="true"
-                        className={`${
-                            summary ? "translate-x-6" : "translate-x-0"
-                        } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                    />
-                </Switch>
-            </div>
+                <div className="flex items-center space-x-4">
+                    {/* Summary Toggle */}
+                    <div className="flex items-center">
+                        <Label htmlFor="summary-mode" className="font-bold text-2">
+                            채팅요약
+                        </Label>
+                        <Switch
+                            id={"summary-mode"}
+                            checked={summary}
+                            onClick={() => {
+                                if (!isSummaryLoading) {
+                                    setSummary((prev) => !prev);
+                                }
+                            }}
+                            disabled={isSummaryLoading}
+                            className={`${summary ? "bg-yellow-400" : "bg-gray-400"} relative inline-flex h-[25px] w-[50px] rounded-full border-2 border-transparent transition-colors ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75`}
+                        >
+                            <span className="sr-only">Use setting</span>
+                            <span
+                                aria-hidden="true"
+                                className={`${summary ? "translate-x-6" : "translate-x-0"} pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                            />
+                        </Switch>
+                    </div>
 
-            {/* 채팅 번역 스위치 */}
-            <div className="flex flex-row-reverse pb-2">
-                <Label
-                    htmlFor="airplane-mode"
-                    className="font-bold text-2 self-center "
-                >
-                    채팅번역
-                </Label>
-                <Switch
-                    id={"airplane-mode"}
-                    checked={enabled}
-                    onClick={() => {
-                        console.log(!enabled);
-                        setEnabled((prev) => !prev);
-                    }}
-                    className={`${
-                        enabled ? "bg-yellow-400 mr-1" : "bg-gray-400 mr-1"
-                    } relative inline-flex h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
-                >
-                    <span className="sr-only">Use setting</span>
-                    <span
-                        aria-hidden="true"
-                        className={`${
-                            enabled ? "translate-x-6" : "translate-x-0"
-                        } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                    />
-                </Switch>
+                    {/* 채팅 번역 스위치 */}
+                    <div className="flex items-center">
+                        <Label htmlFor="translation-mode" className="font-bold text-2">
+                            채팅번역
+                        </Label>
+                        <Switch
+                            id={"translation-mode"}
+                            checked={enabled}
+                            onClick={() => {
+                                setEnabled((prev) => !prev);
+                            }}
+                            className={`${
+                                enabled ? "bg-yellow-400" : "bg-gray-400"
+                            } relative inline-flex h-[25px] w-[50px] rounded-full border-2 border-transparent transition-colors ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
+                        >
+                            <span className="sr-only">Use setting</span>
+                            <span
+                                aria-hidden="true"
+                                className={`${
+                                    enabled ? "translate-x-6" : "translate-x-0"
+                                } pointer-events-none inline-block h-[21px] w-[21px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                            />
+                        </Switch>
+                    </div>
+                </div>
             </div>
             {/* 메시지 입력란 */}
             <Textarea
