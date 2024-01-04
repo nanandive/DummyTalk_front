@@ -8,6 +8,7 @@ import {useModal} from "src/components/hooks/use-modal";
 import {useDispatch, useSelector} from "react-redux";
 import {callGetFriendRequest, callGetNickname, callPostApproval, callPostRefusal} from "src/api/MainAPICalls";
 import styles from "src/layouts/LeftSide/left-side-bar.module.css"
+import {cn} from "src/lib/utils";
 
 const LeftSideBar = () => {
     const [serverList, setServerList] = useState([]);
@@ -72,7 +73,7 @@ const LeftSideBar = () => {
     return (
         <div className="w-[60px] min-w-[60px] bg-[#141C26] flex flex-col gap-3 items-center">
             <div
-                onClick={ () => { navigate('/')}}
+                onClick={ () => { window.location.href = '/' }}
                 className="w-full h-[60px] flex items-center justify-center border-b-[1px] border-black cursor-pointer">
                 <img
                     src="image 61.svg"
@@ -94,10 +95,7 @@ const LeftSideBar = () => {
                         onClick={() => handleServerClick(data.id)}
                     >
                         <Button
-                            onClick
-                            className="overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-teal-300 hover:text-[#0B1725]
-                            active:bg-teal-300 active:text-[#0B1725]
-                            focus:bg-teal-300 focus:text-[#0B1725]"
+                            className={cn("overflow-hidden text-lg font-bold border-2 border-teal-300 bg-transparent text-teal-300 hover:bg-teal-300 hover:text-[#0B1725] active:bg-teal-300 active:text-[#0B1725] focus:bg-teal-300 focus:text-[#0B1725]")}
                             size="icon">
                             {data.serverName
                                 ? data.serverName.slice(0, 2)
