@@ -16,14 +16,27 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import axios from "axios";
+import {useMemo, useState} from "react";
 
 const ChannelHeader = ({ server }) => {
-    const { onOpen } = useModal();
+    const { isOpen, onClose, type, data, onOpen } = useModal();
     const accessToken = localStorage.getItem("accessToken");
     const userInfo = decodeJwt(accessToken);
     const ADMIN = server.userId.toString()
 
-    console.log(server);
+    const [resignUser, setReSignUser] = useState('');
+    const userId = userInfo.sub;
+
+    console.log("server ==>", server.id);
+    const handleDelete = async () => {
+        try {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/server/delete?id=${server.id}&userId=${userId}`);
+            onClose();
+        } catch (error) {
+            console.error('서버 삭제 실패:', error);
+        }
+    };
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -72,7 +85,8 @@ const ChannelHeader = ({ server }) => {
                 <DropdownMenuSeparator />
                 {userInfo.sub === ADMIN && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("deleteServer")}
+                        // onClick={() => onOpen("deleteServer")}
+                        onClick={handleDelete}
                         className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
                     >
                         서버 삭제
