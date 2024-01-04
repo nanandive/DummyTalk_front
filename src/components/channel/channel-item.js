@@ -5,13 +5,20 @@ import ActionTooltip from "../action-tooltip";
 import { useModal } from "../hooks/use-modal";
 import { useUrlQuery } from "../hooks/use-url-query";
 import { ChannelType } from "./Channel";
+import { decodeJwt } from "src/lib/tokenUtils";
+import { useMemo } from "react";
 
-const ChannelItem = ({ channel, serverId }) => {
+const ChannelItem = ({ channel, serverId, server }) => {
     const generalList = ["일반", "1:1 음성 번역"];
     const iconMap = {
         [ChannelType.TEXT]: Hash,
         [ChannelType.VOICE]: Mic,
     };
+
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userId = userInfo.sub;
+    const ADMIN = server.userId.toString()
 
     const { onOpen } = useModal();
     const Icon = iconMap[channel.channelType];
@@ -48,7 +55,7 @@ const ChannelItem = ({ channel, serverId }) => {
                 {channel.channelName}
             </p>
 
-            {!generalList.includes(channel.channelName) && (
+            {!(generalList.includes(channel.channelName) || ADMIN !== userId) && (
                 <div className="ml-auto flex items-center gap-x-2">
                     <ActionTooltip label="수정">
                         <Edit
