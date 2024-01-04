@@ -1,8 +1,15 @@
 import axios from "axios";
 import {useMemo, useState} from 'react';
 import {useModal} from "src/components/hooks/use-modal";
-import {Ban} from "lucide-react";
+import {Ban, ChevronDown, LogOut, PlusCircle, Settings, TrashIcon, UserPlus, Users} from "lucide-react";
 import { decodeJwt } from "src/lib/tokenUtils";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "src/components/ui/dropdown-menu";
 
 
 
@@ -61,8 +68,8 @@ function InvitedUserModal() {
     return (
         <div className="modal" style={{...modalStyle}}>
             <div className="modal-content">
-                <div className={"flex flex-col"}>
-                    <button className={"text-teal-300 ml-auto"} onClick={onClose}><Ban /></button>
+                <div>
+                    <button onClick={onClose}><Ban /></button>
 
                     <input type="text" value={userEmail} onChange={(e) => setUserEmail(e.target.value)}
                            placeholder="user Email"/>
@@ -76,6 +83,61 @@ function InvitedUserModal() {
                 </div>
             </div>
 
+
+            {/*<DropdownMenu>*/}
+            {/*    <DropdownMenuContent className="w-56 text-xs font-medium text-neutral-400 space-y-[2px] bg-[#112033]">*/}
+
+            {/*        <DropdownMenuItem>*/}
+            {/*            <button className={"text-teal-300 ml-auto"} onClick={onClose}><Ban /></button>*/}
+            {/*        </DropdownMenuItem>*/}
+
+            {/*        <DropdownMenuItem*/}
+            {/*            className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"*/}
+            {/*        >*/}
+            {/*            <input type="text" value={userEmail} onChange={(e) => setUserEmail(e.target.value)}*/}
+            {/*                   placeholder="user Email"/>*/}
+            {/*        </DropdownMenuItem>*/}
+
+            {/*        */}
+            {/*        <DropdownMenuItem*/}
+            {/*            className="px-3 py-2 text-sm cursor-pointer"*/}
+            {/*        >*/}
+            {/*            <input type="text" value={resignUserEmail} onChange={(e) => setResignUserEmail(e.target.value)}*/}
+            {/*        </DropdownMenuItem>*/}
+
+
+            {/*        {userInfo.sub === ADMIN && (*/}
+            {/*            <DropdownMenuItem*/}
+            {/*                onClick={() =>*/}
+            {/*                    onOpen("createChannel", {serverId: server.id})*/}
+            {/*                }*/}
+            {/*                className="px-3 py-2 text-sm cursor-pointer"*/}
+            {/*            >*/}
+            {/*                채널 생성*/}
+            {/*                <PlusCircle className="h-4 w-4 ml-auto"/>*/}
+            {/*            </DropdownMenuItem>*/}
+            {/*        )}*/}
+            {/*        <DropdownMenuSeparator/>*/}
+            {/*        {userInfo.sub === ADMIN && (*/}
+            {/*            <DropdownMenuItem*/}
+            {/*                onClick={() => onOpen("deleteServer")}*/}
+            {/*                className="text-rose-500 px-3 py-2 text-sm cursor-pointer"*/}
+            {/*            >*/}
+            {/*                서버 삭제*/}
+            {/*                <TrashIcon className="h-4 w-4 ml-auto"/>*/}
+            {/*            </DropdownMenuItem>*/}
+            {/*        )}*/}
+            {/*        {userInfo.sub !== ADMIN && (*/}
+            {/*            <DropdownMenuItem*/}
+            {/*                onClick={() => onOpen("leaveServer")}*/}
+            {/*                className="text-rose-500 px-3 py-2 text-sm cursor-pointer"*/}
+            {/*            >*/}
+            {/*                서버 나가기*/}
+            {/*                <LogOut className="h-4 w-4 ml-auto"/>*/}
+            {/*            </DropdownMenuItem>*/}
+            {/*        )}*/}
+            {/*    </DropdownMenuContent>*/}
+            {/*</DropdownMenu>*/}
 
         </div>
     );
