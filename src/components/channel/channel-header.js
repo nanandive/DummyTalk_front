@@ -58,7 +58,7 @@ const ChannelHeader = ({ server }) => {
                     <UserPlus className="h-4 w-4 ml-auto" />
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => onOpen("settings")}
+                    onClick={() => onOpen("channelSettingModal")}
                     className="px-3 py-2 text-sm cursor-pointer"
                 >
                     서버 설정
