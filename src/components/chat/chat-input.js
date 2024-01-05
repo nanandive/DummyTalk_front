@@ -85,6 +85,7 @@ const ChatInput = ({ userInfo }) => {
     };
 
 
+
     useEffect(() => {
         if (!summary || isSummaryLoading) return;
         summaryData();
@@ -138,6 +139,8 @@ const ChatInput = ({ userInfo }) => {
                             />
                         </Switch>
                     </div>
+                    {/* ... Other component elements ... */}
+
 
                     {/* 채팅 번역 스위치 */}
                     <div className="flex items-center">
