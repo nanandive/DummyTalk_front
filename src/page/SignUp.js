@@ -7,6 +7,7 @@ import GoogleLogin from "../page/GoogleLogin";
 import { useModal } from "src/components/hooks/use-modal";
 import { Button } from "src/components/ui/button";
 import { FindPasswordModal } from "src/components/modals/FindPassword-modal";
+import { Mail, Lock} from "lucide-react";
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -95,68 +96,72 @@ export default function SignUp() {
 
 
   return (
-    <div className={styles.page}>
+      <div className={styles.full}>
+        <div className={styles.page}>
+          <h1 onClick={() => onClickTest()} className={styles.titleWrap}>
+            Login
+          </h1>
 
-      <h1 style={{marginTop:"170px"}} onClick={() => onClickTest()} className={styles.titleWrap}>
-        이메일과 비밀번호를
-        <br />
-        입력해주세요
-      </h1>
+          <div>
+            {/*<div className={styles.inputTitle}>이메일 주소</div>*/}
+            <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
+              <Mail />
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="test@gmail.com"
+                value={email}
+                onChange={handleEmail}
+              />
+            </div>
 
-      <div>
-        <div className={styles.inputTitle}>이메일 주소</div>
-        <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="test@gmail.com"
-            value={email}
-            onChange={handleEmail}
-          />
-        </div>
+            <div className={styles.errorMessageWrap}>
+              {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
+            </div>
 
-        <div className={styles.errorMessageWrap}>
-          {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
-        </div>
-
-        <div className={styles.inputTitle}>
-          비밀번호
-        </div>
-        <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="영문, 숫자, 특수문자 포함 8자 이상"
-            value={pw}
-            onChange={handlePw}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        <div className={styles.errorMessageWrap}>
-          {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
-        </div>
-      </div>
-
-      <div className={styles.submitWrap}>
-        <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
-          확인
-        </button>
-        <button onClick={onClickSignUpButton} className={styles.bottomButton}>
-          회원가입
-        </button>
-        <Button
+            {/*<div className={styles.inputTitle}>비밀번호</div>*/}
+            <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
+              <Lock />
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                value={pw}
+                onChange={handlePw}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <div className={styles.errorMessageWrap}>
+              {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
+            </div>
+          </div>
+          <div
             onClick={() => onOpen("findPassword")}
-            className={styles.bottomButton}
-            type={"button"}
-        >
-          비밀번호 찾기
-        </Button>
-        <div style={{margin:"50px 30px"}}>
-          <GoogleLogin />
+            className={styles.findPassword}
+          >
+            forgot your password?
+          </div>
+          <div>
+            <button onClick={onClickSignUpButton} className={styles.bottomButton}>
+              SingUp
+            </button>
+            <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
+              Login
+            </button>
+            {/*<Button*/}
+            {/*    onClick={() => onOpen("findPassword")}*/}
+            {/*    className={styles.bottomButton}*/}
+            {/*    type={"button"}*/}
+            {/*>*/}
+            {/*  forgot your password*/}
+            {/*</Button>*/}
+            <div className={ styles.googleLogin}>
+              <GoogleLogin />
+            </div>
+          </div>
+          <FindPasswordModal />
+
         </div>
       </div>
-      <FindPasswordModal />
-
-    </div>
   )
 }

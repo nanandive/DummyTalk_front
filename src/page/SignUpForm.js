@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { callPostSignUp, callPostMail, callPostCheck } from '../api/UserAPICalls';
+import { User, Smartphone, Mail, MailCheck, LockKeyhole, Lock, SquareUserRound } from "lucide-react";
 
 import styles from './SignUpForm.module.css'
 
@@ -115,101 +116,121 @@ const SignUpForm = () => {
 
 
   return (
-    <div className={styles.page}>
-        <br></br>
-        <div onClick={onClickTest} className={styles.titleWrap}>
-            <h1>회원가입 양식</h1>
-        </div>
-        <br></br>
-        <div className={styles.contentWrap}>
-
-            <div className={styles.inputTitle}>이름</div>
-            <div className={`${styles.inputWrap}`}>
-                <input className={styles.input}
-                       type="text" value={userName}
-                       onChange={handleNameChange} />
+      <div className={styles.full}>
+        <div className={styles.page}>
+            <div onClick={onClickTest} className={styles.titleWrap}>
+                <h1>Sign Up</h1>
             </div>
+            <div>
 
-            <div className={styles.inputTitle}>닉네임</div>
-            <div className={`${styles.inputWrap}`}>
-                <input className={styles.input}
-                       type="text" value={nickname}
-                       onChange={handleNicknameChange} />
-            </div>
-
-            <div className={styles.inputTitle}>전화번호</div>
+                {/*<div className={styles.inputTitle}>이름</div>*/}
                 <div className={`${styles.inputWrap}`}>
-                <input className={styles.input}
-                       type="text" value={userPhone}
-                       onChange={handleUserPhone} />
-            </div>
-
-            <div className={styles.inputTitle}>이메일</div>
-            <div className={`${styles.inputWrap}`}>
-                <input className={styles.input}
-                   type="email" value={userEmail}
-                   onChange={handleEmailChange} />
-                <button onClick={onClickMail} className={styles.submit}>전송</button>
-            </div>
-
-
-            <div className={styles.inputTitle}>이메일 인증</div>
-            <div className={`${styles.inputWrap}`}>
-                <input className={styles.input}
-                   type="text" value={userSubmit}
-                   onChange={handleSubmitChange} />
-                <button onClick={onClickCheck} className={styles.submit}>확인</button>
-            </div>
-            {data &&
-                <div style={ data.status == 200 ? {color:"green"}: {color:"red"} }>
-                    {data.data}
+                    <User />
+                    <input className={styles.input}
+                           type="text" value={userName}
+                           onChange={handleNameChange}
+                           placeholder={"Your Name"}
+                    />
                 </div>
-            }
-            <div className={styles.inputTitle}>비밀번호</div>
-            <div className={`${styles.inputWrap}`}>
-                <input
-                className={styles.input}
-                type="password"
-                value={password}
-                onChange={handlePasswordChange}
-                onKeyDown={handleKeyDown}
-                />
-            </div>
-            <div className={styles.inputTitle}>비밀번호 확인</div>
-            <div className={`${styles.inputWrap}`}>
-                <input
-                    className={styles.input}
-                    type="password"
-                    value={checkPassword}
-                    onChange={handleCheckPasswordChange}
-                    onKeyDown={handleKeyDown}
-                />
-            </div>
-            <div style={ checkPassword == '' ? {display:"none"}  : {display:"block"}}>
-                {checkPassword && checkPassword== password ?
-                    <div style={ {color:"green"} }>
-                        일치합니다
-                    </div>:
-                    <div style={ {color:"red"} }>
-                        불일치합니다.
+
+                {/*<div className={styles.inputTitle}>닉네임</div>*/}
+                <div className={`${styles.inputWrap}`}>
+                    <SquareUserRound />
+                    <input className={styles.input}
+                           type="text" value={nickname}
+                           onChange={handleNicknameChange}
+                           placeholder={"Nickname"}
+                    />
+                </div>
+
+                {/*<div className={styles.inputTitle}>전화번호</div>*/}
+                    <div className={`${styles.inputWrap}`}>
+                    <Smartphone />
+                    <input className={styles.input}
+                           type="text" value={userPhone}
+                           onChange={handleUserPhone}
+                           placeholder={"Your PhoneNumber"}
+                    />
+                </div>
+
+                {/*<div className={styles.inputTitle}>이메일</div>*/}
+                <div className={`${styles.inputWrap}`}>
+                    <Mail />
+                    <input className={styles.input}
+                       type="email" value={userEmail}
+                       onChange={handleEmailChange}
+                           placeholder={"Your Email"}
+                    />
+                    <button onClick={onClickMail} className={styles.submit}>Send</button>
+                </div>
+
+
+                {/*<div className={styles.inputTitle}>이메일 인증</div>*/}
+                <div className={`${styles.inputWrap}`}>
+                    <MailCheck />
+                    <input className={styles.input}
+                       type="text" value={userSubmit}
+                       onChange={handleSubmitChange}
+                           placeholder={"Email Check"}
+                    />
+                    <button onClick={onClickCheck} className={styles.submit}>Check</button>
+                </div>
+                {data &&
+                    <div style={ data.status == 200 ? {color:"green"}: {color:"red"} }>
+                        {data.data}
                     </div>
                 }
+                {/*<div className={styles.inputTitle}>비밀번호</div>*/}
+
+                <div className={`${styles.inputWrap}`}>
+                    <Lock />
+                    <input
+                    className={styles.input}
+                    type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder={"Password"}
+                    />
+                </div>
+                {/*<div className={styles.inputTitle}>비밀번호 확인</div>*/}
+                <div className={`${styles.inputWrap}`}>
+                    <LockKeyhole />
+                    <input
+                        className={styles.input}
+                        type="password"
+                        value={checkPassword}
+                        onChange={handleCheckPasswordChange}
+                        onKeyDown={handleKeyDown}
+                        placeholder={"Password Check"}
+                    />
+                </div>
+                <div style={ checkPassword == '' ? {display:"none"}  : {display:"block"}}>
+                    {checkPassword && checkPassword== password ?
+                        <div style={ {color:"green"} }>
+                            일치합니다
+                        </div>:
+                        <div style={ {color:"red"} }>
+                            불일치합니다.
+                        </div>
+                    }
+                </div>
+                <div className={styles.inputTitle}></div>
+                <select className={styles.input} onChange={handleLanguageChange}>
+                    <option className={styles.input} value="국가선택" disabled selected hidden>
+                        language
+                    </option>
+                    <option className={styles.input} value="한국어">한국어</option>
+                    <option className={styles.input} value="English">English</option>
+                </select>
             </div>
-            <div className={styles.inputTitle}>국가선택</div>
-            <select className={styles.input} onChange={handleLanguageChange}>
-                <option value="국가선택" disabled selected hidden>
-                    언어 선택
-                </option>
-                <option value="한국어">한국어</option>
-                <option value="English">English</option>
-            </select>
+          <div>
+            <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !check || data.data < 1 || data.status == 500 || !language} className={styles.bottomButton}>
+                Sign up
+            </button>
+          </div>
         </div>
-      <div>
-        <button onClick={() => onClickSignUp()} disabled={!userName || !userPhone || !userEmail || !check || data.data < 1 || data.status == 500 || !language} className={styles.bottomButton}>
-          가입하기
-        </button>
       </div>
-    </div>
   );
 };
 

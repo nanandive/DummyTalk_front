@@ -5,19 +5,31 @@ import ActionTooltip from "../action-tooltip";
 import { useModal } from "../hooks/use-modal";
 import { useUrlQuery } from "../hooks/use-url-query";
 import { ChannelType } from "./Channel";
+import { decodeJwt } from "src/lib/tokenUtils";
+import {useMemo, useState} from "react";
+import axios from "axios";
 
-const ChannelItem = ({ channel, serverId }) => {
+const ChannelItem = ({ channel, serverId, server }) => {
     const generalList = ["일반", "1:1 음성 번역"];
     const iconMap = {
         [ChannelType.TEXT]: Hash,
         [ChannelType.VOICE]: Mic,
     };
 
+    const accessToken = localStorage.getItem("accessToken");
+    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+    const userId = userInfo.sub;
+    const ADMIN = server.userId.toString()
+
     const { onOpen } = useModal();
     const Icon = iconMap[channel.channelType];
     const query = useUrlQuery();
     const channelId = query.get("channel");
     const navigate = useNavigate()
+    const [channels, setChannels] = useState([]);
+
+    const currentChannel = useMemo(() => channels.find(channel => channel.channelId === channelId), [channels, channelId]);
+
 
     const onClick = () => {
         navigate(`/main?server=${serverId}&channel=${channel.channelId}`)
@@ -26,6 +38,21 @@ const ChannelItem = ({ channel, serverId }) => {
     const onAction = (action) => (e) => {
         e.stopPropagation();
         onOpen(action, { channel, serverId });
+    };
+
+
+    /* 채널 삭제 */
+    const channelDelete = async () => {
+        if (channelId) {
+            try {
+                const response = await axios.delete(`${process.env.REACT_APP_API_URL}/server/${serverId}/channel/${channelId}/delete`);
+                setChannels(channels.filter(channel => channel.channelId !== channelId));
+            } catch (error) {
+                console.error("Error deleting channel:", error);
+            }
+        } else {
+            console.log("No channel selected for deletion.");
+        }
     };
 
     return (
@@ -48,17 +75,17 @@ const ChannelItem = ({ channel, serverId }) => {
                 {channel.channelName}
             </p>
 
-            {!generalList.includes(channel.channelName) && (
+            {!(generalList.includes(channel.channelName) || ADMIN !== userId) && (
                 <div className="ml-auto flex items-center gap-x-2">
                     <ActionTooltip label="수정">
                         <Edit
-                            onClick={onAction("editChannel")}
+                            onClick={() => onOpen("channelSettingModal")}
                             className="hidden group-hover:block w-4 h-4 text-zinc-400 hover:text-zinc-300 transition"
                         />
                     </ActionTooltip>
                     <ActionTooltip label="삭제">
                         <Trash
-                            onClick={onAction("deleteChannel")}
+                            onClick={channelDelete}
                             className="hidden group-hover:block w-4 h-4 text-zinc-400 hover:text-zinc-300 transition"
                         />
                     </ActionTooltip>

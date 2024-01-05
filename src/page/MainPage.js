@@ -1,5 +1,5 @@
 import LeftSideBar from "src/layouts/LeftSide/left-side-bar";
-import LeftSide from "src/layouts/LeftSide/leftSide";
+import ServerSideBar from "src/layouts/LeftSide/server-side-bar";
 import Chat from "../layouts/chat/Chat";
 
 function MainPage() {
@@ -7,8 +7,7 @@ function MainPage() {
         <>
             <div className="flex h-full bg-[#0b1725]">
                 <LeftSideBar />
-
-                <LeftSide />
+                <ServerSideBar />
                 <Chat />
             </div>
         </>

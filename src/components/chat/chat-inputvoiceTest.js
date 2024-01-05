@@ -155,6 +155,7 @@ const ChatVoiceInputTest = () => {
     };
 
     const handleNewIceCandidate = (incoming) => {
+        console.log("incoming: ", incoming);
         const candidate = new RTCIceCandidate(incoming);
 
         peerRef.current.addIceCandidate(candidate).catch((e) => console.log(e));
@@ -196,6 +197,7 @@ const ChatVoiceInputTest = () => {
             handleNewIceCandidate(message.data.candidate);
         }
     };
+    
     useEffect(() => {
         if (!isConnected) return;
         requestMediaStream();
@@ -213,9 +215,10 @@ const ChatVoiceInputTest = () => {
 
         return () => {
             subscription.unsubscribe();
-            if (peerConnect) {
-                peerConnect.close();
-                setPeerConnect(null);
+
+            if (peerRef.current) {
+                peerRef.current.close()
+                peerRef.current = null;
             }
 
             navigator.mediaDevices.ondevicechange = null; // 장치 변경 감지 해제
