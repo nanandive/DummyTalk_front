@@ -55,11 +55,17 @@ const TextSearchComponent = () => {
                     <Search/>
                 </ Button>
             </div>
-            <div className="text-amber-400 border-amber-200 border-2  flex flex-col items-end w-full ">
-                { updateData && updateData.map((chat) => (
-                    <div className="text-amber-400 border-amber-200 border-2  flex flex-col items-end w-full ">
-                        <div className="border-amber-200 text-amber-50 w-full">
-                            {chat.message}
+            <div className="text-amber-400 px-2 py-3 flex flex-col items-end w-full ">
+                {updateData && updateData.map((chat) => (
+                    <div className="rounded-[3px] flex flex-col w-full px-3 py-2 bg-black/5 mt-1 transition hover:bg-gray-200 hover:bg-opacity-10">
+                        <div className="flex items-end gap-x-2 text-sm text-[#B5BAC1] w-full">
+                            <div className={"flex items-center"}>
+                                <span className="font-semibold mr-2 ">{chat.nickname}</span>
+                            </div>
+                            <span className="text-xs">{chat.createdAt}</span>
+                        </div>
+                        <div className="text-[#DBDEE1] py-1 text-sm font-semibold border-amber-200 w-full">
+                            <span>{chat.message}</span>
                         </div>
                     </div>
                 ))}
