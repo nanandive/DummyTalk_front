@@ -15,12 +15,15 @@ function UserSetting() {
 
     return (
         <div className="mt-auto h-[60px] w-full bg-[#141b24] flex items-center pl-2 gap-2">
-            <div className="transition cursor-pointer hover:drop-shadow-md">
+            <div
+                className="transition cursor-pointer hover:drop-shadow-md"
+                onClick={() => onOpen("members")}
+            >
                 <UserAvatar src="img/1.jpeg" />
             </div>
             <div className="flex flex-col w-full">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center">
+                    <div className="flex items-center" onClick={() => onOpen("members")} >
                         <p className="text-sm font-semibold cursor-pointer text-zinc-400 hover:underline">
                             {nickname}
                         </p>
