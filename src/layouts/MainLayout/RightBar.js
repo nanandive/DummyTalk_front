@@ -103,7 +103,7 @@ const RightBar = ({isOpen}) => {
                     요약
                 </label>
             </div>
-            <div className="w-full flex-grow mt-5 overflow-y-auto scrollbar-hidden relative">
+            <div className="w-full flex-grow mt-5">
                 {components[chose]}
             </div>
             <div ref={bottomRef}></div>
