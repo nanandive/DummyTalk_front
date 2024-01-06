@@ -12,7 +12,7 @@ const SummaryComponent = () => {
     const fetchSummaryFiles = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_FASTAPI_URL}/${channelId}/summaryFile`
+                `${process.env.REACT_APP_FASTAPI_URL}/api/summary/${channelId}/summaryFile`
             );
             const summaryData = response.data;
             console.error("요약 파일 목록 불러오기 성공: ", summaryData);
