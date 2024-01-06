@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import uuid from "react-uuid";
 import { useModal } from "src/components/hooks/use-modal";
+import { useServerData } from "../hooks/use-server-data";
 import { Button } from "../ui/button";
 import {
     Dialog,
@@ -13,7 +13,6 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import "./css/ChannelModal.css";
-import { useServerData } from "../hooks/use-server-data";
 
 const CreateChannelModal = () => {
     const navigate = useNavigate();
@@ -40,8 +39,6 @@ const CreateChannelModal = () => {
             updateChannelListData(response.data)
             setChannelName('')
             onClose();
-
-            navigate(`/main?server=${serverId}`);
         } catch (error) {
             console.log("채널 생성 실패");
         } finally {
