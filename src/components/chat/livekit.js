@@ -1,11 +1,12 @@
 import {
-    LiveKitRoom,
-    AudioConference 
+    ControlBar,
+    LiveKitRoom, RoomAudioRenderer
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { decodeJwt } from "src/lib/tokenUtils";
+import CustomAudioConference from "../AudioRecorder/custom-audio-conference";
 import { useUrlQuery } from "../hooks/use-url-query";
 
 const LiveKit = () => {
@@ -35,16 +36,16 @@ const LiveKit = () => {
     return (
         <LiveKitRoom
             video={false}
-            audio={true}
+            audio={{echoCancellation:true}}
             token={token}
             serverUrl={serverUrl}
             connect={true}
             // Use the default LiveKit theme for nice styles.
-            ondis
             data-lk-theme="default"
-            style={{ height: "100vh" }}
         >
-            <AudioConference  />
+            <CustomAudioConference  />
+            {/* <RoomAudioRenderer /> */}
+            {/* <ControlBar /> */}
         </LiveKitRoom>
     );
 };
