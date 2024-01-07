@@ -8,6 +8,22 @@ import {useSocket} from "src/components/hooks/use-socket";
 const RightBar = () => {
     const [activeTab, setActiveTab] = useState('image');
 
+    const tabStyle = {
+        borderColor: '#52CBB6',
+        borderBottom: '2px solid #52CBB6',
+        color: 'white',
+        padding: '5px 10px',
+        cursor: 'pointer',
+        backgroundColor: 'transparent',
+        border: 'none',
+        outline: 'none'
+    };
+
+    const activeTabStyle = {
+        ...tabStyle,
+        borderBottom: '4px solid #52CBB6'
+    };
+
     const TabContent = () => {
         switch (activeTab) {
             case 'image':
@@ -27,13 +43,13 @@ const RightBar = () => {
                 <div>보관함</div>
             </div>
             <div className="flex justify-center items-center mt-2">
-                <button className={`mr-4 ${activeTab === 'image' ? 'text-white' : ''}`} onClick={() => setActiveTab('image')}>
+                <button style={activeTab === 'image' ? activeTabStyle : tabStyle} onClick={() => setActiveTab('image')}>
                     이미지
                 </button>
-                <button className={`mr-4 ${activeTab === 'text' ? 'text-white' : ''}`} onClick={() => setActiveTab('text')}>
+                <button style={activeTab === 'text' ? activeTabStyle : tabStyle} onClick={() => setActiveTab('text')}>
                     텍스트
                 </button>
-                <button className={`mr-4 ${activeTab === 'summary' ? 'text-white' : ''}`} onClick={() => setActiveTab('summary')}>
+                <button style={activeTab === 'summary' ? activeTabStyle : tabStyle} onClick={() => setActiveTab('summary')}>
                     요약
                 </button>
             </div>
