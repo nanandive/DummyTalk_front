@@ -8,7 +8,7 @@ import ChatMessages from "src/components/chat/chat-messages";
 import { useUrlQuery } from "src/components/hooks/use-url-query";
 import RightBar from "../MainLayout/RightBar";
 import { decodeJwt } from "src/lib/tokenUtils";
-import LiveKit from "src/components/chat/livekit-test";
+import LiveKit from "src/components/chat/livekit";
 
 function Chat() {
     const [isOpen, setOpen] = useState(false);
