@@ -220,8 +220,9 @@ const SignUpForm = () => {
                     <option className={styles.input} value="국가선택" disabled selected hidden>
                         language
                     </option>
-                    <option className={styles.input} value="한국어">한국어</option>
-                    <option className={styles.input} value="English">English</option>
+                    <option className={styles.input} value="kor_Hang">Korea</option>
+                    <option className={styles.input} value="eng_Latn">English</option>
+                    <option className={styles.input} value="jpn_Jpan">Japan</option>
                 </select>
             </div>
           <div>
