@@ -73,6 +73,7 @@ const ImageSendModal = () => {
                     response.data.data.map((chat) => (
                         socket.send(`/app/${channelId}/message`
                             , JSON.stringify({
+                                sender: sub,
                                 chatId: chat.chatId,
                                 channelId: channelId,
                                 nickname: chat.nickname,
@@ -152,7 +153,8 @@ const ImageSendModal = () => {
                             <Loader2 />
                         </svg>
                         <a>Processing...</a>
-                    </button>}
+                    </button>
+                }
             </div>
         </div>
     );
