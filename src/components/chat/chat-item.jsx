@@ -111,7 +111,7 @@ const ChatItem = ({chat, channel, name}) => {
                         { chat.type === "IMAGE" && (
                             <div>
                                 { chosen ? (
-                                    <p>"메세지가 삭제되었습니다."</p>
+                                    <p>메세지가 삭제되었습니다.</p>
                                 ) : (
                                     <a
                                         target="_blank"

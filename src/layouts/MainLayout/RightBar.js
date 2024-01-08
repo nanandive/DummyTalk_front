@@ -8,6 +8,22 @@ import {useSocket} from "src/components/hooks/use-socket";
 const RightBar = () => {
     const [activeTab, setActiveTab] = useState('image');
 
+    const tabStyle = {
+        borderColor: '#52CBB6',
+        borderBottom: '2px solid #52CBB6',
+        color: 'white',
+        padding: '5px 10px',
+        cursor: 'pointer',
+        backgroundColor: 'transparent',
+        border: 'none',
+        outline: 'none'
+    };
+
+    const activeTabStyle = {
+        ...tabStyle,
+        borderBottom: '4px solid #52CBB6'
+    };
+
 
     const TabContent = () => {
         switch (activeTab) {
