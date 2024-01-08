@@ -93,28 +93,30 @@ const CellComponent = () => {
 
     return (
         <>
-            <div className="relative h-10 w-full">
+            <div className="relative h-10 w-full mb-4">
                 <input
                     type="text"
                     value={searchQuery}
                     onKeyDown={enter_event}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="검색어를 입력하세요."
-                    className="border-2 border-gray-300 rounded-md p-2 mb-10 mx-5 w-[90%] bg-right-8 bg-center bg-no-repeat bg-contain"
+                    className="text-amber-50 border-2 border-[#8F969F] rounded-md p-2 mb-10 mx-5 w-[90%] bg-[#1C2835] bg-opacity-[10] bg-right-8 bg-center bg-no-repeat bg-contain"
                     ref={topRef}
                 />
                 <Button
-                    className="border-none absolute right-[5%] bottom-[10%] top-[5%]"
+                    className="text-[#8F969F] border-none absolute right-[5%] bottom-[10%] top-[5%]"
                     onClick={imageSearchRequest}
                 >
                     <Search/>
                 </ Button>
             </div>
-            <div className="grid grid-cols-3 gap-5">
+            {/*<div*/}
+            {/*    className="overflow-y-auto scroll-smooth h-[670px] pt-6 text-amber-400 px-2 py-3 grid grid-cols-3 gap-5 w-full">*/}
+                <div className="grid grid-cols-3 gap-5 pt-6 px-2">
                 {data && data.map((img, index) => (
                     <div key={index} className="relative aspect-w-3 aspect-h-4"
-                         onClick={(e) => handleDownload(!img.imagePath ? img : null)}>
-
+                         onClick={(e) => handleDownload(!img.imagePath ? img : null)}
+                    >
                         <img
                             src={img.imagePath || displayImage(img)}
                             alt={`Image ${index}`}

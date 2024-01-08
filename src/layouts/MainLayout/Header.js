@@ -19,7 +19,6 @@ function Header() {
     const imageUrl = "./test.png";
     const [serverList, setServerList] = useState([]);
     const [onRequest, setOnRequest] = useState(false);
-    const [click, setClick] = useState(false);
     const { state } = useLocation()
     const dispatch =  useDispatch()
 
@@ -62,7 +61,7 @@ function Header() {
     useEffect(() => {
         dispatch( callGetNickname() )
         dispatch( callGetFriendRequest() )
-    }, [click]);
+    }, []);
 
   const [page, setPage] = useState(0);
   const validServerList = Array.isArray(serverList) ? serverList : [];
@@ -81,9 +80,7 @@ function Header() {
         dispatch(callPostApproval(friendId))
     }
 
-    const onClick = () =>{
-        setClick(prev => !prev)
-    }
+
 
     const onClickRefusal = (friendId) =>{
         dispatch(callPostRefusal(friendId))
