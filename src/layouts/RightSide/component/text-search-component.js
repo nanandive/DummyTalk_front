@@ -32,12 +32,13 @@ const TextSearchComponent = () => {
 
             if (response.status === 200) {
                 setUpdateData(response.data.chat); // 데이터 설정
+                setError(false);
                 setSearchQuery(""); // 검색창 초기화
             }
 
         } catch (error) {
             console.error("Error in fetching data", error);
-            setError(error);
+            setError(true);
         }
         setEnabled(false);
     }
@@ -48,6 +49,8 @@ const TextSearchComponent = () => {
             textSearchRequest();
         }
     };
+
+    console.log("error : ",error)
 
     return (
         <>
@@ -78,8 +81,8 @@ const TextSearchComponent = () => {
                 }
             </div>
             <div
-                className="overflow-y-auto scroll-smooth h-[670px] pt-6 text-amber-400 px-4 py-3 flex flex-col items-end w-full">
-                { updateData && updateData.map((chat, index) => (
+                className="overflow-y-auto scroll-smooth h-[670px] pt-6 text-[#DBDEE1] px-4 py-3 flex flex-col items-end w-full">
+                { !!updateData.length && updateData.map((chat, index) => (
                     <div
                         key={index}
                         className="mb-1 rounded-[3px] bg-[#b5bac1] bg-opacity-10 ounded-[3px] flex flex-col w-full  px-4 py-2 bg-black/5 mt-1 transition hover:bg-gray-200 hover:bg-opacity-10">
@@ -89,12 +92,12 @@ const TextSearchComponent = () => {
                             </div>
                             <span className="text-xs">{chat.createdAt}</span>
                         </div>
-                        <div className="text-[#DBDEE1] py-1 text-sm font-semibold border-amber-200 w-full">
+                        <div className="text-[#DBDEE1] py-1 text-sm font-semibold w-full">
                             <span>{chat.message}</span>
                         </div>
                     </div>
                 )) }
-                { error && <div>검색 결과가 없습니다.</div> }
+                { !updateData.length && <div>검색 결과가 없습니다.</div> }
             </div>
         </>
     )
