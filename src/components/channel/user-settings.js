@@ -11,21 +11,20 @@ import "./css/Settings.css";
 
 function UserSetting() {
     const { onOpen } = useModal();
-    const { nickname } = useSelector((state) => state.userReducer);
-
+    const { nickname, userImgPath } = useSelector((state) => state.userReducer);
     return (
         <div className="mt-auto h-[60px] w-full bg-[#141b24] flex items-center pl-2 gap-2">
             <div
                 className="transition cursor-pointer hover:drop-shadow-md"
                 onClick={() => onOpen("members")}
             >
-                <UserAvatar src="img/1.jpeg" />
+                <UserAvatar src={ userImgPath } />
             </div>
             <div className="flex flex-col w-full">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center" onClick={() => onOpen("members")} >
                         <p className="text-sm font-semibold cursor-pointer text-zinc-400 hover:underline">
-                            {nickname}
+                            { nickname }
                         </p>
                     </div>
                     <Mic className="text-teal-400 hover:text-teal-300" />
