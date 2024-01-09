@@ -8,6 +8,7 @@ import "../../components/modals/VideoModal.css";
 import { useModal } from "../hooks/use-modal"; // Update the path
 import { UserAvatar } from "../user-avatar";
 import "./css/Settings.css";
+import {User} from "lucide-react";
 
 function UserSetting() {
     const { onOpen } = useModal();
@@ -18,7 +19,11 @@ function UserSetting() {
                 className="transition cursor-pointer hover:drop-shadow-md"
                 onClick={() => onOpen("members")}
             >
-                <UserAvatar src={ userImgPath } />
+                { userImgPath ?
+                    <UserAvatar src={ userImgPath } />
+                    :
+                    <User className={"text-teal-300 border-none"}/>
+                }
             </div>
             <div className="flex flex-col w-full">
                 <div className="flex items-center justify-between">
