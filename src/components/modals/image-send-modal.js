@@ -49,15 +49,16 @@ const ImageSendModal = () => {
     };
 
     const onSubmit = async (enabled) => {
-        try {
-            const formData = new FormData();
-            formData.append("userId", sub);
-            formData.append("nickname", nickname);
-            formData.append("channelId", channelId);
 
-            if (fileInput.current && fileInput.current.files) {
+        try {
+
+            if (fileInput.current && fileInput.current.files.length > 0) {
                 const files = fileInput.current.files;
 
+                const formData = new FormData();
+                formData.append("userId", sub);
+                formData.append("nickname", nickname);
+                formData.append("channelId", channelId);
 
                 for (let i = 0; i < files.length; i++) {
                     formData.append("fileInfo", files[i]);
