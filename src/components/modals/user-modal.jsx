@@ -147,22 +147,22 @@ function UserModal() {
                                     }
                                 </div>
                                 <select
-                                    placeholder={"국가선택"}
+                                    placeholder={"언어선택"}
                                     className="pl-1 border border-[#F1F1F1] w-[250px] h-[30px]  rounded-md"
                                     onChange={ onChangeLanguage }
                                     className="bg-[#1C2835] border-2 border-zinc-400 rounded-lg p-2 w-full"
                                 >
                                     <option
-                                        value="국가선택"
+                                        value="언어선택"
                                         disabled
                                         selected
                                         hidden
                                     >
-                                        국가선택
+                                        언어선택
                                     </option>
-                                    <option value="kor_Hang">Korea</option>
+                                    <option value="kor_Hang">Korean</option>
                                     <option value="eng_Latn">English</option>
-                                    <option value="jpn_Jpan">Japan</option>
+                                    <option value="jpn_Jpan">Japanese</option>
                                 </select>
                             </div>
                             {/* 이미지 등록 및 확인 버튼*/}

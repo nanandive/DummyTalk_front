@@ -217,12 +217,12 @@ const SignUpForm = () => {
                 </div>
                 <div className={styles.inputTitle}></div>
                 <select className={styles.input} onChange={handleLanguageChange}>
-                    <option className={styles.input} value="국가선택" disabled selected hidden>
+                    <option className={styles.input} value="언어선택" disabled selected hidden>
                         language
                     </option>
-                    <option className={styles.input} value="kor_Hang">Korea</option>
+                    <option className={styles.input} value="kor_Hang">Korean</option>
                     <option className={styles.input} value="eng_Latn">English</option>
-                    <option className={styles.input} value="jpn_Jpan">Japan</option>
+                    <option className={styles.input} value="jpn_Jpan">Japanese</option>
                 </select>
             </div>
           <div>
