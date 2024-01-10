@@ -121,7 +121,7 @@ const ImageSendModal = () => {
                 </DialogHeader>
                 <label
                     htmlFor="image_files"
-                    className="text-center my-5"
+                    className="text-center my-5 hover:text-teal-300"
                 >
                     파일 선택
                 </label>
@@ -151,7 +151,7 @@ const ImageSendModal = () => {
                     <button
                         type="submit"
                         onClick={() => onSubmit(true)}
-                        className="w-full h-auto p-1 my-2 bg-green-500 text-white border-none rounded-md cursor-pointer"
+                        className="w-full h-auto p-1 my-2 bg-[#204771] text-white border-none rounded-md cursor-pointer"
                     > 전송 </button>
                     :
                     <button type="button" className="pl-[180px] rounded-[3px] flex flex-row items-center w-full h-8 bg-indigo-500 hover:" disabled>
