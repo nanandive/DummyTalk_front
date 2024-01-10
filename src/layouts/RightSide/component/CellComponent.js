@@ -111,17 +111,20 @@ const CellComponent = () => {
                 </ Button>
             </div>
             <div
-                className="overflow-y-auto scroll-smooth h-[660px] pt-6 text-amber-400 px-2 py-3 grid grid-cols-3 gap-5 w-full">
+                className="overflow-y-auto scroll-smooth pl-3 h-[670px] pt-6 text-amber-400 py-3 grid grid-cols-3 gap-5 w-full">
                 {data && data.map((img, index) => (
-                    <div key={index} className="aspect-w-3 aspect-h-4"
-                         onClick={(e) => handleDownload(!img.imagePath ? img : null)}
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative aspect-square rounded-md mt-2 overflow-hidden flex items-center bg-secondary h-28 w-28"
+                        onClick={(e) => handleDownload(!img.imagePath ? img : null)}
                     >
                         <img
                             src={img.imagePath || displayImage(img)}
                             alt={`Image ${index}`}
-                            className="w-full h-full object-cover object-center rounded-md"
+                            className="w-full h-full object-cover"
                         />
-                    </div>
+                    </a>
                 ))}
             </div>
         </>
