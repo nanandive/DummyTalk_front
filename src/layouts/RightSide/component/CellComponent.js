@@ -75,7 +75,7 @@ const CellComponent = () => {
             const response = await axios.get(
                 `http://localhost:8000/api/image/search/${channelId}/${searchQuery}`// FastAPI 엔드포인트로 변경
             );
-            console.log("Response from FastAPI: ", response);
+            console.log("Response from FastAPI:   ", response);
             if (response.status === 200) {
                 setUpdateData(response.data.similar_images); // 데이터 설정
                 setSearchQuery(""); // 검색창 초기화
