@@ -111,7 +111,7 @@ const CellComponent = () => {
                 </ Button>
             </div>
             <div
-                className="overflow-y-auto scroll-smooth h-[570px] pt-6 text-amber-400 px-2 py-3 grid grid-cols-3 gap-5 w-full">
+                className="overflow-y-auto scroll-smooth h-[660px] pt-6 text-amber-400 px-2 py-3 grid grid-cols-3 gap-5 w-full">
                 {data && data.map((img, index) => (
                     <div key={index} className="aspect-w-3 aspect-h-4"
                          onClick={(e) => handleDownload(!img.imagePath ? img : null)}
