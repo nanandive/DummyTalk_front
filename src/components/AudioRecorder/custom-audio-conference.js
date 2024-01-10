@@ -1,62 +1,87 @@
 import {
-	AudioTrack,
-	ControlBar,
-	LayoutContextProvider,
-	useTracks
+    AudioTrack,
+    AudioVisualizer,
+    ControlBar,
+    LayoutContextProvider,
+    useTracks,
 } from "@livekit/components-react";
 import { RemoteTrackPublication, Track } from "livekit-client";
-import { useEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import AudioRecorderTest from "./AudioRecorderTest";
 
 const CustomAudioConference = ({ ...props }) => {
-  const tracks = useTracks(
-    [
-      Track.Source.Microphone,
-      Track.Source.ScreenShareAudio,
-      Track.Source.Unknown,
-    ],
-    {
-      updateOnlyOn: [],
-      onlySubscribed: false,
-    }
-  ).filter((ref) => {
-    console.log(ref.participant.isLocal);
-    return (
-      !ref.participant.isLocal && ref.publication.kind === Track.Kind.Audio
+    const [mediaStream, setMediaStream] = useState(null);
+    const tracks = useTracks(
+        [
+            Track.Source.Microphone,
+            Track.Source.ScreenShareAudio,
+            Track.Source.Unknown,
+        ],
+        {
+            updateOnlyOn: [],
+            onlySubscribed: false,
+        }
     );
-  });
 
-  useEffect(() => {
-    for (const track of tracks) {
-      if (track.publication instanceof RemoteTrackPublication)
-        track.publication.setSubscribed(true);
-    }
-  }, [tracks]);
+    useLayoutEffect(() => {
+        if (mediaStream) return;
 
-  // TODO: Layout 수정
-  return (
-    <LayoutContextProvider>
-      <div className="lk-audio-conference" {...props}>
-        <div className="lk-audio-conference-stage">
-          {tracks?.map((trackRef) => (
-            <>
-              <AudioTrack trackRef={trackRef} />
-              <AudioRecorderTest stream={trackRef.publication.track?.mediaStream} />
-            </>
-          ))}
-        </div>
-        <ControlBar
-          controls={{
-            microphone: true,
-            screenShare: false,
-            camera: false,
-            chat: false,
-            leave: false,
-          }}
-        />
-      </div>
-    </LayoutContextProvider>
-  );
+        for (const track of tracks) {
+            if (track.publication instanceof RemoteTrackPublication) {
+                track.publication.setSubscribed(true);
+                if (track.publication.audioTrack?.mediaStreamTrack) {
+                    const mediaStreamTrack =
+                        track.publication.audioTrack?.mediaStreamTrack;
+                    const newMediaStream = new MediaStream([mediaStreamTrack]);
+                    setMediaStream(newMediaStream);
+                }
+                // MediaStreamTrack을 AudioContext에 연결
+                // setMediaStream(newMediaStream);
+            }
+        }
+    }, [tracks]);
+
+    console.log(mediaStream);
+    // TODO: Layout 수정
+    return (
+        <LayoutContextProvider>
+            <div className="flex flex-col h-full">
+                <div className="flex justify-center">
+                    <ControlBar
+                        variation={"minimal"}
+                        controls={{
+                            microphone: true,
+                            screenShare: false,
+                            camera: false,
+                            chat: false,
+                            leave: false,
+                        }}
+                    />
+                    {mediaStream && <AudioRecorderTest stream={mediaStream} />}
+                </div>
+
+                <div
+                    className="lk-audio-conference"
+                    {...props}
+                >
+                    <div className="grid w-full h-full grid-cols-2 gap-3 p-3">
+                        {tracks?.map((trackRef) => (
+                            <>
+                                <AudioTrack
+                                    trackRef={trackRef}
+                                    volume={0}
+                                />
+                                <div className="flex flex-col items-center justify-center w-full h-1/2">
+                                    <AudioVisualizer trackRef={trackRef} />
+                                    <span>{trackRef.participant.name}</span>
+                                </div>
+                            </>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </LayoutContextProvider>
+    );
 };
 
 export default CustomAudioConference;
