@@ -1,14 +1,21 @@
-import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
 import { callPotLogin } from '../api/UserAPICalls';
-import styles from './SignUp.module.css'; // Import your CSS module
+import styles from './SignUp.module.css';                 // Import your CSS module
+import GoogleLogin from "../page/GoogleLogin";
+import { useModal } from "src/components/hooks/use-modal";
+import { Button } from "src/components/ui/button";
+import { FindPasswordModal } from "src/components/modals/FindPassword-modal";
+import { Mail, Lock} from "lucide-react";
+import { jwtDecode } from 'jwt-decode';
+
 
 export default function SignUp() {
 
+
   const accessToken = window.localStorage.getItem('accessToken');
-  const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+  // const decodedToken = accessToken ? jwtDecode(accessToken) : null;
 
   const navigate = useNavigate(); // Initialize navigate for navigation
 
@@ -19,6 +26,7 @@ export default function SignUp() {
   const [notAllow, setNotAllow] = useState(true);
   const dispatch = useDispatch();
 
+  const { onOpen } = useModal();
 
   const user = {
     userEmail: email,
@@ -69,10 +77,7 @@ export default function SignUp() {
 
 
   const onClickTest = () =>{
-
-    console.log(new Date().getTime())
-    console.log(decodedToken.exp* 1000)
-
+    console.log("haha")
   }
 
   if(accessToken){
@@ -89,55 +94,74 @@ export default function SignUp() {
     }
   }
 
+
   return (
-    <div className={styles.page}>
-      <div onClick={() => onClickTest()} className={styles.titleWrap}>
-        이메일과 비밀번호를
-        <br />
-        입력해주세요
-      </div>
+      <div className={styles.full}>
+        <div className={styles.page}>
+          <h1 onClick={() => onClickTest()} className={styles.titleWrap}>
+            Login
+          </h1>
 
-      <div className={styles.contentWrap}>
-        <div className={styles.inputTitle}>이메일 주소</div>
-        <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="test@gmail.com"
-            value={email}
-            onChange={handleEmail}
-          />
-        </div>
-        <div className={styles.errorMessageWrap}>
-          {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
-        </div>
+          <div>
+            {/*<div className={styles.inputTitle}>이메일 주소</div>*/}
+            <div className={`${styles.inputWrap} ${!emailValid && email.length > 0 ? styles.error : ''}`}>
+              <Mail />
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="test@gmail.com"
+                value={email}
+                onChange={handleEmail}
+              />
+            </div>
 
-        <div style={{ marginTop: '26px' }} className={styles.inputTitle}>
-          비밀번호
-        </div>
-        <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="영문, 숫자, 특수문자 포함 8자 이상"
-            value={pw}
-            onChange={handlePw}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        <div className={styles.errorMessageWrap}>
-          {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
+            <div className={styles.errorMessageWrap}>
+              {!emailValid && email.length > 0 && <div>올바른 이메일을 입력해주세요.</div>}
+            </div>
+
+            {/*<div className={styles.inputTitle}>비밀번호</div>*/}
+            <div className={`${styles.inputWrap} ${!pwValid && pw.length > 0 ? styles.error : ''}`}>
+              <Lock />
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                value={pw}
+                onChange={handlePw}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <div className={styles.errorMessageWrap}>
+              {!pwValid && pw.length > 0 && <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>}
+            </div>
+          </div>
+          <div
+            onClick={() => onOpen("findPassword")}
+            className={styles.findPassword}
+          >
+            forgot your password?
+          </div>
+          <div>
+            <button onClick={onClickSignUpButton} className={styles.bottomButton}>
+              SingUp
+            </button>
+            <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
+              Login
+            </button>
+            {/*<Button*/}
+            {/*    onClick={() => onOpen("findPassword")}*/}
+            {/*    className={styles.bottomButton}*/}
+            {/*    type={"button"}*/}
+            {/*>*/}
+            {/*  forgot your password*/}
+            {/*</Button>*/}
+            <div className={ styles.googleLogin}>
+              <GoogleLogin />
+            </div>
+          </div>
+          <FindPasswordModal />
+
         </div>
       </div>
-
-      <div>
-        <button onClick={onClickConfirmButton} disabled={notAllow} className={styles.bottomButton}>
-          확인
-        </button>
-        <button onClick={onClickSignUpButton} className={styles.bottomButton}>
-          회원가입
-        </button>
-      </div>
-    </div>
-  );
+  )
 }

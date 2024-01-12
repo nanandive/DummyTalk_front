@@ -1,84 +1,89 @@
-import { format } from "date-fns";
-import { useEffect, useMemo, useRef, useState } from "react";
-import ChatItem from "src/components/chat/chat-item";
-import { useUrlQuery } from "../hooks/use-url-query";
 import axios from "axios";
-import { decodeJwt } from "src/lib/tokenUtils";
-import ChatEmpty from "./ChatEmpty";
+import { useEffect, useRef, useState } from "react";
+import ChatItem from "src/components/chat/chat-item";
+import { useUrlQuery } from "src/components/hooks/use-url-query";
+import { useChatData } from "../hooks/use-chat-data";
 
-const ChatMessages = ({data, setData}) => {
-    const [hasInitialized, setHasInitialized] = useState(false);
+const ChatMessages = ({ userInfo }) => {
 
-    const chatRef = useRef(null);
-    const bottomRef = useRef(null);
+  const query = useUrlQuery();
+  const channelId = query.get("channel");
 
-    const query = useUrlQuery();
-    const channelId = query.get("channel");
+  const chatRef = useRef(null);
+  const bottomRef = useRef(null);
 
-    const accessToken = localStorage.getItem("accessToken");
-    const userInfo = useMemo(() => decodeJwt(accessToken), [accessToken]);
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const { data, setData } = useChatData();
 
-    const fetchChatData = async () => {
-        try {
-            console.log("===================================== fetchChatData");
-            const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
-            );
-            setData(response.data.data);
-            console.log(
-                "===================================== response " + response
-            );
-        } catch (error) {
-            console.error("채팅 리스트 뽑아보기 에러", error);
-        }
+  // const dispatch =  useDispatch()
+  // const chatData = useSelector(state => state.chatReducer);
+
+  useEffect(() => {
+
+    const bottomDiv = bottomRef?.current;
+    const topDiv = chatRef.current;
+    const shouldAutoScroll = () => {
+      if (!hasInitialized && bottomDiv) {
+        setHasInitialized(true);
+        return true;
+      }
+
+      if (!topDiv) {
+        return false;
+      }
+
+      const distanceFromBottom =
+        topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
+      return distanceFromBottom <= 100;
     };
 
-    useEffect(() => {
-        const bottomDiv = bottomRef?.current;
-        const topDiv = chatRef.current;
-        const shouldAutoScroll = () => {
-            if (!hasInitialized && bottomDiv) {
-                setHasInitialized(true);
-                return true;
-            }
+    if (shouldAutoScroll()) {
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  }, [bottomRef, chatRef, hasInitialized, data]);
 
-            if (!topDiv) {
-                return false;
-            }
+  useEffect(() => {
 
-            const distanceFromBottom =
-                topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
-            return distanceFromBottom <= 100;
-        };
 
-        if (shouldAutoScroll()) {
-            setTimeout(() => {
-                bottomRef.current?.scrollIntoView({
-                    behavior: "smooth",
-                });
-            }, 100);
-        }
-    }, [bottomRef, chatRef, hasInitialized, data]);
+    if (!channelId || channelId === '' ) return;
+    // dispatch(callFetchChatData(channelId))
+    const fetchChatData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/chat/${channelId}/${userInfo.sub}`
+        );
+    
+        setData(response.data.data);
+        console.log("response ", response.data);
+      } catch (error) {
+        console.error("채팅 리스트 뽑아보기 에러", error);
+      }
+    };
+    fetchChatData();
 
-    useEffect(() => {
-        if (channelId) fetchChatData();
-    }, [channelId]);
 
-    if (!channelId) return <ChatEmpty />;
+  }, [channelId, userInfo, setData]);
 
-    return (
-        <div className="h-3/4 flex items-end ml-3 overflow-y-auto scrollbar-hidden relative">
+
+    console.log("test ======>" ,  data)
+    // console.log("Tes2t ===> " , chatData)
+
+    return  (
+        <div className="h-3/4 flex items-end mx-3 overflow-y-auto scrollbar-hidden scroll-smooth relative">
             <div
                 className="mt-auto w-full"
                 ref={chatRef}
             >
-                {data.map((chat) => (
+                {data.length > 0 && data.map((data) => (
                     <ChatItem
-                        key={chat.chatId}
-                        content={chat.message}
-                        member={chat.sender}
-                        name={chat.nickname}
-                        timestamp={format(new Date(), "yyyy MMM d, HH:mm:ss")}
+                        key={data.chatId}
+                        chat={data}
+                        name={data.nickname}
+                        channel={channelId}
                     />
                 ))}
                 <div ref={bottomRef}></div>

@@ -1,20 +1,17 @@
-import { useState } from "react";
+import LeftSideBar from "src/layouts/LeftSide/left-side-bar";
+import ServerSideBar from "src/layouts/LeftSide/server-side-bar";
 import Chat from "../layouts/chat/Chat";
-import LeftBar from "../layouts/MainLayout/LeftBar";
-import RightBar from "../layouts/MainLayout/RightBar";
-
 
 function MainPage() {
-    const [isOpen, setOpen] = useState(false);
     return (
         <>
-            <div className="flex h-[92vh]">
-                <LeftBar />
-                <Chat isOpen={isOpen} setOpen={setOpen} />
-                {isOpen && <RightBar />}
+            <div className="flex h-full bg-[#0b1725]">
+                <LeftSideBar />
+                <ServerSideBar />
+                <Chat />
             </div>
         </>
-    )
+    );
 }
 
-export default MainPage
+export default MainPage;

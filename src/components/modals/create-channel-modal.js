@@ -1,164 +1,117 @@
-// ChannelModal.js
 import axios from "axios";
-import uuid from "react-uuid";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "src/components/hooks/use-modal";
-
-
-
+import { useServerData } from "../hooks/use-server-data";
+import { Button } from "../ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+import "./css/ChannelModal.css";
 
 const CreateChannelModal = () => {
     const navigate = useNavigate();
     const { data, isOpen, onClose, type } = useModal();
+    const { updateChannelListData } = useServerData()
     const { serverId } = data;
     const isModalOpen = isOpen && type === "createChannel";
     const [channelName, setChannelName] = useState("");
-    const [isFormDataComplete, setIsFormDataComplete] = useState(false);
 
     const handleInputChange = (e) => {
         setChannelName(e.target.value);
     };
 
-
-    const handleOneToOneChat = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("channelName", channelName);
-        formData.append("serverId", serverId);
-        setIsFormDataComplete(channelName && serverId);
-
-        try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/channel/writePro`,
-                formData
-            );
-
-            console.log("채널 생성 성공");
-            navigate(`/main?server=${serverId}`, {
-                replace: true,
-                state: uuid(),
-            });
-        } catch (error) {
-            console.log("채널 생성 실패");
-        } finally {
-            onClose();
-        }
-    };
-    
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("channelName", channelName);
-        formData.append("serverId", serverId);
+        const formData = new FormData(e.target);
 
         try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/channel/writePro`,
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/channel/writePro1`,
                 formData
             );
 
-            console.log("채널 생성 성공");
-            navigate(`/main?server=${serverId}`, {
-                replace: true,
-                state: uuid(),
-            });
+            updateChannelListData(response.data)
+            setChannelName('')
+            onClose();
         } catch (error) {
             console.log("채널 생성 실패");
         } finally {
             onClose();
         }
     };
-    
+
     return (
-        <div
-            style={{
-                display: isModalOpen ? "block" : "none",
-                position: "fixed",
-                zIndex: 1,
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%",
-                overflow: "auto",
-                backgroundColor: "rgba(0,0,0,0.4)",
-            }}
-        >
-            <div
-                style={{
-                    backgroundColor: "#fefefe",
-                    margin: "10% auto",
-                    padding: "20px",
-                    border: "1px solid #888",
-                    width: "50%",
-                }}
+        <>
+            <Dialog
+                open={isModalOpen}
+                onOpenChange={onClose}
             >
-                <span
-                    style={{
-                        color: "#aaa",
-                        float: "right",
-                        fontSize: "28px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                    }}
-                    onClick={onClose}
-                >
-                    &times;
-                </span>
-                <h2 style={{ textAlign: "center" }}>채널 생성</h2>
-                <form onSubmit={handleSubmit} style={{ color: isFormDataComplete ? "green" : "defaultColor" }}>
-                    <label style={{ marginBottom: "10px", display: "block" }}>
-                        채널 이름:
+                <DialogContent className="bg-[#0A192E] text-white overflow-hidden">
+                    <DialogHeader className="px-6">
+                        <DialogTitle className="text-2xl text-center font-bold">
+                            채널 생성
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-zinc-500 ">
+                            새로운 채널에서 사용할 이름과 <br /> 형식을
+                            설정해주세요
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form
+                        className="gap-1 flex flex-col p-6"
+                        onSubmit={handleSubmit}
+                    >
+                        <label
+                            htmlFor="channelName"
+                            className="font-semibold text-zinc-400 text-left p-2"
+                        >
+                            채널 이름
+                        </label>
                         <input
+                            id="channelName"
+                            name="channelName"
+                            className="bg-[#1C2835] border-2 border-zinc-400 rounded-lg p-2 w-full"
                             type="text"
                             value={channelName}
+                            placeholder={"채널 이름을 입력해주세요."}
                             onChange={handleInputChange}
-                            style={{
-                                width: "100%",
-                                padding: "8px",
-                                margin: "8px 0",
-                                boxSizing: "border-box",
-                                border: "1px solid black",
-                            }}
                         />
-                    </label>
-                    <button
-                        type="submit"
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            background: "#4CAF50",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        생성
-                    </button>
+                        <br />
 
+                        <div className="font-semibold text-zinc-400 text-left p-2">형식</div>
+                        <select
+                            name="channelType"
+                            className="bg-[#1C2835] border-2 border-zinc-400 rounded-lg p-2 w-full"
+                            defaultValue="TEXT"
+                        >
+                            <option value="TEXT">텍스트</option>
+                            <option value="VOICE">1대1 음성</option>
+                        </select>
+                        <input type="hidden" name="serverId" value={serverId} />
+                        <br />
 
-                    <button
-                    type="button" // type을 'button'으로 설정하여 폼 제출을 방지
-                    onClick={handleOneToOneChat}
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        marginTop: "10px",
-                        background: "#2196F3",
-                        color: isFormDataComplete ? "white" : "white", // Example color change
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                    }}
-                >
-                    1:1 번역채팅방
-                </button>
-                </form>
-            </div>
-        </div>
+                        <DialogFooter className="sm:justify-center gap-10">
+
+                            <Button className="bg-[#204771] text-white hover:bg-indigo-500/90">
+                                생성
+                            </Button>
+
+                            <Button
+                                onClick={onClose}
+                                className="bg-white text-[#1C2835] hover:bg-teal-700 font-bold"
+                            >
+                                취소
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 
